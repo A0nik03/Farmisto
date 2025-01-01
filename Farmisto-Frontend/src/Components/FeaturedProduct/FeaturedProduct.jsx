@@ -28,7 +28,7 @@ const FeaturedProduct = () => {
     },
   ];
   return (
-    <div className="w-full h-screen flex flex-col justify-center items-center">
+    <div className="w-full h-screen flex flex-col justify-center items-center bg-gradient-to-br from-zinc-50 to-zinc-100">
       <div className="w-[80%] h-full mx-auto flex flex-col justify-center items-center gap-12">
         <h1 className="text-5xl text-[#242424] font-bold">
           Our Featured Product
@@ -41,7 +41,7 @@ const FeaturedProduct = () => {
         </p>
         <div className="flex gap-10">
           {products.map((product) => (
-            <div key={product.id} className="hover:scale-[1.05] transition-all duration-300 w-60 h-80 p-4 rounded-3xl flex flex-col items-center justify-center bg-zinc-100">
+            <div key={product.id} className="hover:scale-[1.05] transition-all duration-300 w-60 h-80 p-4 rounded-3xl flex flex-col items-center justify-center bg-white">
               <img
                 src={product.image}
                 alt={product.name}

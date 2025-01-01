@@ -3,17 +3,25 @@ import { FaCartShopping } from "react-icons/fa6";
 import { FaUser } from "react-icons/fa";
 import assets from "../../assets/assets";
 import CircularOverlay from "../Minor/CircularOverlay";
+import { Link } from "react-router-dom";
 
 const NavBar = () => {
-  const tabs = ["Home", "MarketPlace", "Nearby Farmers", "Contact Us"];
+  const tabs = [
+    { label: "Home", path: "/" },
+    { label: "MarketPlace", path: "/market" },
+    { label: "Nearby Farmers", path: "/farmers" },
+    { label: "About", path: "/about" },
+    { label: "Contact", path: "/contact" }
+  ];
+  
   return (
-    <div className="h-[10vh] px-10 py-14 font-[satoshi] flex justify-between items-center">
-      <h1 className="text-3xl font-black text-[#0d331c] ml-10 z-100">Farmisto</h1>
+    <div className="h-[10vh] px-10 py-14 flex justify-between items-center bg-zinc-100">
+      <h1 className="text-3xl font-black text-[#0d331c] ml-10 z-50">Farmisto</h1>
       <div className="flex gap-12">
         {tabs.map((tab, index) => (
-          <h1 key={index} className="text-xl text-green-800 font-semibold">
-            {tab}
-          </h1>
+          <Link to={tab.path} key={index} className="text-xl text-green-800 font-semibold">
+            {tab.label}
+          </Link>
         ))}
       </div>
       <div className="flex gap-7">

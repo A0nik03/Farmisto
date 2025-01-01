@@ -2,12 +2,12 @@ import React from "react";
 
 const Story = () => {
   return (
-    <div className="h-[75vh] bg-gradient-to-br from-zinc-50 to-zinc-100 flex">
+    <div className="h-[80vh] bg-white flex">
       <div className="relative w-1/3 px-20">
         <div className="absolute w-96 h-[70vh] top-28">
           <img
             src="https://images.pexels.com/photos/1094544/pexels-photo-1094544.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"
-            className="h-full w-full object-cover"
+            className="h-full w-full object-cover shadow-2xl"
             alt="Fresh vegetables in a basket"
             style={{
               borderTopLeftRadius: "50%",
