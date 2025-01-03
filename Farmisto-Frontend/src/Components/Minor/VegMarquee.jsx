@@ -13,17 +13,17 @@ const VegMarquee = () => {
         { name: "Cucumber", img: "https://images.pexels.com/photos/1691180/pexels-photo-1691180.jpeg?auto=compress&cs=tinysrgb&w=600" },
         { name: "Mushroom", img: "https://images.pexels.com/photos/1249884/pexels-photo-1249884.jpeg?auto=compress&cs=tinysrgb&w=600" },
         { name: "Spinach", img: "https://images.pexels.com/photos/6824475/pexels-photo-6824475.jpeg?auto=compress&cs=tinysrgb&w=600" },
-        { name: "Cilantro", img: "https://images.pexels.com/photos/3338495/pexels-photo-3338495.jpeg?auto=compress&cs=tinysrgb&w=600" }
+        { name: "Cilantro", img: "https://images.pexels.com/photos/3338495/pexels-photo-3338495.jpeg?auto=compress&cs=tinysrgb&w=600" },
       ];
       
 
   return (
     <div className="h-[40vh] w-full flex items-center justify-center mb-10">
       <Marquee
-        pauseOnHover={true}
         gradient={false}
         speed={60}
-        direction="right"
+        loop={false}
+        pauseOnHover={true}
         className="h-60 w-full flex items-center justify-center"
       >
         {vegs.map((item, index) => (

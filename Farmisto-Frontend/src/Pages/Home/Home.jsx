@@ -1,5 +1,5 @@
 import React from "react";
-import NavBar from "../../Components/Major/NavBar";
+import NavBar from "../../Components/NavBar/NavBar";
 import Header from "../../Components/Header/HomeHeader";
 import CircularOverlay from "../../Components/Minor/CircularOverlay";
 import Story from "../../Components/Story/Story";

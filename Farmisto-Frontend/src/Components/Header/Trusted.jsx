@@ -21,7 +21,7 @@ const Trusted = () => {
             {Object.keys(partners).map((partner, index) => {
                 const Icon = partners[partner]
                 return (
-                    <div key={index} className='h-20 bg-[#f9f9f9] flex items-center justify-center rounded-full'>
+                    <div key={index} className='h-20 flex items-center justify-center rounded-full'>
                         <div className='flex gap-3'>
                         <Icon size={40} className="text-zinc-400"/>
                         <p className='text-3xl text-zinc-400 font-medium'>{partner}</p>
