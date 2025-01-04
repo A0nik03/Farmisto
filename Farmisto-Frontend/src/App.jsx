@@ -10,6 +10,7 @@ import FAQs from './Pages/Faq/FAQ'
 import TermsConditions from './Pages/Terms/TermsConditions'
 import PrivacyPolicy from './Pages/Privacy/PrivacyPolicy'
 import Cart from './Pages/Cart/Cart'
+import Register from './Pages/Register/Register'
 
 const App = () => {
   return (
@@ -24,6 +25,7 @@ const App = () => {
     <Route path='/terms-conditions' element={<TermsConditions/>}/>
     <Route path='/privacy-policy' element={<PrivacyPolicy/>}/>
 
+    <Route path='/form' element={<Register/>}/>
     <Route path='/cart' element={<Cart/>}/>
     </Routes>
     </div>

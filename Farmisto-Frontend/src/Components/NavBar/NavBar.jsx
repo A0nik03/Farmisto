@@ -1,8 +1,6 @@
 import React from "react";
 import { FaCartShopping } from "react-icons/fa6";
 import { FaUser } from "react-icons/fa";
-import assets from "../../assets/assets";
-import CircularOverlay from "../Minor/CircularOverlay";
 import { Link } from "react-router-dom";
 
 const NavBar = () => {
@@ -24,9 +22,9 @@ const NavBar = () => {
       </div>
       <div className="flex gap-7">
         <div className="h-12 px-1 flex items-center justify-center gap-2 bg-[#0d331c] text-white rounded-full">
-          <div className="h-10 w-10 flex items-center justify-center bg-white rounded-full">
+          <Link to={'/form'} className="h-10 w-10 flex items-center justify-center bg-white rounded-full hover:scale-110 transition-all duration-300">
             <FaUser size={18} color="#0d331c"/>
-          </div>
+          </Link>
           <Link to={'/cart'} className="h-10 w-10 flex items-center justify-center bg-white rounded-full hover:scale-110 transition-all duration-300">
             <FaCartShopping size={18} color="#0d331c"/>
           </Link>
