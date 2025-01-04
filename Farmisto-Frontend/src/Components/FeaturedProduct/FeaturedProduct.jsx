@@ -27,32 +27,37 @@ const FeaturedProduct = () => {
       description: "This is the description for product 4.",
     },
   ];
+
   return (
-    <div className="w-full h-screen flex flex-col justify-center items-center bg-gradient-to-br from-zinc-50 to-zinc-100">
-      <div className="w-[80%] h-full mx-auto flex flex-col justify-center items-center gap-12">
-        <h1 className="text-5xl text-[#242424] font-bold">
+    <div className="w-full h-auto flex flex-col justify-center items-center bg-gradient-to-br from-zinc-50 to-zinc-100 py-10">
+      <div className="w-[90%] lg:w-[80%] mx-auto flex flex-col justify-center items-center gap-8">
+        <h1 className="text-3xl sm:text-4xl lg:text-5xl text-[#242424] font-bold text-center">
           Our Featured Product
         </h1>
-        <p className="text-xl text-zinc-600 font-medium text-center">
+        <p className="text-lg sm:text-xl text-zinc-600 font-medium text-center">
           Discover our Featured Product, handpicked for its quality and
           freshness. Sourced directly from local farmers, it brings
           farm-to-table goodness right to you. Support fair trade while enjoying
           the best of nature’s harvest.
         </p>
-        <div className="flex gap-10">
+        <div className="flex flex-col sm:flex-row sm:gap-10 gap-8 sm:flex-wrap justify-center items-center">
           {products.map((product) => (
-            <div key={product.id} className="hover:scale-[1.05] transition-all duration-300 w-60 h-80 p-4 rounded-3xl flex flex-col items-center justify-center bg-white">
+            <div
+              key={product.id}
+              className="hover:scale-[1.05] transition-all duration-300 w-full sm:w-[calc(20%-2rem)] md:w-[calc(33%-2rem)] lg:w-[calc(35%-2rem)] p-4 rounded-3xl flex flex-col items-center justify-center bg-white"
+            >
               <img
                 src={product.image}
                 alt={product.name}
-                className="w-24 h-24 shadow-lg object-cover rounded-3xl"
+                className="w-24 h-24 sm:w-32 sm:h-32 shadow-lg object-cover rounded-3xl"
               />
-              <h2 className="text-2xl font-bold mt-4">{product.name}</h2>
-              <p className="text-gray-600 mt-2 text-center">{product.description}</p>
+              <h2 className="text-xl sm:text-2xl font-bold mt-4">{product.name}</h2>
             </div>
           ))}
         </div>
-        <p className="text-green-600 font-semibold text-xl">See All Products</p>
+        <p className="text-green-600 font-semibold text-lg sm:text-xl cursor-pointer hover:underline mt-6">
+          See All Products
+        </p>
       </div>
     </div>
   );

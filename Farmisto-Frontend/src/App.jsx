@@ -14,7 +14,7 @@ import Register from './Pages/Register/Register'
 
 const App = () => {
   return (
-    <div className='h-screen w-screen font-[Inter]'>
+    <div className='h-screen w-full font-[Inter]'>
     <Routes>
     <Route path='/' element={<Home/>}/>
     <Route path='/market' element={<MarketPlace/>}/>

@@ -7,28 +7,55 @@ const NavBar = () => {
   const tabs = [
     { label: "Home", path: "/" },
     { label: "MarketPlace", path: "/market" },
-    { label: "Nearby Farmers", path: "/farmers" }
+    { label: "Nearby Farmers", path: "/farmers" },
   ];
-  
+
   return (
-    <div className="h-[10vh] px-10 py-14 flex justify-between items-center bg-zinc-100">
-      <h1 className="text-3xl font-black text-[#0d331c] ml-10 z-50">Farmisto</h1>
-      <div className="flex gap-12">
+    <div className="h-[10vh] px-6 py-4 flex justify-between items-center bg-zinc-100">
+      {/* Brand Logo */}
+      <h1 className="text-2xl sm:text-3xl font-black text-[#0d331c] ml-4 z-50">
+        Farmisto
+      </h1>
+
+      {/* Navigation Links */}
+      <div className="hidden sm:flex gap-8">
         {tabs.map((tab, index) => (
-          <Link to={tab.path} key={index} className="text-xl text-green-800 font-semibold">
+          <Link
+            to={tab.path}
+            key={index}
+            className="text-lg sm:text-xl text-green-800 font-semibold hover:underline"
+          >
             {tab.label}
           </Link>
         ))}
       </div>
-      <div className="flex gap-7">
-        <div className="h-12 px-1 flex items-center justify-center gap-2 bg-[#0d331c] text-white rounded-full">
-          <Link to={'/form'} className="h-10 w-10 flex items-center justify-center bg-white rounded-full hover:scale-110 transition-all duration-300">
-            <FaUser size={18} color="#0d331c"/>
+
+      {/* Icons Section */}
+      <div className="flex gap-4">
+        <div className="h-10 sm:h-12 px-1 flex items-center justify-center gap-2 bg-[#0d331c] text-white rounded-full">
+          <Link
+            to={"/form"}
+            className="h-8 w-8 sm:h-10 sm:w-10 flex items-center justify-center bg-white rounded-full hover:scale-110 transition-all duration-300"
+          >
+            <FaUser size={16} className="sm:size-18" color="#0d331c" />
           </Link>
-          <Link to={'/cart'} className="h-10 w-10 flex items-center justify-center bg-white rounded-full hover:scale-110 transition-all duration-300">
-            <FaCartShopping size={18} color="#0d331c"/>
+          <Link
+            to={"/cart"}
+            className="h-8 w-8 sm:h-10 sm:w-10 flex items-center justify-center bg-white rounded-full hover:scale-110 transition-all duration-300"
+          >
+            <FaCartShopping size={16} className="sm:size-18" color="#0d331c" />
           </Link>
         </div>
+      </div>
+
+      {/* Mobile Menu */}
+      <div className="sm:hidden">
+        <button
+          className="text-green-800 font-semibold text-lg"
+          onClick={() => alert("Toggle Mobile Menu Here")}
+        >
+          ☰
+        </button>
       </div>
     </div>
   );

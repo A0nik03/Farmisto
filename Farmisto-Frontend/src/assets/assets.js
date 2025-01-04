@@ -6,6 +6,7 @@ import carrot from './carrot.png'
 import almond from './almond.png'
 import farmer from './farmer.png'
 import farm from './farm.png'
+import hand from './hand.png'
 
 const assets = {
     colors,
@@ -15,8 +16,8 @@ const assets = {
     carrot,
     almond,
     farmer,
-    farm
- 
+    farm,
+    hand
 }
 
 export default assets;
