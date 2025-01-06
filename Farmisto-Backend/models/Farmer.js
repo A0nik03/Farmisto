@@ -1,87 +1,91 @@
-const express = require(`express`);
-const mongoose = require(`mongoose`);
+const mongoose = require("mongoose");
+const bcrypt = require("bcrypt");
+const {GenerateToken} = require('../authentication/TokenAuth')
 
-const farmerSchema = new mongoose.Schema(
-  {
-    firstname: {
-      type: String,
-      required: true,
-    },
-    lastname: {
-      type: String,
-      required: true,
-    },
-    email: {
-      type: String,
-      required: false,
-      unique: true,
-      match: [/\S+@\S+\.\S+/, "Please use a valid email address."],
-    },
-    phone: {
+const FarmerSchema = new mongoose.Schema({
+  farmerName: {
+    type: String,
+    required: true,
+  },
+  farmerEmail: {
+    type: String,
+    required: true,
+    unique: true,
+  },
+  farmerPhone: {
+    type: Number,
+    required: true,
+    unique: true,
+  },
+  farmerAddress: {
+    type: String,
+    required: true,
+  },
+  farmerCity: {
+    type: String,
+    required: true,
+  },
+  farmerState: {
+    type: String,
+    required: true,
+  },
+  farmerCountry: {
+    type: String,
+    required: true,
+  },
+  farmerZip: {
+    type: Number,
+    required: true,
+  },
+  farmerPassword: {
+    type: String,
+    required: true,
+  },
+  farmerCategory: {
+    type: String,
+    required: true,
+  },
+  farmerlocation: {
+    latitude: {
       type: Number,
-      required: true,
-      unique: true,
     },
-    address: {
-      type: String,
-      required: true,
-    },
-    city: {
-      type: String,
-      required: true,
-    },
-    state: {
-      type: String,
-      required: true,
-    },
-    country: {
-      type: String,
-      required: true,
-    },
-    zipcode: {
+    longitude: {
       type: Number,
-      required: true,
-    },
-    password: {
-      type: String,
-      required: true,
-      minLength: 6,
-    },
-    coordinates: {
-      latitude: {
-        type: Number,
-        required: false,
-      },
-      longitude: {
-        type: Number,
-        required: false,
-      },
     },
   },
-  { timestamps: true }
-);
-
-farmerSchema.pre("save", async function (next) {
-  if (!this.isModified("password")) {
-    next();
-  }
-  try {
-    const salt = await bcrypt.genSalt(12);
-    this.password = await bcrypt.hash(this.password, salt);
-    next();
-  } catch (error) {
-    next(error);
-  }
 });
 
-farmerSchema.methods.comparePassword = async function (password) {
-  try {
-    return await bcrypt.compare(password, this.password);
-  } catch (error) {
-    throw new Error("Error in comparing password");
-  }
-};
+// FarmerSchema.pre("save", async function (next) {
+//   if (!this.isModified("farmerPassword")) {
+//     return next();
+//   }
+//   try {
+//     const salt = await bcrypt.genSalt(10);
+//     this.farmerPassword = await bcrypt.hash(this.farmerPassword, salt);
+//   } catch (error) {
+//     return next(error);
+//   }
+// });
 
-const Farmer = mongoose.model(`Farmer`, farmerSchema);
+// FarmerSchema.static("ComparePassword", async function (farmer,password, hashedPassword) {
+
+ 
+//   try {
+//     const isMatch = await bcrypt.compare(password, hashedPassword);
+
+//     if(isMatch){
+//       const token = GenerateToken(farmer);
+//       return token;
+//     }
+//     else{
+//       throw new Error("Failed to Create Token !");
+//     }
+    
+//   } catch (error) {
+//     console.log("Error in farmer login", error);
+//   }
+// });
+
+const Farmer = mongoose.model("Farmer", FarmerSchema);
 
 module.exports = Farmer;
