@@ -1,34 +1,84 @@
-import React, { useState, useEffect } from "react";
+import React, { useRef, useEffect, useState } from "react";
 import { RiLeafFill } from "react-icons/ri";
-import { FaApple, FaArrowLeftLong, FaArrowUpLong, FaHand } from "react-icons/fa6";
-import { FcGoogle } from "react-icons/fc";
+import { FaApple, FaArrowLeftLong } from "react-icons/fa6";
+import { PuffLoader } from "react-spinners";
+import { Modal, Button } from "rsuite";
 import { useNavigate } from "react-router-dom";
+import { FcGoogle } from "react-icons/fc";
 
 const Register = () => {
   const navigate = useNavigate();
   const [isLogin, setIsLogin] = useState(false);
-  const [formData, setFormData] = useState({
-    name: "",
-    email: "",
-    password: "",
-  });
+  const [loading, setLoading] = useState(false);
+  const [showModal, setShowModal] = useState(false);
+  const [locationError, setLocationError] = useState(null);
+  const locationRef = useRef(null);
+
+  const nameRef = useRef();
+  const emailRef = useRef();
+  const passwordRef = useRef();
 
   const handleNavigate = () => {
     navigate("/");
-  }
-  const handleInputChange = (e) => {
-    const { name, value } = e.target;
-    setFormData({ ...formData, [name]: value });
+  };
+
+  const fetchLocation = () => {
+    setLoading(true);
+    setShowModal(true);
+
+    navigator.geolocation.getCurrentPosition(
+      (position) => {
+        locationRef.current = {
+          latitude: position.coords.latitude,
+          longitude: position.coords.longitude,
+          accuracy: position.coords.accuracy,
+        };
+        console.log("Location fetched: ", locationRef.current);
+        setLocationError("");
+      },
+      (error) => {
+        console.error("Error fetching location: ", error);
+        setLocationError(
+          "Unable to get location. Please enter your location manually."
+        );
+      }
+    );
+
+    setTimeout(() => {
+      setShowModal(false);
+      setLoading(false);
+    }, 3000);
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    if (isLogin) {
-      console.log("Logging in", formData);
-    } else {
-      console.log("Signing up", formData);
-    }
+    setLoading(true);
+
+    setTimeout(() => {
+      const formData = {
+        name: nameRef.current.value,
+        email: emailRef.current.value,
+        password: passwordRef.current.value,
+        location: locationRef.current,
+      };
+
+      console.log("Form Data: ", formData);
+
+      if (isLogin) {
+        console.log("Logging in", formData);
+      } else {
+        console.log("Signing up", formData);
+        // Send formData to the backend
+      }
+      setLoading(false);
+    }, 2000);
   };
+
+  useEffect(() => {
+    if (!isLogin) {
+      fetchLocation();
+    }
+  }, [isLogin]);
 
   return (
     <div
@@ -36,117 +86,136 @@ const Register = () => {
         backgroundImage:
           "url(https://cdn.dribbble.com/userupload/15096871/file/original-7d27c04dcd28a05d8dc9cf004a9548ac.jpg?resize=1200x904&vertical=center)",
       }}
-      className="h-full w-full flex justify-center items-center relative"
+      className="h-screen w-full flex justify-center items-center relative bg-cover"
     >
-    <div onClick={handleNavigate} className="absolute h-11 w-11 rounded-full bg-black flex justify-center items-center left-12 top-6 hover:scale-[1.05] cursor-pointer">
-      <FaArrowLeftLong size={20} color="white"/>
-    </div>
-      <div className="w-[80%] h-[95%] flex rounded-xl overflow-hidden mx-auto">
-        <div className="h-full w-1/2 bg-white flex flex-col items-center p-5">
-          <span className="relative flex w-32 mt-5 ml-14">
+      <div
+        onClick={handleNavigate}
+        className="absolute lg:h-11 lg:w-11 h-8 w-8 rounded-full bg-black flex justify-center items-center left-2  top-1 sm:left-6 sm:top-6 hover:scale-105 cursor-pointer"
+      >
+        <FaArrowLeftLong className="text-md sm:text-xl" color="white" />
+      </div>
+
+      {/* Loading Overlay */}
+      {loading && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center">
+          <PuffLoader color="#0d331c" size={150} />
+        </div>
+      )}
+
+      {/* Location Fetching Modal */}
+      <Modal
+        backdrop="static"
+        keyboard={false}
+        open={showModal}
+        onClose={() => setShowModal(false)}
+        className="fixed inset-0 z-50 flex items-center justify-center bg-black/50"
+      >
+        <div className="bg-white rounded-xl shadow-lg w-11/12 sm:w-1/3 overflow-hidden absolute left-[5%] lg:left-[30vw] top-[10%]">
+          <div className="bg-gray-100 border-b border-gray-200 p-6 text-center">
+            <h2 className="text-xl font-semibold text-gray-800">
+              Fetching Location
+            </h2>
+          </div>
+          <div className="p-6 bg-white text-center">
+            <p className="text-gray-600 text-lg">
+              We are determining your location to enhance your experience. This
+              might take a few seconds.
+            </p>
+            {locationError && (
+              <p className="text-red-500 text-sm mt-4">{locationError}</p>
+            )}
+          </div>
+          <div className="bg-gray-100 border-t border-gray-200 p-6 flex justify-center">
+            <button
+              onClick={() => setShowModal(false)}
+              className="bg-green-500 text-white font-medium px-6 py-2 rounded-full shadow-md hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-green-400 focus:ring-offset-2 transition-all duration-200"
+            >
+              Close
+            </button>
+          </div>
+        </div>
+      </Modal>
+
+      {/* Form Section */}
+      <div className="w-[90%] sm:w-[80%] h-[87%] sm:h-[95%] flex flex-col sm:flex-row rounded-xl overflow-hidden mx-auto bg-white shadow-lg">
+        <div className="h-full w-full sm:w-1/2 bg-white flex flex-col sm:mt-10 items-center p-2">
+          <span className="relative flex w-32 mt-5 sm:ml-14 ml-20 sm:mt-5">
             <span className="h-12 w-12 border-[2px] border-[#0d331c] rounded-full"></span>
-            <span className="absolute left-3 h-12 w-12 flex justify-center items-center rounded-full bg-[#0d331c]">
+            <span className="absolute left-3 h-12 w-12 flex justify-center items-center rounded-full bg-black">
               <RiLeafFill size={27} color="#fff" />
             </span>
           </span>
 
-          <h1 className="text-6xl font-bold mt-5 font-[kurale]">
+          <h1 className="text-4xl sm:text-5xl font-bold mt-2 sm:mt-2 font-[kurale]">
             {isLogin ? "Log In" : "Sign Up"}
           </h1>
-          <p className="text-md font-medium text-zinc-400 mt-4 font-[kurale]">
-            Welcome to Farmisto - {isLogin ? "Log in to your account" : "Let's create an account"}
+          <p className="text-md font-medium text-zinc-400 mt-6 font-[kurale] sm:text-left text-center">
+            Welcome to Farmisto -{" "}
+            {isLogin ? "Log in to your account" : "Let's create an account"}
           </p>
-
-          <div className="w-full flex gap-4 mt-5 px-10">
-            <button className="w-full flex justify-center items-center hover:bg-zinc-100 gap-3 p-3 border-[1px] border-zinc-500 rounded-2xl">
+          <div className="w-full flex sm:flex-row items-center justify-center gap-4 mt-3 px-10">
+            <button className="lg:w-full sm:w-auto flex justify-center items-center hover:bg-zinc-100 gap-3 p-3 border-[1px] border-zinc-500 lg:rounded-2xl rounded-full">
               <FcGoogle size={22} />
-              <span className="text-md font-medium text-black">
+              <span className="hidden lg:block text-md font-medium text-black">
                 Log in with Google
               </span>
             </button>
-            <button className="w-full flex justify-center items-center hover:bg-zinc-100 gap-3 p-3 border-[1px] border-zinc-500 rounded-2xl">
+            <button className="lg:w-full sm:w-auto flex justify-center items-center hover:bg-zinc-100 gap-3 p-3 border-[1px] border-zinc-500 lg:rounded-2xl rounded-full">
               <FaApple size={22} />
-              <span className="text-md font-medium text-black">
+              <span className="hidden lg:block text-md font-medium text-black">
                 Log in with Apple
               </span>
             </button>
           </div>
 
-          <form className="w-full mt-8 px-10" onSubmit={handleSubmit}>
+          {locationError && (
+            <p className="text-red-500 text-sm mt-2">{locationError}</p>
+          )}
+
+          {/* Registration/Login Form */}
+          <form
+            className="w-full sm:mt-5 mt-2 px-6 sm:px-10"
+            onSubmit={handleSubmit}
+          >
             {!isLogin && (
               <input
+                ref={nameRef}
                 type="text"
                 name="name"
                 placeholder="Name"
                 className="w-full py-3 px-5 border-[1px] border-zinc-500 rounded-2xl focus:outline-none mt-4"
-                value={formData.name}
-                onChange={handleInputChange}
               />
             )}
             <input
+              ref={emailRef}
               type="text"
               name="email"
               placeholder="Email"
               className="w-full py-3 px-5 border-[1px] border-zinc-500 rounded-2xl focus:outline-none mt-4"
-              value={formData.email}
-              onChange={handleInputChange}
             />
             <input
+              ref={passwordRef}
               type="password"
               name="password"
               placeholder="Password"
               className="w-full py-3 px-5 border-[1px] border-zinc-500 rounded-2xl focus:outline-none mt-4"
-              value={formData.password}
-              onChange={handleInputChange}
             />
-            {/* <p className="flex items-center gap-3 mt-3 ml-3">
-              <input
-                type="checkbox"
-                name="check"
-                id="check"
-                className="h-3 w-3"
-                style={{ accentColor: "black" }}
-              />
-              you agree to the{" "}
-              <span className="text-amber-500">Terms of Service</span> and{" "}
-              <span className="text-amber-500">Privacy Policy</span>
-            </p> */}
             <button
-              className="w-full h-14 mt-4 rounded-xl bg-black text-white font-semibold relative"
+              className="w-full h-14 mt-8 sm:mt-4 rounded-xl bg-black text-white font-semibold relative"
               type="submit"
+              disabled={loading}
             >
               {isLogin ? "Log In" : "Sign Up"}
             </button>
-            <p className="text-center text-md font-normal text-black mt-3">
-              {isLogin ? (
-                <>
-                  Don't have an account?{" "}
-                  <span
-                    onClick={() => setIsLogin(false)}
-                    className="text-amber-500 hover:text-green-600 font-semibold cursor-pointer"
-                  >
-                    Sign Up
-                  </span>
-                </>
-              ) : (
-                <>
-                  Already have an account?{" "}
-                  <span
-                    onClick={() => setIsLogin(true)}
-                    className="text-amber-500 hover:text-green-600 font-semibold cursor-pointer"
-                  >
-                    Log In
-                  </span>
-                </>
-              )}
-            </p>
           </form>
         </div>
-        <div className="h-full w-1/2 bg-white p-2">
+
+        {/* Image Section */}
+        <div className="h-full w-full sm:w-1/2 bg-white p-2 sm:p-5">
           <img
             src="https://cdn.dribbble.com/userupload/12474394/file/original-f302b712afeab2efe8b2ac76d999476d.png?resize=1200x900&vertical=center"
-            className="h-full w-full object-cover rounded-lg"
-            alt=""
+            className="h-full w-full object-cover rounded-lg hidden sm:block"
+            alt="Background"
           />
         </div>
       </div>
