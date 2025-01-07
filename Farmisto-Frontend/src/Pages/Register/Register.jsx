@@ -5,6 +5,7 @@ import { PuffLoader } from "react-spinners";
 import { Modal, Button } from "rsuite";
 import { useNavigate } from "react-router-dom";
 import { FcGoogle } from "react-icons/fc";
+import axios from "axios";
 
 const Register = () => {
   const navigate = useNavigate();
@@ -50,26 +51,39 @@ const Register = () => {
     }, 3000);
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
 
-    setTimeout(() => {
-      const formData = {
-        name: nameRef.current.value,
-        email: emailRef.current.value,
-        password: passwordRef.current.value,
-        location: locationRef.current,
-      };
+    const formData = {
+      userName: nameRef.current.value,
+      email: emailRef.current.value,
+      password: passwordRef.current.value,
+      userLocation: locationRef.current,
+    };
 
-      console.log("Form Data: ", formData);
+    console.log("Form Data: ", formData);
 
-      if (isLogin) {
-        console.log("Logging in", formData);
-      } else {
-        console.log("Signing up", formData);
-        // Send formData to the backend
+    try {
+      const response = await axios.post(
+        `http://localhost:4000/user/${isLogin ? "login" : "register"}`,
+        formData
+      );
+      console.log("Response: ", response.data);
+      if (response.status === 200) {
+        nameRef.current.value = "";
+        emailRef.current.value = "";
+        passwordRef.current.value = "";
+        locationRef.current = null;
       }
+    } catch (error) {
+      console.error(
+        `Error while ${isLogin ? "Loggin In" : "Registering"} !`,
+        error
+      );
+    }
+
+    setTimeout(() => {
       setLoading(false);
     }, 2000);
   };

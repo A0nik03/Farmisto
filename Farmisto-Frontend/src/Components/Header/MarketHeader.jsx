@@ -4,7 +4,7 @@ import { FaArrowDownLong, FaLeaf } from "react-icons/fa6";
 
 const MarketHeader = () => {
   return (
-    <div className="w-full h-screen p-5 bg-zinc-100">
+    <div className="w-full h-screen p-5 bg-zinc-100 ">
       <div className="w-full h-full flex flex-row justify-between">
         
         <div className="relative w-[40%] h-full flex flex-col justify-center items-center">

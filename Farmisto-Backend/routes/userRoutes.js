@@ -1,8 +1,9 @@
 const express = require('express');
-const {FarmerRegister , Loginfarmer} = require('../controllers/FarmerController');
+const { UserRegister, UserLogin } = require('../controllers/UserController');
+
 const router = express.Router();
 
-router.post('/register', FarmerRegister);
-router.post('/login', Loginfarmer);
+router.post('/register', UserRegister);
+router.post('/login', UserLogin);
 
 module.exports = router;
