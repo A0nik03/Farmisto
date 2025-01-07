@@ -19,23 +19,15 @@ const FarmerSchema = new mongoose.Schema({
   },
   farmerAddress: {
     type: String,
-    required: true,
   },
   farmerCity: {
     type: String,
-    required: true,
   },
-  farmerState: {
+  farmerStateZip: {
     type: String,
-    required: true,
   },
   farmerCountry: {
     type: String,
-    required: true,
-  },
-  farmerZip: {
-    type: Number,
-    required: true,
   },
   farmerPassword: {
     type: String,
@@ -45,7 +37,7 @@ const FarmerSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
-  farmerlocation: {
+  farmerLocation: {
     latitude: {
       type: Number,
     },

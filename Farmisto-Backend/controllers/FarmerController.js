@@ -1,19 +1,15 @@
 const { hashPassword, comparePassword } = require("../middleware/hashing");
 const Farmer = require("../models/Farmer");
+const { fetchLocation } = require("./GeoController");
 
 const FarmerRegister = async (req, res) => {
   const {
     farmerName,
     farmerEmail,
     farmerPhone,
-    farmerCity,
-    farmerState,
-    farmerAddress,
-    farmerCountry,
-    farmerZip,
     farmerPassword,
     farmerCategory,
-    farmerlocation
+    farmerLocation
   } = req.body;
 
   try {
@@ -21,12 +17,7 @@ const FarmerRegister = async (req, res) => {
       !farmerName ||
       !farmerEmail ||
       !farmerPhone ||
-      !farmerCity ||
       !farmerCategory ||
-      !farmerState ||
-      !farmerAddress ||
-      !farmerCountry ||
-      !farmerZip ||
       !farmerPassword
     ) {
       return res.status(400).json({ msg: "All fields are required" });
@@ -38,18 +29,25 @@ const FarmerRegister = async (req, res) => {
 
     const hashedPassword = await hashPassword(farmerPassword);
 
+    const GeoLocate = await fetchLocation(farmerLocation.latitude, farmerLocation.longitude);
+    const addressArray = GeoLocate[0].formatted_address.split(",").map(item => item.trim());
+    const len = addressArray.length;
+    const geoCity = addressArray[len - 3];
+    const geoStateZip = addressArray[len - 2];
+    const geoCountry = addressArray[len - 1];
+    const geoAddress =  GeoLocate[0].formatted_address;
+
     const farmer = await Farmer.create({
       farmerName: farmerName,
       farmerEmail: farmerEmail,
       farmerPhone: farmerPhone,
-      farmerCity: farmerCity,
-      farmerState: farmerState,
-      farmerAddress: farmerAddress,
-      farmerCountry: farmerCountry,
-      farmerZip: farmerZip,
+      farmerCity: geoCity,
+      farmerStateZip: geoStateZip,
+      farmerAddress: geoAddress,
+      farmerCountry: geoCountry,
       farmerPassword: hashedPassword,
       farmerCategory: farmerCategory,
-      farmerlocation: farmerlocation
+      farmerLocation: farmerLocation
     });
 
     res.status(200).json({ message: "farmer is register sucessfully ",farmer});
