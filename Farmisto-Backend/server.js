@@ -2,8 +2,10 @@ const express = require('express');
 const app = express();
 const dotenv = require('dotenv');
 const cors = require('cors');
-const FarmerRoutes = require('./routes/UserRoutes');
+const FarmerRoutes = require('./routes/FarmerRoutes');
 const UserRoutes = require('./routes/UserRoutes');
+const MarketRoutes = require('./routes/MarketRoutes');
+
 const MongooseConnect = require('./config/Db');
 const {fetchLocation, fetchNearbyFarmers }= require('./controllers/GeoController');
 dotenv.config();
@@ -15,6 +17,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
 app.use('/farmer', FarmerRoutes);
+app.use('/farmerDash',MarketRoutes);
 app.use('/user', UserRoutes);
 app.use('/api/geocode',fetchLocation)
 app.use('/api/geoNearby',fetchNearbyFarmers)

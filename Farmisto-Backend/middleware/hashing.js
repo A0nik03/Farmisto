@@ -1,5 +1,4 @@
 const bcrypt = require('bcrypt');
-const { GenerateToken } = require('../authentication/TokenAuth');
 
 const hashPassword = async (password) => {
     try {
@@ -11,12 +10,11 @@ const hashPassword = async (password) => {
     }
 }
 
-const comparePassword = async (farmer, password, hashedPassword) => {
+const comparePassword = async (password, hashedPassword) => {
     try {
         const isMatch = await bcrypt.compare(password, hashedPassword);
         if (isMatch) {
-            const token = GenerateToken(farmer);
-            return token;
+            return true;
         } else {
             return new Error("Password does not match");
         }
