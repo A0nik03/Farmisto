@@ -34,7 +34,7 @@ const cartSchema = new mongoose.Schema(
       required: true,
       default: 0,
     },
-    discountedPrice: {
+    discountPrice: {
       type: Number,
       required: true,
       default: 0,

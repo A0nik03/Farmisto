@@ -7,13 +7,19 @@ const UserRoutes = require('./routes/UserRoutes');
 const MarketRoutes = require('./routes/MarketRoutes');
 const CartRoutes = require('./routes/CartRoutes');
 const {fetchLocation, fetchNearbyFarmers }= require('./controllers/GeoController');
-
+const connectCloudinary=require("./config/cloudinary");
 const MongooseConnect = require('./config/Db');
+const fileUpload = require('express-fileupload');
 dotenv.config();
 
+connectCloudinary();
 MongooseConnect();
 
 app.use(cors())
+app.use(fileUpload({
+    useTempFiles : true,
+    tempFileDir : '/tmp/'
+}))
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 

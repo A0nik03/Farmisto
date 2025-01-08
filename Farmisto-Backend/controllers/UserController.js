@@ -44,16 +44,12 @@ const UserLogin = async (req, res) => {
       return res.status(400).json({ msg: "User not exists" });
     }
 
-    const isPasswordMatched = await comparePassword(
-      UserInDB,
-      password,
-      isUserAlreadyRegistered.password
-    );
+    const isPasswordMatched = await comparePassword(password,UserInDB.password);
 
     if (!isPasswordMatched) {
       return res.status(400).json({ msg: "Invalid credentials" });
     }
-    const token = GenerateToken(isUserAlreadyRegistered);
+    const token = GenerateToken(UserInDB);
     res.cookie("token", token);
     return res
       .status(200)
