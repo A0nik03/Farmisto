@@ -2,13 +2,20 @@ const Cart = require("../models/Cart");
 
 const getCartDetail = async (req, res) => {
   try {
-    const cartItem = await Cart.find({});
+    const cartItems = await Cart.find({});
+    if (!cartItems.length) {
+      return res.status(200).json({
+        message: "Cart is empty",
+        data: [],
+        success: true,
+      });
+    }
     let grandTotal = 0;
     let totalSavings = 0;
-    const allItemsOfCart = cartItem.map((item) => {
-      const discountedPrice = item.discountedPrice;
+    const allItemsOfCart = cartItems.map((item) => {
+      const discountedPrice = item?.discountedPrice;
       const savings = item.savingPrice;
-      const totalCost = item.totalItemCost;
+      const totalCost = item?.totalItemCost;
       grandTotal += totalCost;
       totalSavings += savings;
       return {
