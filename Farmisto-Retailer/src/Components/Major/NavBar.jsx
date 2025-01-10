@@ -7,7 +7,6 @@ import { Link } from "react-router-dom";
 const NavBar = () => {
   const tabs = [
     { label: "Home", path: "/" },
-    { label: "Dashboard", path: "/Dashboard" },
     { label: "Nearby Farmers", path: "/farmers" },
     { label: "About", path: "/about" },
     { label: "Contact", path: "/contact" }
@@ -24,14 +23,9 @@ const NavBar = () => {
         ))}
       </div>
       <div className="flex gap-7">
-        <div className="h-12 px-1 flex items-center justify-center gap-2 bg-[#0d331c] text-white rounded-full">
-          <div className="h-10 w-10 flex items-center justify-center bg-white rounded-full">
-            <FaUser size={18} color="#0d331c"/>
-          </div>
-          <div className="h-10 w-10 flex items-center justify-center bg-white rounded-full">
-            <FaCartShopping size={18} color="#0d331c"/>
-          </div>
-        </div>
+        <Link to={'/Dashboard'} className="h-12 px-6 flex items-center justify-center gap-2 bg-[#0d331c] text-white rounded-full">
+            <p>Dashboard</p>
+        </Link>
       </div>
     </div>
   );

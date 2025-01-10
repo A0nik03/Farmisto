@@ -4,24 +4,48 @@ import SideNav from "./sidenav";
 const AddItem = () => {
   const [currentPage, setCurrentPage] = useState(1);
 
-  const productsPerPage = 8; // Number of products displayed per page
+  const productsPerPage = 8;
 
   const productData = [
-    { image: "https://media.istockphoto.com/id/174075608/photo/potatoes.jpg?s=612x612&w=0&k=20&c=3LcXA2-2qu9vFOagRZJ_WrXcUUllHyc8mDFJlvyaKiw=", name: "Tomato", quantity: "20 Kg", rate: "500 Rs" },
-    { image: "https://via.placeholder.com/50", name: "Potato", quantity: "30 Kg", rate: "750 Rs" },
-    { image: "https://via.placeholder.com/50", name: "Carrot", quantity: "15 Kg", rate: "450 Rs" },
-    { image: "https://via.placeholder.com/50", name: "Onion", quantity: "25 Kg", rate: "600 Rs" },
-    { image: "https://via.placeholder.com/50", name: "Apple", quantity: "10 Kg", rate: "1000 Rs" },
-    { image: "https://via.placeholder.com/50", name: "Banana", quantity: "12 Kg", rate: "400 Rs" },
-    { image: "https://via.placeholder.com/50", name: "Grapes", quantity: "8 Kg", rate: "800 Rs" },
-    { image: "https://via.placeholder.com/50", name: "Orange", quantity: "18 Kg", rate: "900 Rs" },
-    { image: "https://via.placeholder.com/50", name: "Cucumber", quantity: "22 Kg", rate: "700 Rs" },
-    { image: "https://via.placeholder.com/50", name: "Spinach", quantity: "5 Kg", rate: "300 Rs" },
+    {
+      image:
+        "https://media.istockphoto.com/id/174075608/photo/potatoes.jpg?s=612x612&w=0&k=20&c=3LcXA2-2qu9vFOagRZJ_WrXcUUllHyc8mDFJlvyaKiw=",
+      name: "Tomato",
+      quantity: "20 Kg",
+      rate: "500 Rs",
+    },
+    {
+      image:
+        "https://media.istockphoto.com/id/174075608/photo/potatoes.jpg?s=612x612&w=0&k=20&c=3LcXA2-2qu9vFOagRZJ_WrXcUUllHyc8mDFJlvyaKiw=",
+      name: "Tomato",
+      quantity: "20 Kg",
+      rate: "500 Rs",
+    },
+    {
+      image:
+        "https://media.istockphoto.com/id/174075608/photo/potatoes.jpg?s=612x612&w=0&k=20&c=3LcXA2-2qu9vFOagRZJ_WrXcUUllHyc8mDFJlvyaKiw=",
+      name: "Tomato",
+      quantity: "20 Kg",
+      rate: "500 Rs",
+    },
+    {
+      image:
+        "https://media.istockphoto.com/id/174075608/photo/potatoes.jpg?s=612x612&w=0&k=20&c=3LcXA2-2qu9vFOagRZJ_WrXcUUllHyc8mDFJlvyaKiw=",
+      name: "Tomato",
+      quantity: "20 Kg",
+      rate: "500 Rs",
+    },
+    {
+      image:
+        "https://media.istockphoto.com/id/174075608/photo/potatoes.jpg?s=612x612&w=0&k=20&c=3LcXA2-2qu9vFOagRZJ_WrXcUUllHyc8mDFJlvyaKiw=",
+      name: "Tomato",
+      quantity: "20 Kg",
+      rate: "500 Rs",
+    },
+    // Additional sample data...
   ];
 
   const totalPages = Math.ceil(productData.length / productsPerPage);
-
-  // Get the products for the current page
   const currentProducts = productData.slice(
     (currentPage - 1) * productsPerPage,
     currentPage * productsPerPage
@@ -41,136 +65,130 @@ const AddItem = () => {
 
   return (
     <div className="flex h-screen bg-gray-100">
-      <SideNav className="fixed h-full top-0 left-0 shadow-lg" />
-      <div className="w-full h-screen p-6 overflow-y-auto">
-        <h2 className="text-4xl font-serif mb-8">ADD-ITEM</h2>
-        <div className="w-full h-[70%] flex gap-6">
-          {/* File Upload Section */}
-          <div className="w-[30%] h-full border-dashed border-2 border-black rounded-lg flex flex-col items-center justify-center">
-            <div className="text-gray-600 mb-2">Drop files to upload</div>
-            <div className="text-blue-600 underline cursor-pointer">or browse</div>
-          </div>
-
-          {/* Details Section */}
-          <div className="w-[70%] h-full bg-yellow-100 px-6 pt-3 rounded-lg shadow-lg">
-            <h2 className="text-3xl font-serif mb-4">Add Details</h2>
-            <div className="mb-2">
-              <label className="block text-xl font-medium mb-2">Product Name</label>
-              <input
-                type="text"
-                placeholder="Enter the product name"
-                className="w-full p-2 border border-gray-400 rounded-md"
-              />
-            </div>
-            <div className="mb-2">
-              <label className="block text-xl font-medium mb-2">Category</label>
-              <select className="w-full p-2 border border-gray-400 rounded-md">
-                <option>Vegetables</option>
-                <option>Fruits</option>
-                <option>Pulses</option>
-                <option>Dry Fruits</option>
-              </select>
-            </div>
-            <div className="flex gap-4 mb-2">
-              <div className="flex-1">
-                <label className="block text-xl font-medium mb-2">Quantity</label>
-                <input
-                  type="number"
-                  placeholder="Enter quantity"
-                  className="w-full p-2 border border-gray-400 rounded-md"
-                />
-              </div>
-              <div className="flex-1">
-                <label className="block text-xl font-medium mb-2">Unit</label>
-                <select className="w-full p-2 border border-gray-400 rounded-md">
-                  <option>/Kilogram</option>
-                  <option>/Gram</option>
-                </select>
-              </div>
-              <div className="flex-1">
-                <label className="block text-xl font-medium mb-2">Price</label>
-                <input
-                  type="number"
-                  placeholder="Enter price"
-                  className="w-full p-2 border border-gray-400 rounded-md"
-                />
-              </div>
-            </div>
-            {/* Description */}
-            <div className="flex flex-col h-[110px] rounded-md">
-              <label className="text-xl font-medium mb-2">Description</label>
-              <textarea
-                rows="5"
-                placeholder="Enter a description of the product"
-                className="w-full h-full resize-none overflow-y-auto p-2 border border-gray-300 rounded-md"
-              />
-            </div>
-            {/* Buttons */}
-            <div className="flex gap-4">
-              <button className="w-24 h-8 bg-green-500 text-white rounded-md mt-4">
-                Add Item
-              </button>
-              <button className="w-24 h-8 bg-red-600 text-white rounded-md mt-4">
-                Delete
+      <SideNav />
+      <div className="h-full w-full flex flex-col overflow-y-auto">
+        <header className="flex justify-between items-center bg-white shadow-sm mb-3 p-5">
+          <h1 className="text-3xl font-bold text-gray-800">Add New Item</h1>
+        </header>
+        <div className="w-full h-full  p-6">
+          <div className="w-full grid grid-cols-1 lg:grid-cols-3 gap-6">
+            {/* File Upload Section */}
+            <div className="col-span-1 bg-white p-6 rounded-3xl shadow-md flex flex-col items-center justify-center">
+              <p className="text-gray-500 mb-2">Drop files to upload</p>
+              <button className="bg-[#03C9A9] text-white px-4 py-2 rounded-full">
+                Browse
               </button>
             </div>
-          </div>
-        </div>
 
-        {/* Product Table */}
-        <div className="mt-6">
-          <h2 className="text-3xl font-serif mb-4">Product List</h2>
-          <table className="w-full text-left border-collapse bg-white shadow-lg rounded-lg">
-            <thead>
-              <tr>
-                {["Image", "Product Name", "Total Quantity", "Total Rate"].map(
-                  (header, index) => (
-                    <th
-                      key={index}
-                      className="px-4 py-2 text-lg font-medium text-black border-b"
-                    >
-                      {header}
-                    </th>
-                  )
-                )}
-              </tr>
-            </thead>
-            <tbody>
-              {currentProducts.map((product, index) => (
-                <tr key={index} className="odd:bg-zinc-100">
-                  <td className="px-4 py-2 border-b">
-                    <img
-                      src={product.image}
-                      alt={product.name}
-                      className="w-12 h-12 rounded-md object-cover"
-                    />
-                  </td>
-                  <td className="px-4 py-2 border-b">{product.name}</td>
-                  <td className="px-4 py-2 border-b">{product.quantity}</td>
-                  <td className="px-4 py-2 border-b">{product.rate}</td>
+            {/* Details Section */}
+            <div className="col-span-2 bg-white p-8 rounded-3xl shadow-md">
+              <h2 className="text-2xl font-bold text-gray-800 mb-6">
+                Product Details
+              </h2>
+              <div className="space-y-4">
+                <div>
+                  <input
+                    type="text"
+                    placeholder="Product Name"
+                    className="w-full p-3 border border-gray-300 rounded-full"
+                  />
+                </div>
+                <div>
+                  <select className="w-full p-3 border border-gray-300 rounded-full">
+                    <option>Category</option>
+                    <option>Vegetables</option>
+                    <option>Fruits</option>
+                  </select>
+                </div>
+                <div className="grid grid-cols-3 gap-4">
+                  <input
+                    type="number"
+                    placeholder="Quantity"
+                    className="p-3 border border-gray-300 rounded-full"
+                  />
+                  <select className="p-3 border border-gray-300 rounded-full">
+                    <option>/Kg</option>
+                  </select>
+                  <input
+                    type="number"
+                    placeholder="Price"
+                    className="p-3 border border-gray-300 rounded-full"
+                  />
+                </div>
+                <textarea
+                  rows="4"
+                  placeholder="Description"
+                  className="w-full p-3 border border-gray-300 rounded-3xl"
+                />
+                <div className="flex gap-4">
+                  <button className="w-32 bg-[#03C9A9] text-white rounded-full">
+                    Add Item
+                  </button>
+                  <button className="w-32 bg-red-500 text-white rounded-full">
+                    Delete
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Product List */}
+          <div className="mt-10 bg-white p-8 rounded-3xl shadow-md">
+            <h3 className="text-2xl font-bold text-gray-800 mb-6">
+              Product List
+            </h3>
+            <table className="w-full text-left border-collapse">
+              <thead>
+                <tr>
+                  <th className="px-6 py-4 text-lg font-semibold text-gray-700 border-b">
+                    Image
+                  </th>
+                  <th className="px-6 py-4 text-lg font-semibold text-gray-700 border-b">
+                    Name
+                  </th>
+                  <th className="px-6 py-4 text-lg font-semibold text-gray-700 border-b">
+                    Quantity
+                  </th>
+                  <th className="px-6 py-4 text-lg font-semibold text-gray-700 border-b">
+                    Rate
+                  </th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
-          <div className="flex justify-between mt-4">
-            <button
-              onClick={handlePreviousPage}
-              disabled={currentPage === 1}
-              className={`px-4 py-2 bg-blue-500 text-white rounded-md ${
-                currentPage === 1 ? "opacity-50 cursor-not-allowed" : ""
-              }`}
-            >
-              Previous
-            </button>
-            <button
-              onClick={handleNextPage}
-              disabled={currentPage === totalPages}
-              className={`px-4 py-2 bg-blue-500 text-white rounded-md ${
-                currentPage === totalPages ? "opacity-50 cursor-not-allowed" : ""
-              }`}
-            >
-              Next
-            </button>
+              </thead>
+              <tbody>
+                {currentProducts.map((product, index) => (
+                  <tr key={index} className="hover:bg-gray-50">
+                    <td className="px-6 py-4 border-b">
+                      <img
+                        src={product.image}
+                        alt={product.name}
+                        className="w-16 h-16 rounded-lg"
+                      />
+                    </td>
+                    <td className="px-6 py-4 border-b">{product.name}</td>
+                    <td className="px-6 py-4 border-b">{product.quantity}</td>
+                    <td className="px-6 py-4 border-b">{product.rate}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+            <div className="flex justify-between mt-6">
+              <button
+                onClick={handlePreviousPage}
+                className={`px-4 py-2 bg-gray-300 text-gray-700 rounded-full ${
+                  currentPage === 1 ? "opacity-50" : ""
+                }`}
+              >
+                Previous
+              </button>
+              <button
+                onClick={handleNextPage}
+                className={`px-4 py-2 bg-[#03C9A9] text-white rounded-full ${
+                  currentPage === totalPages ? "opacity-50" : ""
+                }`}
+              >
+                Next
+              </button>
+            </div>
           </div>
         </div>
       </div>
@@ -179,6 +197,3 @@ const AddItem = () => {
 };
 
 export default AddItem;
-
-
-

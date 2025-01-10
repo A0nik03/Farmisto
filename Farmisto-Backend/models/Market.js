@@ -19,6 +19,11 @@ const marketSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
+    itemType:{
+      type: String,
+      required: true,
+      default:"All"
+    },
     seller: {
       type: mongoose.Schema.Types.ObjectId,
       required: true,

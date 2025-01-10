@@ -3,7 +3,6 @@ const { AddItem, DeleteItem, GetItems } = require("../controllers/MarketControll
 const Authentication = require("../middleware/Authentication");
 const multer = require("multer");
 const fs = require("fs");
-
 const router = express.Router();
 
 const storage = multer.diskStorage({

@@ -6,14 +6,17 @@ import {
   AiOutlineSchedule,
   AiOutlineMessage,
   AiOutlineSetting,
+  AiOutlineDash,
 } from "react-icons/ai";
+import { MdSpaceDashboard } from "react-icons/md";
 import { BsFillTreeFill, BsCreditCard } from "react-icons/bs";
 
 
 
 const SideNav = () => {
   const routes = [
-    { path: "/dashboard", name: "Dashboard", icon: AiOutlineHome },
+    { path: "/", name: "Home", icon: AiOutlineHome },
+    { path: "/dashboard", name: "Dashboard", icon: MdSpaceDashboard },
     { path : "/Additem", name: "Add-item", icon: AiOutlineSchedule },
     { path: "/Orders", name: "Orders", icon: BsFillTreeFill },
     { path: "/Message", name: "Messages", icon: AiOutlineMessage },
@@ -33,8 +36,8 @@ const SideNav = () => {
           <NavLink
             to={route.path}
             key={key}
-            className={`flex items-center p-3 rounded-md font-mono font-medium
-                hover:bg-green-500 hover:text-white transition-colors duration-100
+            className={`flex items-center p-3 font-mono font-medium
+                hover:bg-[#03C9A9] hover:text-white transition-colors duration-100
              `}
           >
             <route.icon
