@@ -1,5 +1,6 @@
 import React from "react";
 import { NavLink } from "react-router-dom";
+
 import {
   AiOutlineHome,
   AiOutlineSchedule,
@@ -8,12 +9,14 @@ import {
 } from "react-icons/ai";
 import { BsFillTreeFill, BsCreditCard } from "react-icons/bs";
 
+
+
 const SideNav = () => {
   const routes = [
     { path: "/dashboard", name: "Dashboard", icon: AiOutlineHome },
-    { path: "/schedule", name: "Schedule", icon: AiOutlineSchedule },
-    { path: "/plants", name: "Plants", icon: BsFillTreeFill },
-    { path: "/messages", name: "Messages", icon: AiOutlineMessage },
+    { path : "/Additem", name: "Add-item", icon: AiOutlineSchedule },
+    { path: "/Orders", name: "Orders", icon: BsFillTreeFill },
+    { path: "/Message", name: "Messages", icon: AiOutlineMessage },
     { path: "/payments", name: "Payments", icon: BsCreditCard },
     { path: "/settings", name: "Settings", icon: AiOutlineSetting },
   ];
@@ -23,7 +26,7 @@ const SideNav = () => {
   }
 
   const links = (
-    <div className="space-y-4 mt-8">
+    <div className="space-y-4 mt-8 ">
       {routes.map((route, key) => {
         const isActive = activeRoute(route.path);
         return (
@@ -47,7 +50,7 @@ const SideNav = () => {
   );
 
   return (
-    <div className="w-[20%] flex flex-col items-center bg-zinc-100  h-full shadow-lg">
+    <div className="w-[20%] h-full flex flex-col items-center bg-white shadow-2xl">
       <div className="flex-grow w-full">
         <p className="h-full w-full">{links}</p>
       </div>

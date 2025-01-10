@@ -16,6 +16,8 @@ import {
   Tooltip,
   Legend,
 } from "chart.js";
+import { BsPerson, BsPersonCircle } from "react-icons/bs";
+import { Link } from "react-router-dom";
 
 // Register Chart.js components
 ChartJS.register(
@@ -47,12 +49,12 @@ const Maindash = () => {
 
   // Chart.js Data for Profit
   const chartData = {
-    labels: orderedWeeks, // Week names
+    labels: orderedWeeks,
     datasets: [
       {
         label: "Profit Rate (%)",
-        data: orderedWeeks.map((week) => profitData[week].profit), // Extracting profit data
-        backgroundColor: "light-orange",
+        data: orderedWeeks.map((week) => profitData[week].profit),
+        backgroundColor: "rgba(75, 192, 192, 0.6)",
         borderColor: "rgba(75, 192, 192, 1)",
         borderWidth: 1,
       },
@@ -60,61 +62,62 @@ const Maindash = () => {
   };
 
   return (
-    <div className="w-full h-full bg-gray-300 p-6">
-      <header className="flex justify-between items-center">
+    <div className="w-full h-full bg-gray-100">
+      {/* Header */}
+      <header className="flex justify-between items-center bg-white p-6 shadow-sm">
         {/* Search Bar */}
-        <div className="relative w-1/3">
+        <div className="w-1/3 flex gap-2 items-center border border-gray-300 rounded-xl pl-2">
           <AiOutlineSearch
-            className="absolute top-2.5 left-3 text-gray-400"
-            size={20}
+            className=" text-gray-400"
+            size={30}
           />
           <input
             type="text"
-            placeholder="Search plant here"
-            className="w-full pl-10 pr-4 py-2 rounded-full border border-gray-300 bg-white shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+            placeholder="Search"
+            className="w-full p-3 bg-transparent text-xl font-normal outline-none"
           />
         </div>
+        {/* Notifications and Profile */}
         <div className="flex items-center gap-6">
           <div className="relative">
-            <AiOutlineBell size={24} className="text-gray-600" />
+            <AiOutlineBell size={30} className="text-gray-600" />
             <span className="absolute top-0 right-0 bg-orange-500 text-white text-xs rounded-full w-4 h-4 flex items-center justify-center">
               2
             </span>
           </div>
-          <div className="w-10 h-10 rounded-full bg-red-200 flex items-center justify-center">
-            <span className="text-lg font-bold text-red-800">A</span>
-          </div>
+          <Link to = {'/Register'} className="w-12 h-12 rounded-full flex items-center justify-center">
+            <BsPersonCircle size={36} className="text-gray-600 hover:scale-[1.05] hover:cursor-pointer" />
+          </Link>
         </div>
       </header>
 
-      <div className="text-xl mt-4">
-        hello <br />
-        <span className="text-4xl ml-7">farmer name</span>
+      {/* Welcome Section */}
+      <div className="p-6">
+        <h1 className="text-xl">Hello,</h1>
+        <h2 className="text-4xl ml-2 font-bold text-green-700">Farmer Name</h2>
       </div>
 
-      <div className="w-full h-[40%] mt-5 p-2 flex gap-4">
+      {/* Main Dashboard */}
+      <div className="w-full p-6 flex flex-col lg:flex-row gap-6">
         {/* Left Section */}
-        <div className="w-[65%] h-full bg-white p-6 rounded-3xl flex flex-col justify-between">
-          <div className="flex justify-between items-center">
-            <h2 className="text-4xl font-bold">Farmer Profit</h2>
-            {/* Dropdown */}
+        <div className="w-full lg:w-2/3 bg-white p-6 rounded-3xl shadow-md">
+          <div className="flex justify-between items-center mb-6">
+            <h2 className="text-2xl font-bold text-gray-800">Farmer Profit</h2>
             <select
               value={selectedWeek}
               onChange={(e) => setSelectedWeek(e.target.value)}
-              className="w-36 h-10 bg-green-400 text-white rounded-full px-4 text-center focus:outline-none focus:ring-2 focus:ring-green-500"
+              className="w-36 h-10 bg-green-500 text-white rounded-full px-4 text-center focus:outline-none focus:ring-2 focus:ring-green-700"
             >
               <option value="week1">Week 1</option>
               <option value="week2">Week 2</option>
               <option value="week3">Week 3</option>
             </select>
           </div>
-
-          {/* Dynamic Content in Row */}
-          <div className="mt-5 flex items-center gap-4 overflow-x-auto">
+          <div className="flex gap-4 overflow-x-auto">
             {orderedWeeks.map((week) => (
               <div
                 key={week}
-                className={`p-4 rounded-lg min-w-[200px] ${
+                className={`p-4 rounded-lg min-w-[200px] shadow-md ${
                   week === selectedWeek
                     ? "bg-green-500 text-white font-bold"
                     : "bg-gray-100 text-gray-700"
@@ -127,31 +130,33 @@ const Maindash = () => {
         </div>
 
         {/* Right Section */}
-        <div className="w-[35%] h-full bg-gray-200 p-6 rounded-3xl gap-3 flex flex-col">
-          <div className="w-full flex items-center h-20 rounded-full bg-white justify-between">
-            <div className="text-black text-xl justify-center font-bold ml-8">
+        <div className="w-full lg:w-1/3 bg-gray-50 p-6 rounded-3xl shadow-md">
+          <div className="mb-4 flex items-center justify-between p-4 bg-white rounded-full shadow-sm">
+            <span className="text-lg font-bold text-gray-800">
               Profit: {currentData.profit}%
-            </div>
-            <AiOutlineArrowUp size={24} className="text-green-300 mr-5" />
+            </span>
+            <AiOutlineArrowUp size={24} className="text-green-500" />
           </div>
-          <div className=" flex items-center w-full rounded-full h-20 bg-white justify-between">
-            <div className="text-black text-xl font-bold ml-8">
+          <div className="mb-4 flex items-center justify-between p-4 bg-white rounded-full shadow-sm">
+            <span className="text-lg font-bold text-gray-800">
               Loss: {currentData.loss}%
-            </div>
-            <AiOutlineArrowDown size={24} className="text-red-300 mr-5" />
+            </span>
+            <AiOutlineArrowDown size={24} className="text-red-500" />
           </div>
-          <div className="flex items-center rounded-full w-full h-20 bg-white justify-between">
-            <div className="text-black text-xl font-bold ml-8">
+          <div className="flex items-center justify-between p-4 bg-white rounded-full shadow-sm">
+            <span className="text-lg font-bold text-gray-800">
               Average: {currentData.average}%
-            </div>
-            <AiOutlineInfoCircle size={24} className="text-yellow-300 mr-5" />
+            </span>
+            <AiOutlineInfoCircle size={24} className="text-yellow-500" />
           </div>
-
-          {/* Bar Chart for Profit */}
         </div>
       </div>
-      <div className="h-[40%] w-full ">
-        <Bar data={chartData} />
+
+      {/* Bar Chart */}
+      <div className="p-6">
+        <div className="bg-white p-6 rounded-3xl shadow-md">
+          <Bar data={chartData} />
+        </div>
       </div>
     </div>
   );
