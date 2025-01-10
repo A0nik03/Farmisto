@@ -3,9 +3,13 @@ const dotenv = require("dotenv");
 dotenv.config();
 
 // Generate a JWT token
-const GenerateToken = (farmer) => {
+const GenerateToken = (person) => {
   const token = JWT.sign(
-    { id: farmer._id, email: farmer.farmerEmail },
+    {
+      id: person._id,
+      email: person.farmerEmail || person.email,
+      name: person.userName || person.farmerName,
+    },
     process.env.SECRET_KEY,
     { expiresIn: "3d" }
   );
@@ -16,14 +20,14 @@ const GenerateToken = (farmer) => {
 const verifyToken = (token) => {
   if (!token || typeof token !== "string") {
     console.error("Invalid token format");
-    return null;
+    return { success: false, error: "Invalid token format" };
   }
   try {
-    const farmer = JWT.verify(token, process.env.SECRET_KEY);
-    return farmer;
+    const person = JWT.verify(token, process.env.SECRET_KEY);
+    return person;;
   } catch (err) {
     console.error("Error verifying token:", err.message);
-    return null;
+    return { success: false, error: err.message };
   }
 };
 

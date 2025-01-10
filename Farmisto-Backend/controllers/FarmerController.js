@@ -72,7 +72,6 @@ const FarmerRegister = async (req, res) => {
 
 const FarmerLogin = async (req, res) => {
   const { farmerEmail, farmerPassword } = req.body;
-  console.log(req.body)
   if (!farmerEmail || !farmerPassword) {
     return res.status(400).json({ msg: "All fields are required" });
   }
@@ -91,12 +90,8 @@ const FarmerLogin = async (req, res) => {
     }
 
     const token = GenerateToken(farmer);
-    res.cookie('token', token,{
-      httpOnly: true,
-      secure: true,
-      sameSite: 'none'
-    });
-    return res.status(200).json({ success: "Login Successful", token });
+    res.setHeader("Authorization", `Bearer ${token}`);
+    return res.status(200).json({ msg: "Login successful", token });
   } catch (err) {
     console.error("Error in farmer login:", err);
     return res.status(500).json({ msg: "Server Error" });

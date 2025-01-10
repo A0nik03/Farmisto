@@ -2,9 +2,10 @@ const express = require("express");
 const User = require("../models/User");
 const { GenerateToken } = require("../middleware/TokenAuth");
 const { comparePassword, hashPassword } = require("../middleware/Hashing");
+const Cart = require("../models/Cart");
 
 const UserRegister = async (req, res) => {
-  const { userName, email, password,userLocation } = req.body;
+  const { userName, email, password, userLocation } = req.body;
 
   if (!email || !password) {
     res.status(400).json({ msg: "Please enter all fields" });
@@ -21,7 +22,7 @@ const UserRegister = async (req, res) => {
       userName: userName,
       email: email,
       password: HashPassword,
-      userLocation: userLocation
+      userLocation: userLocation,
     });
 
     res.status(200).json({ msg: "User registered successfully", User: user });
@@ -44,23 +45,54 @@ const UserLogin = async (req, res) => {
       return res.status(400).json({ msg: "User not exists" });
     }
 
-    const isPasswordMatched = await comparePassword(password,UserInDB.password);
+    const isPasswordMatched = await comparePassword(
+      password,
+      UserInDB.password
+    );
 
     if (!isPasswordMatched) {
       return res.status(400).json({ msg: "Invalid credentials" });
     }
     const token = GenerateToken(UserInDB);
-    res.cookie("token", token);
-    return res
-      .status(200)
-      .json({ msg: "User logged in successfully", User: UserInDB  });
+    res.setHeader("Authorization", `Bearer ${token}`);
+    return res.status(200).json({ msg: "Login successful", token });
+
   } catch (error) {
     console.error(error);
     return res.status(500).json({ msg: "Internal server error" });
   }
 };
 
+const BuyItem = async (req, res) => {
+  const { itemName, itemPrice, imageUrl, quantity } = req.body;
+  if (!itemName || !itemPrice || !imageUrl || !quantity) {
+    return res.status(400).json({ msg: "Please enter all fields" });
+  }
+  try {
+    const ItemToCart = await Cart.create({
+      itemName: itemName,
+      itemPrice: itemPrice,
+      imageUrl: imageUrl,
+      quantity: quantity,
+      buyer: req.user.id,
+    });
+    return res.status(200).json({
+      msg: "Item added to cart",
+      item: ItemToCart,
+      buyer: {
+        _id: req.user.id,
+        name: req.user.name,
+      },
+    });
+  } catch (error) {
+    return res
+      .status(500)
+      .json({ msg: "Error while adding item to cart", error: error.message });
+  }
+};
+
 module.exports = {
-    UserRegister,
-    UserLogin,
- };
+  UserRegister,
+  UserLogin,
+  BuyItem,
+};

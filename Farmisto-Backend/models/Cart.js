@@ -1,4 +1,5 @@
 const mongoose = require("mongoose");
+
 const cartSchema = new mongoose.Schema(
   {
     itemName: {
@@ -16,47 +17,45 @@ const cartSchema = new mongoose.Schema(
     },
     discount: {
       type: Number,
-      required: true,
       min: 0,
       max: 100,
-    },
-    saving: {
-      type: Number,
-      required: true,
+      default: 0,
     },
     quantity: {
       type: Number,
       required: true,
       min: 1,
     },
-    totalCost: {
-      type: Number,
+    buyer:{
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
       required: true,
-      default: 0,
-    },
-    discountPrice: {
-      type: Number,
-      required: true,
-      default: 0,
-    },
+    }
   },
   {
     toJSON: { virtuals: true },
     toObject: { virtuals: true },
   }
 );
+
 cartSchema.virtual("discountedPrice").get(function () {
-  const result = this.itemPrice - (this.itemPrice * this.discount) / 100;
-  return result;
+  const discountValue = this.discount
+    ? (this.itemPrice * this.discount) / 100
+    : 0;
+  return this.itemPrice - discountValue;
 });
+
 cartSchema.virtual("savingPrice").get(function () {
-  const savings = (this.itemPrice - this.discountedPrice) * this.quantity;
-  return savings;
+  const discountValue = this.discount
+    ? (this.itemPrice * this.discount) / 100
+    : 0;
+  return discountValue * this.quantity;
 });
+
 cartSchema.virtual("totalItemCost").get(function () {
-  const cost = this.discountedPrice * this.quantity;
-  return cost;
+  return this.discountedPrice * this.quantity;
 });
+
 const Cart = mongoose.model("Cart", cartSchema);
+
 module.exports = Cart;
-// item -> name/price/url/discount/saving/quantity

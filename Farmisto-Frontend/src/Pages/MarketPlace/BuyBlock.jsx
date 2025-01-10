@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   FaAppleAlt,
   FaSeedling,
@@ -11,53 +11,14 @@ import {
 } from "react-icons/fa";
 import { BsCart4 } from "react-icons/bs";
 import assets from "../../assets/assets";
+import axios from "axios";
 
-const products = [
-  {
-    id: 1,
-    name: "Tomato",
-    price: 20,
-    category: "Vegetables",
-    image: assets.tomato,
-    backgroundColor: "#DB324D",
-  },
-  {
-    id: 2,
-    name: "Apple",
-    price: 120,
-    category: "Fruits",
-    image: assets.apple,
-    backgroundColor: "#FF495C",
-  },
-  {
-    id: 3,
-    name: "Carrot",
-    price: 40,
-    category: "Vegetables",
-    image: assets.carrot,
-    backgroundColor: "#EF798A",
-  },
-  {
-    id: 4,
-    name: "Almonds",
-    price: 200,
-    category: "Nuts",
-    image: assets.almond,
-    backgroundColor: "#E4B4C2",
-  },
-  {
-    id: 5,
-    name: "Cereal",
-    price: 30,
-    category: "Cereals",
-    image: assets.tomato,
-    backgroundColor: "#E3D7FF",
-  },
-];
+
 
 const BuyBlock = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [cart, setCart] = useState([]);
+  const [products,setProducts] = useState([]);
 
   const sideBarKinds = [
     { name: "Seasonal", icon: <FaSeedling /> },
@@ -73,6 +34,16 @@ const BuyBlock = () => {
     { name: "Pulses", icon: <FaSeedling /> },
   ];
 
+  const GetProducts = async () => {
+    try {
+      const response = await axios.get("http://localhost:4000/market/get-items");
+      console.log("Response: ", response.data.items);
+      setProducts(response.data.items)
+    } catch (error) {
+      console.error("Failed to fetch products: ", error);
+    }
+  };
+
   const handleSearchChange = (e) => {
     setSearchTerm(e.target.value);
   };
@@ -84,6 +55,10 @@ const BuyBlock = () => {
   const removeFromCart = (productId) => {
     setCart((prevCart) => prevCart.filter((item) => item.id !== productId));
   };
+
+  useEffect(() => {
+    GetProducts();
+  }, []);
 
   return (
     <div className="h-[140vh] w-full p-10 overflow-hidden mb-20">
@@ -135,18 +110,17 @@ const BuyBlock = () => {
             {products
               .filter(
                 (product) =>
-                  product.name
+                  product.itemName
                     .toLowerCase()
                     .includes(searchTerm.toLowerCase()) ||
-                  product.category
+                  product.itemCategory
                     .toLowerCase()
                     .includes(searchTerm.toLowerCase())
               )
               .map((product) => (
                 <div
-                  key={product.id}
+                  key={product._id}
                   style={{
-                    backgroundColor: product.backgroundColor,
                     background:
                       "radial-gradient(circle at center, #a7f3d0, #6ee7b7, #34d399)",
                     textShadow: "0.2px 0.2px 0.2px #000",
@@ -155,15 +129,15 @@ const BuyBlock = () => {
                 >
                   <div className="flex justify-center">
                     <img
-                      src={product.image}
+                      src={product.itemImage}
                       className="object-cover h-32 w-32"
                       alt=""
                     />
                   </div>
                   <div className="p-3">
-                    <h3 className="text-xl font-semibold">{product.name}</h3>
+                    <h3 className="text-xl font-semibold">{product.itemName}</h3>
                     <span className="text-lg font-medium">
-                      Rs {product.price}/kg
+                      Rs {product.itemPrice}/kg
                     </span>
                   </div>
                   <div

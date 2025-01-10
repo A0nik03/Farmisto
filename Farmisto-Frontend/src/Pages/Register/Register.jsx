@@ -51,22 +51,44 @@ const Register = () => {
     }, 3000);
   };
 
+  const handleCloseModal = () => {
+    setShowModal(false);
+    setLoading(false);
+  };
+
+  const handleManualLocation = () => {
+    locationRef.current = {
+      latitude: "Manual Latitude",
+      longitude: "Manual Longitude",
+    };
+    setLocationError(null);
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if (
+      !emailRef.current.value ||
+      !passwordRef.current.value ||
+      (!isLogin && !nameRef.current.value)
+    ) {
+      alert("All fields are required!");
+      return;
+    }
+
     setLoading(true);
 
     const formData = {
-      userName: nameRef.current.value,
+      userName: nameRef.current?.value || "",
       email: emailRef.current.value,
       password: passwordRef.current.value,
       userLocation: locationRef.current,
     };
 
-    console.log("Form Data: ", formData);
-
     try {
+      const BASE_URL = "http://localhost:4000";
+
       const response = await axios.post(
-        `http://localhost:4000/user/${isLogin ? "login" : "register"}`,
+        `${BASE_URL}/user/${isLogin ? "login" : "register"}`,
         formData
       );
       console.log("Response: ", response.data);
@@ -78,7 +100,7 @@ const Register = () => {
       }
     } catch (error) {
       console.error(
-        `Error while ${isLogin ? "Loggin In" : "Registering"} !`,
+        `Error while ${isLogin ? "logging in" : "registering"}!`,
         error
       );
     }
@@ -121,7 +143,7 @@ const Register = () => {
         backdrop="static"
         keyboard={false}
         open={showModal}
-        onClose={() => setShowModal(false)}
+        onClose={handleCloseModal}
         className="fixed inset-0 z-50 flex items-center justify-center bg-black/50"
       >
         <div className="bg-white rounded-xl shadow-lg w-11/12 sm:w-1/3 overflow-hidden absolute left-[5%] lg:left-[30vw] top-[10%]">
@@ -138,10 +160,16 @@ const Register = () => {
             {locationError && (
               <p className="text-red-500 text-sm mt-4">{locationError}</p>
             )}
+            <button
+              onClick={handleManualLocation}
+              className="bg-blue-500 text-white font-medium px-6 py-2 rounded-full shadow-md hover:bg-blue-600 mt-4"
+            >
+              Enter Location Manually
+            </button>
           </div>
           <div className="bg-gray-100 border-t border-gray-200 p-6 flex justify-center">
             <button
-              onClick={() => setShowModal(false)}
+              onClick={handleCloseModal}
               className="bg-green-500 text-white font-medium px-6 py-2 rounded-full shadow-md hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-green-400 focus:ring-offset-2 transition-all duration-200"
             >
               Close
@@ -198,6 +226,7 @@ const Register = () => {
                 name="name"
                 placeholder="Name"
                 className="w-full py-3 px-5 border-[1px] border-zinc-500 rounded-2xl focus:outline-none mt-4"
+                aria-label="Name"
               />
             )}
             <input
@@ -206,6 +235,7 @@ const Register = () => {
               name="email"
               placeholder="Email"
               className="w-full py-3 px-5 border-[1px] border-zinc-500 rounded-2xl focus:outline-none mt-4"
+              aria-label="Email"
             />
             <input
               ref={passwordRef}
@@ -213,6 +243,7 @@ const Register = () => {
               name="password"
               placeholder="Password"
               className="w-full py-3 px-5 border-[1px] border-zinc-500 rounded-2xl focus:outline-none mt-4"
+              aria-label="Password"
             />
             <button
               className="w-full h-14 mt-8 sm:mt-4 rounded-xl bg-black text-white font-semibold relative"
@@ -221,6 +252,15 @@ const Register = () => {
             >
               {isLogin ? "Log In" : "Sign Up"}
             </button>
+            <p className="mt-4 text-center text-sm text-gray-600">
+              {isLogin ? "Don't have an account? " : "Already registered? "}
+              <span
+                onClick={() => setIsLogin(!isLogin)}
+                className="text-green-600 font-medium cursor-pointer hover:underline"
+              >
+                {isLogin ? "Sign Up" : "Log In"}
+              </span>
+            </p>
           </form>
         </div>
 
