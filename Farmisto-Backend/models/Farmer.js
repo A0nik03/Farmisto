@@ -16,11 +16,9 @@ const FarmerSchema = new mongoose.Schema({
   },
   farmerCategory: {
     type: String,
-    required: true,
   },
   farmerPhone: {
     type: Number,
-    required: true,
     unique: true,
   },
   farmerAddress: {
