@@ -14,13 +14,6 @@ const FarmerSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
-  farmerCategory: {
-    type: String,
-  },
-  farmerPhone: {
-    type: Number,
-    unique: true,
-  },
   farmerAddress: {
     type: String,
   },

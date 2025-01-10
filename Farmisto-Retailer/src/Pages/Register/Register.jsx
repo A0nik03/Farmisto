@@ -81,8 +81,10 @@ const Register = () => {
       farmerName: nameRef.current?.value || "",
       farmerEmail: emailRef.current.value,
       farmerPassword: passwordRef.current.value,
-      userLocation: locationRef.current,
+      farmerLocation: locationRef.current,
     };
+
+    console.log(formData)
 
     try {
       const BASE_URL = "http://localhost:4000";

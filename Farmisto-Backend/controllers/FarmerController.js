@@ -7,9 +7,7 @@ const FarmerRegister = async (req, res) => {
   const {
     farmerName,
     farmerEmail,
-    farmerPhone,
     farmerPassword,
-    farmerCategory,
     farmerLocation,
   } = req.body;
 
@@ -17,8 +15,6 @@ const FarmerRegister = async (req, res) => {
     if (
       !farmerName ||
       !farmerEmail ||
-      !farmerPhone ||
-      !farmerCategory ||
       !farmerPassword
     ) {
       return res.status(400).json({ msg: "All fields are required" });
@@ -37,6 +33,7 @@ const FarmerRegister = async (req, res) => {
       farmerLocation.latitude,
       farmerLocation.longitude
     );
+
     if (!GeoLocate || GeoLocate.length === 0) {
       return res.status(400).json({ msg: "Invalid location details provided" });
     }
@@ -53,13 +50,11 @@ const FarmerRegister = async (req, res) => {
     const farmer = await Farmer.create({
       farmerName,
       farmerEmail,
-      farmerPhone,
       farmerCity: geoCity,
       farmerStateZip: geoStateZip,
       farmerAddress: geoAddress,
       farmerCountry: geoCountry,
       farmerPassword: hashedPassword,
-      farmerCategory,
       farmerLocation,
     });
 
