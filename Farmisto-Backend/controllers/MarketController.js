@@ -10,9 +10,9 @@ const streamifier = require("streamifier");
 const REMOVE_BG_API_KEY = '9oT87irw47jn9XUmB6mg9rGq';
 
 const AddItem = async (req, res) => {
-  const { itemName, itemPrice, itemCategory,itemType } = req.body;
+  const { itemName, itemPrice, itemCategory,itemType,quantity,unit,itemValue } = req.body;
 
-  if (!itemName || !itemPrice || !itemCategory || !itemType) {
+  if (!itemName || !itemPrice || !itemCategory || !itemType || !quantity || !unit || ! itemValue) {
     return res.status(400).json({ message: "Missing item details!" });
   }
 
@@ -67,8 +67,13 @@ const AddItem = async (req, res) => {
       itemName,
       itemPrice,
       itemImage: result?.secure_url,
+      quantity,
       itemCategory,
       itemType,
+      itemUnit:{
+        value: itemValue,
+        unit: unit
+      },
       seller: req.user.id,
     });
 

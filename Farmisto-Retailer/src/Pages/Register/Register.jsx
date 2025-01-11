@@ -6,8 +6,10 @@ import { Modal, Button } from "rsuite";
 import { useNavigate } from "react-router-dom";
 import { FcGoogle } from "react-icons/fc";
 import axios from "axios";
+import { useAuth } from "../../utils/Auth";
 
 const Register = () => {
+  const {setToken} = useAuth();
   const navigate = useNavigate();
   const [isLogin, setIsLogin] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -95,6 +97,10 @@ const Register = () => {
       );
       console.log("Response: ", response.data);
       if (response.status === 200) {
+
+        // localStorage.setItem("authToken",response.data.token)
+        setToken(response.data.token);
+
         nameRef.current.value = "";
         emailRef.current.value = "";
         passwordRef.current.value = "";

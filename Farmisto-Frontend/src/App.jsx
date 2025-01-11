@@ -11,6 +11,7 @@ import TermsConditions from './Pages/Terms/TermsConditions'
 import PrivacyPolicy from './Pages/Privacy/PrivacyPolicy'
 import Cart from './Pages/Cart/Cart'
 import Register from './Pages/Register/Register'
+import PlaceOrder from './Pages/PlaceOrder/PlaceOrder'
 
 const App = () => {
   return (
@@ -27,6 +28,7 @@ const App = () => {
 
     <Route path='/form' element={<Register/>}/>
     <Route path='/cart' element={<Cart/>}/>
+    <Route path='/place-order' element={<PlaceOrder/>}/>
     </Routes>
     </div>
   )

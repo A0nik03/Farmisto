@@ -1,4 +1,4 @@
-import React, { useRef, useEffect, useState } from "react";
+import React, { useRef, useEffect, useState, useContext } from "react";
 import { RiLeafFill } from "react-icons/ri";
 import { FaApple, FaArrowLeftLong } from "react-icons/fa6";
 import { PuffLoader } from "react-spinners";
@@ -6,8 +6,10 @@ import { Modal, Button } from "rsuite";
 import { useNavigate } from "react-router-dom";
 import { FcGoogle } from "react-icons/fc";
 import axios from "axios";
+import { useAuth } from "../../utils/Auth";
 
 const Register = () => {
+  const {login} = useAuth();
   const navigate = useNavigate();
   const [isLogin, setIsLogin] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -92,11 +94,19 @@ const Register = () => {
         formData
       );
       console.log("Response: ", response.data);
+
       if (response.status === 200) {
+        if (isLogin) {
+          const token = response.data.token;
+          const user = response.data.user;
+          console.log("User: ",user)
+          login(token, user);
+        }
         nameRef.current.value = "";
         emailRef.current.value = "";
         passwordRef.current.value = "";
         locationRef.current = null;
+        navigate(-1)
       }
     } catch (error) {
       console.error(

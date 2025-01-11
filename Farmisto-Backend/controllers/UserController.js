@@ -55,7 +55,7 @@ const UserLogin = async (req, res) => {
     }
     const token = GenerateToken(UserInDB);
     res.setHeader("Authorization", `Bearer ${token}`);
-    return res.status(200).json({ msg: "Login successful", token });
+    return res.status(200).json({ msg: "Login successful", token , user: UserInDB });
 
   } catch (error) {
     console.error(error);
@@ -64,12 +64,13 @@ const UserLogin = async (req, res) => {
 };
 
 const BuyItem = async (req, res) => {
-  const { itemName, itemPrice, imageUrl, quantity } = req.body;
-  if (!itemName || !itemPrice || !imageUrl || !quantity) {
+  const { itemName, itemPrice, imageUrl, quantity,id } = req.body;
+  if (!itemName || !itemPrice || !imageUrl || !quantity || !id) {
     return res.status(400).json({ msg: "Please enter all fields" });
   }
   try {
     const ItemToCart = await Cart.create({
+      id: id,
       itemName: itemName,
       itemPrice: itemPrice,
       imageUrl: imageUrl,

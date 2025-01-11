@@ -19,6 +19,21 @@ const marketSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
+    quantity:{
+      type: Number,
+      required: true,
+    },
+    itemUnit:{
+      value:{
+        type: Number,
+        required: true,
+      },
+      unit:{
+        type: String,
+        required: true,
+        enum:["kg", "liter", "g", "ml"]
+      }
+    },
     itemType:{
       type: String,
       required: true,
