@@ -26,11 +26,25 @@ const cartSchema = new mongoose.Schema(
       required: true,
       min: 1,
     },
-    buyer:{
+    buyer: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
       required: true,
-    }
+    },
+    farmer: {
+      id: {
+        type: mongoose.Schema.Types.ObjectId,
+        required: true,
+      },
+      name: {
+        type: String,
+        required: true,
+      },
+      email: {
+        type: String,
+        required: true,
+      },
+    },
   },
   {
     toJSON: { virtuals: true },

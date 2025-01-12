@@ -77,6 +77,11 @@ const BuyBlock = () => {
       itemPrice: product.itemPrice,
       imageUrl: product.itemImage,
       quantity: quantity,
+      farmer: {
+        id: product.seller.id,
+        name: product.seller.name,
+        email: product.seller.email,
+      },
     };
 
     try {
@@ -103,7 +108,7 @@ const BuyBlock = () => {
 
   const closeModal = () => {
     setSelectedProduct(null);
-    setQuantity(1)
+    setQuantity(1);
     setModal(false);
   };
 
@@ -116,8 +121,11 @@ const BuyBlock = () => {
       {/* Modal */}
       {modal && selectedProduct && (
         <div className="fixed inset-28 z-50 max-h-[65%] w-1/2 mx-auto bg-white rounded-2xl shadow-2xl">
-          <span onClick={()=>closeModal()} className="absolute -right-2 -top-5 hover:cursor-pointer">
-            <ImCross size={18}/>
+          <span
+            onClick={() => closeModal()}
+            className="absolute -right-2 -top-5 hover:cursor-pointer"
+          >
+            <ImCross size={18} />
           </span>
           <div className="h-full w-full flex flex-col gap-1 p-1">
             <div className="h-44 w-full rounded-xl border-[1px] border-zinc-400 flex items-center justify-between">

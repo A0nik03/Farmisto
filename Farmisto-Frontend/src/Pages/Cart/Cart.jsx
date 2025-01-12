@@ -5,7 +5,7 @@ import { MdDelete } from "react-icons/md";
 import assets from "../../assets/assets";
 import { useAuth } from "../../utils/Auth";
 import axios from "axios";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 const Cart = () => {
   const { authToken, userDetails } = useAuth();
@@ -13,6 +13,7 @@ const Cart = () => {
   const [totalCost, setTotalCost] = useState(0);
   const [shippingCost] = useState(10);
   const [discount, setDiscount] = useState(0);
+  const navigate = useNavigate();
 
   useEffect(() => {
     if (userDetails && authToken) {
@@ -23,6 +24,7 @@ const Cart = () => {
 
   const fetchCart = async (dsnt) => {
     const id = userDetails?._id;
+    console.log("UserID", id);
     if (authToken) {
       try {
         const response = await axios.post(
@@ -107,7 +109,7 @@ const Cart = () => {
           }
         );
 
-        console.log("Promo: ",response.data);
+        console.log("Promo: ", response.data);
         setDiscount(response.data.promo);
 
         if (response.status === 200) {
@@ -118,7 +120,6 @@ const Cart = () => {
         } else {
           console.warn("Invalid promo code");
         }
-        
       } catch (error) {
         console.error("Error applying promo code:", error);
       }
@@ -150,9 +151,99 @@ const Cart = () => {
     }
   };
 
+  const ClearCart = async () => {
+    const id = userDetails._id;
+
+    if (authToken) {
+      try {
+        const response = await axios.delete(
+          `http://localhost:4000/cart/clear`,
+          {
+            headers: {
+              Authorization: `Bearer ${authToken}`,
+            },
+            data: {
+              id: id,
+            },
+          }
+        );
+        console.log("Cart cleared successfully", response.data);
+        if (response.status === 200) {
+          console.log("Cart cleared successfully");
+          fetchCart();
+          setCart([]);
+          setTotalCost(0);
+          setDiscount(0);
+          return;
+        }
+      } catch (error) {
+        console.error("Error clearing cart:", error);
+      }
+    }
+  };
+
+  const handleCODCheckout = async () => {
+    const farmers = cart.map(item => ({
+      id: item.farmer.id,
+      name: item.farmer.name, 
+      email: item.farmer.email,
+    }));
+
+    console.log(farmers)
+  
+    const orderDetails = {
+      farmers: farmers,
+      cartItems: cart,
+      totalAmount: totalCost + shippingCost - discount,
+      address: {
+        street: "BH",
+        city: "Greater Noida",
+        state: "UP",
+        zip: "130619",
+        country: "India",
+      },
+      buyerEmail: "nikhilscn@gmail.com",
+    };
+  
+    if (authToken) {
+      try {
+        const response = await axios.post(
+          "http://localhost:4000/payments/create-payment",
+          orderDetails,
+          {
+            headers: {
+              Authorization: `Bearer ${authToken}`,
+            },
+            responseType: "blob",
+          }
+        );
+  
+        if (response.status === 200) {
+          const blob = new Blob([response.data], { type: "application/pdf" });
+  
+          const link = document.createElement("a");
+          const fileName = `invoice-${orderDetails.buyerId}.pdf`;
+          link.href = URL.createObjectURL(blob);
+          link.download = fileName;
+          link.click();
+  
+          console.log("Payment created and invoice downloaded");
+          ClearCart();
+  
+          // navigate("/order-confirmation");
+        } else {
+          console.error("Failed to create payment");
+        }
+      } catch (error) {
+        console.error("Error creating payment:", error);
+      }
+    }
+  };
+  
+
   return (
     <div className="h-full w-full bg-gradient-to-b from-green-200 to-green-400">
-      <NavBar transparent = {true} />
+      <NavBar transparent={true} />
       <div className="w-[90%] h-[80%] rounded-xl bg-white mx-auto p-4 flex gap-2 mt-5">
         <div className="w-2/3 flex flex-col gap-2 overflow-y-auto">
           {cart.length === 0 ? (
@@ -259,9 +350,21 @@ const Cart = () => {
           <p className="mt-1 text-md text-zinc-400 font-medium">
             Including GST
           </p>
-          <Link to={'/place-order'} className="w-full h-12 bg-[#0d331c] flex justify-center items-center text-white font-semibold rounded-xl mt-8">
-            Go to checkout
-          </Link>
+
+          <div className="w-full flex gap-2">
+          <button
+            onClick={handleCODCheckout}
+            className="w-full h-12 bg-[#0d331c] flex justify-center items-center text-white font-semibold rounded-xl mt-8"
+          >
+            Place Order (COD)
+          </button>
+          <button
+            onClick={()=>navigate('/place-order')}
+            className="w-full h-12 bg-[#0d331c] flex justify-center items-center text-white font-semibold rounded-xl mt-8"
+          >
+            Card
+          </button>
+          </div>
           <button className="w-full h-12 bg-black text-white font-semibold rounded-xl mt-2">
             Negotiate
           </button>
@@ -274,13 +377,9 @@ const Cart = () => {
             <input
               type="text"
               name="promoCode"
-              className="w-2/3 h-12 bg-white rounded-xl p-2 border-[1px]"
-              placeholder="Enter your promo code"
+              className="border-[1px] border-zinc-300 w-full px-2 py-1 rounded-md"
             />
-            <button
-              type="submit"
-              className="w-1/3 h-12 bg-[#0d331c] text-white font-semibold rounded-xl"
-            >
+            <button className="bg-green-600 px-4 py-2 text-white font-medium rounded-lg">
               Apply
             </button>
           </form>

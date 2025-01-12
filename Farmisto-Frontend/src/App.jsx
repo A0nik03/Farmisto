@@ -12,6 +12,7 @@ import PrivacyPolicy from './Pages/Privacy/PrivacyPolicy'
 import Cart from './Pages/Cart/Cart'
 import Register from './Pages/Register/Register'
 import PlaceOrder from './Pages/PlaceOrder/PlaceOrder'
+import Confirmation from './Pages/Confirmation/Confirmation'
 
 const App = () => {
   return (
@@ -29,6 +30,8 @@ const App = () => {
     <Route path='/form' element={<Register/>}/>
     <Route path='/cart' element={<Cart/>}/>
     <Route path='/place-order' element={<PlaceOrder/>}/>
+    <Route path='/order-confirmation' element={<Confirmation/>}/>
+
     </Routes>
     </div>
   )

@@ -5,6 +5,7 @@ const FarmerRoutes = require("./routes/FarmerRoutes");
 const UserRoutes = require("./routes/UserRoutes");
 const MarketRoutes = require("./routes/MarketRoutes");
 const CartRoutes = require("./routes/CartRoutes");
+const PaymentRoutes = require("./routes/PaymentRoutes");
 const PromoRoutes = require("./routes/PromoRoutes")
 const { fetchLocation, fetchNearbyFarmers } = require("./controllers/GeoController");
 const connectCloudinary = require("./config/cloudinary");
@@ -27,6 +28,7 @@ app.use("/farmer", FarmerRoutes);
 app.use("/market", MarketRoutes);
 app.use("/user", UserRoutes);
 app.use("/cart", CartRoutes);
+app.use('/payments',PaymentRoutes)
 app.use("/promo",PromoRoutes);
 app.use("/api/geocode", fetchLocation);
 app.use("/api/geoNearby", fetchNearbyFarmers);

@@ -3,7 +3,9 @@ const Cart = require("../models/Cart");
 const GetCartDetail = async (req, res) => {
   const { id } = req.body;
   try {
-    const cartItems = await Cart.find({ buyer: id });
+    const cartItems = await Cart.find({ buyer: id })
+
+    console.log(cartItems)
 
     if (!cartItems.length) {
       return res.status(200).json({
@@ -34,6 +36,11 @@ const GetCartDetail = async (req, res) => {
         quantity: item.quantity,
         totalCost: totalCost,
         discountedPrice: discountedPrice,
+        farmer:{
+          id:item.farmer.id,
+          name:item.farmer.name,
+          email:item.farmer.email
+        }
       };
     });
 
@@ -57,19 +64,22 @@ const GetCartDetail = async (req, res) => {
   }
 };
 
-const GetCart = async (req, res) => {
+const ClearCart = async (req, res) => {
   const { id } = req.body;
   if (!id) {
     return res.status(400).json({ message: "No user id provided!" });
   }
   try {
-    const cart = await Cart.find({ buyer: id });
-    if (!cart) {
+    const cart = await Cart.deleteMany({ buyer: id });
+
+    if (cart.deletedCount === 0) {
       return res.status(404).json({ message: "No cart found for this user!" });
     }
-    res.status(200).json({ message: "Cart fetched successfully!", cart });
+
+    res.status(200).json({ message: "Cart deleted successfully!", cart });
   } catch (error) {
-    console.error("Error fetching cart:", error.message);
+    console.error("Error clearing cart:", error.message);
+    res.status(500).json({ message: "Internal server error" });
   }
 };
 
@@ -122,7 +132,7 @@ const ItemDiscountUpdate = async (req, res) => {
     isNaN(discount) ||
     discount < 0 ||
     discount > 100
-  ){
+  ) {
     return res.status(400).json({ message: "Invalid discount percentage!" });
   }
 
@@ -147,9 +157,7 @@ const ItemDiscountUpdate = async (req, res) => {
   }
 };
 
-
-
-const ItemDelete = async (req,res) => {
+const ItemDelete = async (req, res) => {
   const id = req.params.id;
   if (!id) {
     return res.status(400).json({ message: "No item id provided!" });
@@ -163,11 +171,12 @@ const ItemDelete = async (req,res) => {
   } catch (error) {
     console.error("Error deleting item:", error.message);
   }
-}
+};
 
 module.exports = {
   GetCartDetail,
   ItemQuantityUpdate,
   ItemDelete,
   ItemDiscountUpdate,
+  ClearCart,
 };

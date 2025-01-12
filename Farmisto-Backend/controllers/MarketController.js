@@ -42,6 +42,7 @@ const AddItem = async (req, res) => {
       }
     );
 
+
     const processedImageBuffer = removeBgResponse.data;
     const supportedImages = ["image/jpeg", "image/png", "image/jpg"];
     const contentType = removeBgResponse.headers['content-type'];
@@ -74,9 +75,12 @@ const AddItem = async (req, res) => {
         value: itemValue,
         unit: unit
       },
-      seller: req.user.id,
+      seller: {
+        id: req.user.id,
+        name: req.user.name,
+        email: req.user.email
+      },
     });
-
     return res.status(200).json({ message: "Successfully added the item!", item: marketItem });
 
   } catch (error) {
