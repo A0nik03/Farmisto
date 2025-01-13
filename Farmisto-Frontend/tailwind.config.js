@@ -9,5 +9,5 @@ export default {
       },
     },
   },
-  plugins: [require("tailwind-clip-path")],
+  plugins: [require("tailwind-clip-path"), require("tailwind-scrollbar")],
 };

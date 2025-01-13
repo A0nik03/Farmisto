@@ -1,14 +1,21 @@
-const express = require('express');
-const {FarmerRegister , FarmerLogin, getProfile, updateProfile, editPassword, logout} = require('../controllers/FarmerController');
+const express = require("express");
+const {
+  FarmerRegister,
+  FarmerLogin,
+  getProfile,
+  updateProfile,
+  editPassword,
+  loggedOut,
+} = require("../controllers/FarmerController");
+const Authentication = require("../middleware/Authentication");
 const router = express.Router();
 
-router.post('/register', FarmerRegister);
-router.post('/login', FarmerLogin);
+router.post("/register", FarmerRegister);
+router.post("/login", FarmerLogin);
 
-router.get("/settings/profile-data",verifyToken,getProfile) // get profile data
-router.patch("/settings/update-profile",verifyToken,updateProfile)// update profile data
-router.patch("/settings/logout",verifyToken,editPassword) // logged out the person from dashboard
-router.patch("/settings/changePassword",verifyToken,)// changing the password
-
+router.get("/settings/profile-data", Authentication, getProfile);
+router.patch("/settings/update-profile", Authentication, updateProfile);
+router.patch("/settings/logout", Authentication, loggedOut);
+router.patch("/settings/changePassword", Authentication, editPassword);
 
 module.exports = router;

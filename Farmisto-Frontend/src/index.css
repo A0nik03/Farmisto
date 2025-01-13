@@ -3,6 +3,32 @@
 @tailwind utilities;
 
 body {
-    font-family: 'Poppins', sans-serif;
-  }
-  
+  font-family: "Poppins", sans-serif;
+}
+
+body::-webkit-scrollbar {
+  display: none; 
+}
+.my-container::-webkit-scrollbar {
+  display: none;
+}
+
+::-webkit-scrollbar {
+  width: 2px;
+  height: 2px;
+}
+
+::-webkit-scrollbar-track {
+  background: #e8f5e9;
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: #0d331c;
+  border-radius: 10px;
+}
+
+html {
+  scrollbar-color: #0d331c #e8f5e9;
+  scrollbar-width: thin;
+}

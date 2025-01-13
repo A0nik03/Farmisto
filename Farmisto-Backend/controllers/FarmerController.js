@@ -2,7 +2,7 @@ const { GenerateToken } = require("../middleware/TokenAuth");
 const { hashPassword, comparePassword } = require("../middleware/Hashing");
 const Farmer = require("../models/Farmer");
 const { fetchLocation } = require("./GeoController");
-import { validateProfileData } from "../utils/validation";
+const validateProfileData = require('../utils/validation');
 const bcrypt = require("bcrypt");
 
 const FarmerRegister = async (req, res) => {

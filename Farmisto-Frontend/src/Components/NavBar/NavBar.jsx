@@ -4,9 +4,12 @@ import { BsFillDoorOpenFill } from "react-icons/bs";
 import { FaUser } from "react-icons/fa";
 import { Link } from "react-router-dom";
 import { useAuth } from "../../utils/Auth";
+import { motion } from "framer-motion";
+import { useState } from "react";
 
-const NavBar = ({transparent = false}) => {
+const NavBar = ({ transparent = false }) => {
   const { authToken, logout } = useAuth();
+  const [active, setActive] = useState(0);
   const tabs = [
     { label: "Home", path: "/" },
     { label: "MarketPlace", path: "/market" },
@@ -14,23 +17,42 @@ const NavBar = ({transparent = false}) => {
   ];
 
   return (
-  <div className={`h-[10vh] px-6 py-4 flex justify-between items-center ${transparent ? "bg-transparent" : "bg-zinc-100"}`}>
+    <div
+      className={`h-[13vh] px-6 py-4 flex justify-between items-center ${
+        transparent ? "bg-transparent" : "bg-zinc-100"
+      }`}
+    >
       {/* Brand Logo */}
-      <h1 className="text-2xl sm:text-3xl font-black text-[#0d331c] ml-4 z-50">
+      <h1 className="text-3xl sm:text-5xl font-black font-[Aladin] text-[#0d331c] ml-4 z-50">
         Farmisto
       </h1>
 
       {/* Navigation Links */}
       <div className="hidden sm:flex gap-8">
-        {tabs.map((tab, index) => (
-          <Link
-            to={tab.path}
-            key={index}
-            className="text-lg sm:text-xl text-green-800 font-semibold hover:underline"
-          >
-            {tab.label}
-          </Link>
-        ))}
+      {tabs.map((tab, index) => (
+        <Link
+          to={tab.path}
+          key={index}
+          className={`text-lg sm:text-xl w-[auto] flex flex-col gap-2 text-green-800 font-semibold`}
+          onMouseEnter={() => setActive(index)}
+        >
+          {tab.label}
+          {active === index && (
+            <motion.span
+              initial={{ width: '0%' }}
+              animate={{ width: '100%' }}
+              whileHover={{ width: '100%' }}
+              transition={{
+                type: 'spring',
+                stiffness: 150,
+                mass: 1,
+                duration: 0.3, 
+              }}
+              className="bg-green-500 shadow-lg shadow-green-100 h-[4px] block mx-auto rounded-sm"
+            />
+          )}
+        </Link>
+      ))}
       </div>
 
       {/* Icons Section */}
