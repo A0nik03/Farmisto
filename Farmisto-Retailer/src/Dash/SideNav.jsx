@@ -1,51 +1,67 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { NavLink } from "react-router-dom";
-
 import {
   AiOutlineHome,
   AiOutlineSchedule,
   AiOutlineMessage,
   AiOutlineSetting,
-  AiOutlineDash,
 } from "react-icons/ai";
 import { MdSpaceDashboard } from "react-icons/md";
 import { BsFillTreeFill, BsCreditCard } from "react-icons/bs";
-
-
+import { HiOutlineBars3 } from "react-icons/hi2";
 
 const SideNav = () => {
+  const [isOpen, setIsOpen] = useState(true);
+
+  // Load the initial state from localStorage on component mount
+  useEffect(() => {
+    const savedState = localStorage.getItem("isOpen");
+    if (savedState) {
+      setIsOpen(JSON.parse(savedState));
+    }
+  }, []);
+
+  // Define the routes and icons
   const routes = [
     { path: "/", name: "Home", icon: AiOutlineHome },
     { path: "/dashboard", name: "Dashboard", icon: MdSpaceDashboard },
-    { path : "/Additem", name: "Add-item", icon: AiOutlineSchedule },
+    { path: "/Additem", name: "Add-item", icon: AiOutlineSchedule },
     { path: "/Orders", name: "Orders", icon: BsFillTreeFill },
     { path: "/Message", name: "Messages", icon: AiOutlineMessage },
-    { path: "/payments", name: "Payments", icon: BsCreditCard },
     { path: "/settings", name: "Settings", icon: AiOutlineSetting },
   ];
 
+  // Toggle the nav state and save it to localStorage
+  const toggleNav = () => {
+    setIsOpen((prevState) => {
+      const newState = !prevState;
+      localStorage.setItem("isOpen", JSON.stringify(newState)); // Save to localStorage
+      return newState;
+    });
+  };
+
+  // Helper function to check if the current route is active
   function activeRoute(routeName) {
     return window.location.href.indexOf(routeName) > -1;
   }
 
+  // Generate the list of links
   const links = (
-    <div className="space-y-4 mt-8 ">
+    <div className="space-y-4 px-3 mt-8">
       {routes.map((route, key) => {
         const isActive = activeRoute(route.path);
         return (
           <NavLink
             to={route.path}
             key={key}
-            className={`flex items-center p-3 font-mono font-medium
-                hover:bg-[#03C9A9] hover:text-white transition-colors duration-100
-             `}
+            className={`flex items-center p-3 font-mono font-medium 
+                transition-all duration-300 ease-in-out 
+                ${isActive ? "text-white bg-gradient-to-r from-[#7a9f35] to-[#6b8e2b]" : "text-[#2E7D32]"} 
+                hover:bg-gradient-to-r hover:from-[#6b8e2b] hover:to-[#7a9f35] hover:text-white 
+                hover:shadow-lg rounded-xl`}
           >
-            <route.icon
-              className={`w-6 h-6 ml-4 `}
-            />
-            <span className={`ml-5 `}>
-              {route.name}
-            </span>
+            <route.icon className={`w-6 h-6 ${isOpen ? "ml-2" : "mr-0"}`} />
+            {isOpen && <span className="ml-7 text-xl font-[satoshi]">{route.name}</span>}
           </NavLink>
         );
       })}
@@ -53,25 +69,32 @@ const SideNav = () => {
   );
 
   return (
-    <div className="w-[20%] h-full flex flex-col items-center bg-white shadow-2xl">
-      <div className="flex-grow w-full">
-        <p className="h-full w-full">{links}</p>
+    <div
+      className={`${
+        isOpen ? "w-[20%]" : "w-[5%]"
+      } h-screen flex flex-col items-center bg-[#F7F3E9] shadow-2xl border-r-2 border-[#D9CDA3] transition-all duration-300`}
+    >
+      <div className="flex flex-col items-center w-full mt-4">
+        {/* Toggle Button */}
+        <button
+          onClick={toggleNav}
+          className="mb-4 p-3 bg-[#3D5A4A] text-white hover:bg-[#7a9f35] transition-colors rounded-full transform hover:scale-110"
+        >
+          <HiOutlineBars3 size={25} />
+        </button>
       </div>
-      <div>
-        <div style={
-            {
-                backgroundImage: 'url(https://cdn.dribbble.com/userupload/15096871/file/original-7d27c04dcd28a05d8dc9cf004a9548ac.jpg?resize=1200x904&vertical=center)',
-                backgroundSize: 'cover',
-                backgroundPosition: 'center',
-            }
-        } className="h-52 w-52 mb-3 overflow-hidden rounded-2xl flex flex-col justify-end">
-          <div className="w-full h-20  rounded-b-xl bg-black opacity-60 flex items-center justify-center">
-            <p className="text-lg font-bold text-white">
-                Add Form
-            </p>
-          </div>
+
+      <div className="flex-grow w-full">{links}</div>
+
+      {/* Divider */}
+      <hr className="border-t-2 border-[#D9CDA3] w-full mt-4" />
+
+      {/* Themed Banner Section */}
+      {isOpen && (
+        <div className="w-full p-3 bg-[#3D5A4A] text-white text-center">
+          <p className="text-sm font-semibold">"Grow your farm, grow your future"</p>
         </div>
-      </div>
+      )}
     </div>
   );
 };

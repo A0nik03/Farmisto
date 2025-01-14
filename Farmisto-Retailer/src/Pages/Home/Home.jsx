@@ -6,7 +6,7 @@ import Panel from "../../Components/Panel/Panel";
 import Work from "../../Components/Work/Work";
 const Home = () => {
   return (
-    <div className="relative bg-[#0ddc81]">
+    <div className="relative">
       <NavBar />
       <Homeheader />
        <Panel />
@@ -18,3 +18,4 @@ const Home = () => {
 };
 
 export default Home;
+

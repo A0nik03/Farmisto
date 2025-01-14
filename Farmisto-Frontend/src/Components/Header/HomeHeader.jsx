@@ -4,7 +4,7 @@ import { FaArrowRightLong } from "react-icons/fa6";
 
 const Header = () => {
   return (
-    <div className="h-[84vh] p-5 bg-zinc-100">
+    <div className="h-[84vh] w-full overflow-hidden p-5 bg-zinc-100">
       <div className="h-full w-full flex flex-col lg:flex-row">
         {/* Text Section */}
         <div className="lg:w-2/3 h-full p-5 pl-5 lg:ml-20">

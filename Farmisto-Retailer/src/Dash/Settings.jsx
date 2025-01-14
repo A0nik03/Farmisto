@@ -1,12 +1,15 @@
+import React from "react";
 import SideNav from "./sidenav";
 import { BsPersonCircle } from "react-icons/bs";
+
 function SettingOption({ option }) {
   return (
-    <button className="w-6/12 text-left bg-gray-100 hover:bg-gray-200 p-3 rounded-lg text-gray-800 font-medium shadow-sm transition">
+    <div className="w-full cursor-pointer text-left bg-[#f5f0e3] hover:bg-[#d9d4b7] p-3 rounded-lg text-[#2A293E] font-medium shadow-sm">
       {option}
-    </button>
+    </div>
   );
 }
+
 const settingsData = [
   {
     category: "Profile Settings",
@@ -38,27 +41,29 @@ const settingsData = [
     options: ["Logout"],
   },
 ];
+
 const Settings = () => {
   return (
-    <div className="flex h-screen bg-gray-100">
+    <div className="h-screen w-full flex bg-[#f7f3e9]">
       <SideNav />
-      <div className=" mx-10 w-full h-full bg-white shadow-lg rounded-lg p-6 overflow-y-auto">
-        <div className="flex justify-between">
-        <h1 className="text-2xl font-semibold text-gray-800 mb-6">
-          Settings Panel
-        </h1>
-        <BsPersonCircle
-          size={36}
-          className="text-gray-600 hover:scale-[1.05] hover:cursor-pointer"
-        />
+      <div className="flex flex-col w-full overflow-y-auto font-[Fjalla One]">
+        <div className="flex justify-between items-center px-20 mt-10 mb-8">
+          <div className="flex items-center space-x-3">
+            <img src="./settings.png" className="h-9 w-9" alt="Settings Icon" />
+            <h2 className="text-3xl text-nowrap w-56 font-bold border-b-4 p-2 border-[#70942e] text-[#2A293E]">
+              Settings Panel
+            </h2>
+          </div>
+          <BsPersonCircle size={36} className="text-[#2A293E] hover:scale-[1.05] hover:cursor-pointer" />
         </div>
-        <div className="space-y-6 ">
+
+        <div className="w-[90%] flex flex-col gap-7 mx-auto">
           {settingsData.map((section, index) => (
             <div key={index} className="border-b pb-4 last:border-none">
-              <h2 className="text-lg font-medium text-gray-700 mb-2">
+              <h2 className="text-lg font-medium text-[#2A293E] mb-2">
                 {section.category}
               </h2>
-              <div className="grid grid-cols-2 gap-4">
+              <div className="grid grid-cols-1 cursor-pointer md:grid-cols-2 gap-5">
                 {section.options.map((option, idx) => (
                   <SettingOption key={idx} option={option} />
                 ))}

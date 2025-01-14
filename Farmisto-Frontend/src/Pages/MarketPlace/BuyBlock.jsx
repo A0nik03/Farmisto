@@ -150,7 +150,7 @@ const BuyBlock = () => {
   }, [searchTerm, selectedKind, selectedCategory]);
 
   return (
-    <div className="relative h-[140vh] w-full p-10 overflow-hidden mb-20">
+    <div className="relative h-full w-full p-10 overflow-hidden mb-20">
       {modal && selectedProduct && (
         <div className="fixed inset-28 z-50 max-h-[65%] w-1/2 mx-auto rounded-2xl">
           <span

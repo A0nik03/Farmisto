@@ -1,14 +1,15 @@
 const { verifyToken } = require("./TokenAuth");
 
-const Authentication = (req, res, next) => {
+const Authentication = async(req, res, next) => {
   try {
     const authHeader = req.headers.authorization;
+    // console.log("Authentication header: " + authHeader);
     if (!authHeader || !authHeader.startsWith("Bearer ")) {
       return res.status(401).json({ msg: "Unauthorized: No token provided" });
     }
 
     const token = authHeader.split(" ")[1];
-    const person = verifyToken(token);
+    const person = await verifyToken(token);
 
     if (!person) {
       return res.status(401).json({ msg: "Unauthorized: Invalid or expired token" });

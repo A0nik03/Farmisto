@@ -3,7 +3,7 @@ import Maindash from "./MainDash";
 import SideNav from "./sidenav";
 const Dashboard = () => {
   return (
-    <div className="flex h-screen">
+    <div className="flex w-screen h-screen">
       <SideNav />
       <Maindash />
     </div>

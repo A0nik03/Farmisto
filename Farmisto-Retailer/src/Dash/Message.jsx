@@ -28,50 +28,48 @@ const Message = () => {
   };
 
   return (
-    <div className="flex h-screen bg-gray-300">
+    <div className="flex h-screen bg-[#f7f3e9]">
       <SideNav />
-      <div className="w-full h-screen bg-gray-300 p-6 overflow-y-auto">
-        <h2 className="text-4xl font-serif mb-8">List Notification</h2>
-        <div className="bg-white rounded-lg shadow-md p-4">
+      <div className="w-full h-screen bg-[#f7f3e9] p-6 overflow-y-auto">
+        <h2 className="text-4xl mb-8 text-[#2A293E]">Notifications</h2>
+        <div className="p-4">
           <div className="flex justify-between items-center mb-4">
-            <h3 className="text-xl font-semibold">188 Notifications</h3>
+            <h3 className="text-xl font-semibold text-[#2A293E]">188 Notifications</h3>
             <input
               type="text"
               placeholder="Search by Name Product"
-              className="p-2 border border-gray-300 rounded-md"
+              className="p-2 border border-[#d9d4b7] rounded-md"
             />
           </div>
 
-          <table className="w-full">
-            <tbody>
-              {notifications.map((notification) => (
-                <tr
-                  key={notification.id}
-                  className="border-b hover:bg-gray-100 transition"
-                >
-                  <td className="px-4 py-3">
-                    <button onClick={() => toggleFavorite(notification.id)}>
-                      {notification.isFavorite ? (
-                        <span className="text-yellow-500">★</span>
-                      ) : (
-                        <span className="text-gray-400">☆</span>
-                      )}
-                    </button>
-                  </td>
-                  <td className="px-4 py-3 text-gray-800">{notification.text}</td>
-                  <td className="px-4 py-3 text-gray-600">{notification.time}</td>
-                  <td className="px-4 py-3">
-                    <button
-                      onClick={() => deleteNotification(notification.id)}
-                      className="text-red-600 hover:text-red-800"
-                    >
-                      🗑️
-                    </button>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
+          <div className="flex flex-col">
+            {notifications.map((notification) => (
+              <div
+                key={notification.id}
+                className="flex items-center justify-between p-4 border-b hover:bg-[#f5f0e3] transition"
+              >
+                <div className="flex items-center space-x-2 cursor-pointer">
+                  <div onClick={() => toggleFavorite(notification.id)}>
+                    {notification.isFavorite ? (
+                      <span className="text-yellow-500 text-3xl">★</span>
+                    ) : (
+                      <span className="text-gray-400 text-3xl">☆</span>
+                    )}
+                  </div>
+                  <span className="text-[#2A293E]">{notification.text}</span>
+                </div>
+                <div className="flex items-center space-x-4 cursor-pointer">
+                  <span className="text-[#6c6c6c]">{notification.time}</span>
+                  <div
+                    onClick={() => deleteNotification(notification.id)}
+                    className="text-red-600 hover:text-red-800"
+                  >
+                    🗑️
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
         </div>
       </div>
     </div>
@@ -79,4 +77,3 @@ const Message = () => {
 };
 
 export default Message;
-

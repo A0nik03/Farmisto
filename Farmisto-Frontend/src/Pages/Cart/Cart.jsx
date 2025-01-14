@@ -211,8 +211,7 @@ const Cart = () => {
         state: "UP",
         zip: "130619",
         country: "India",
-      },
-      buyerEmail: "nikhilscn@gmail.com",
+      }
     };
 
     if (authToken) {
@@ -228,7 +227,7 @@ const Cart = () => {
           }
         );
 
-        console.log("Payment: ", response.data);
+        // console.log("Payment: ", response.data);
 
         if (response.status === 200) {
           const blob = new Blob([response.data], { type: "application/pdf" });

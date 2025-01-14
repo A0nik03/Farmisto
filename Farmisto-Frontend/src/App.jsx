@@ -16,7 +16,7 @@ import Confirmation from './Pages/Confirmation/Confirmation'
 
 const App = () => {
   return (
-    <div className='h-screen w-full font-[Inter]'>
+    <div className='h-screen w-screen font-[Inter]'>
     <Routes>
     <Route path='/' element={<Home/>}/>
     <Route path='/market' element={<MarketPlace/>}/>

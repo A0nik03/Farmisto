@@ -4,7 +4,8 @@ const pdf = require("pdfkit");
 
 const createPayment = async (req, res) => {
   try {
-    const { cartItems, address, farmers } = req.body;
+    const { cartItems, address, farmers} = req.body;
+
 
     if ( !farmers || farmers.length === 0) {
       return res.status(400).json({ message: "Information is incomplete" });
@@ -55,7 +56,6 @@ const createPayment = async (req, res) => {
       paymentMethod: "COD",
     });
 
-    console.log(payment)
 
     await payment.save();
 

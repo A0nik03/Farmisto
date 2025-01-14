@@ -1,168 +1,367 @@
+import React, { useState } from "react";
+import { CgSearch } from "react-icons/cg";
 import {
-  AiOutlineSearch,
   AiOutlineBell,
-  AiOutlineArrowUp,
-  AiOutlineArrowDown,
-  AiOutlineInfoCircle,
+  AiOutlineCheck,
+  AiOutlineClose,
+  AiOutlineMessage,
 } from "react-icons/ai";
-import { useState } from "react";
-import { Bar } from "react-chartjs-2";
+import {
+  IoPerson,
+  IoLeafOutline,
+  IoWalletOutline,
+  IoPeopleOutline,
+  IoBagCheckOutline,
+} from "react-icons/io5";
+import { Bar, Line, Pie } from "react-chartjs-2";
 import {
   Chart as ChartJS,
   CategoryScale,
   LinearScale,
   BarElement,
-  Title,
+  PointElement,
+  LineElement,
+  ArcElement,
   Tooltip,
   Legend,
 } from "chart.js";
-import { BsPerson, BsPersonCircle } from "react-icons/bs";
-import { Link } from "react-router-dom";
 
-// Register Chart.js components
 ChartJS.register(
   CategoryScale,
   LinearScale,
   BarElement,
-  Title,
+  PointElement,
+  LineElement,
+  ArcElement,
   Tooltip,
   Legend
 );
 
-const Maindash = () => {
-  const [selectedWeek, setSelectedWeek] = useState("week1");
+const Dashboard = () => {
+  const [salesView, setSalesView] = useState("Weekly");
+  const [showNotifications, setShowNotifications] = useState(false);
+  const farmerName = "John Doe";
 
-  const activityDetails = {
-    week1: "Week 1: Seed Phase - The plant begins to sprout from the seed.",
-    week2: "Week 2: Vegetation - The plant starts growing leaves and stems.",
-    week3: "Week 3: Final Growth - The plant reaches maturity and flowers.",
+  const negotiations = [
+    {
+      id: 1,
+      requester: {
+        name: "John Doe",
+        location: "New York, USA",
+        image: "https://via.placeholder.com/40",
+      },
+      message: "Negotiation started for Product A",
+      status: "Pending",
+    },
+    {
+      id: 2,
+      requester: {
+        name: "Jane Smith",
+        location: "London, UK",
+        image: "https://via.placeholder.com/40",
+      },
+      message: "Offer received for Product B",
+      status: "In Progress",
+    },
+    {
+      id: 3,
+      requester: {
+        name: "Alice Johnson",
+        location: "Sydney, Australia",
+        image: "https://via.placeholder.com/40",
+      },
+      message: "Counteroffer sent for Product C",
+      status: "Awaiting Response",
+    },
+    {
+      id: 4,
+      requester: {
+        name: "Bob Brown",
+        location: "Toronto, Canada",
+        image: "https://via.placeholder.com/40",
+      },
+      message: "Negotiation closed for Product D",
+      status: "Completed",
+    },
+  ];
+
+  // Example Stats
+  const stats = [
+    {
+      label: "Total Produce Sold",
+      value: "1200 kg",
+      icon: <IoBagCheckOutline size={24} className="text-green-700" />,
+    },
+    {
+      label: "Total Revenue",
+      value: "$18,000",
+      icon: <IoWalletOutline size={24} className="text-yellow-600" />,
+    },
+    {
+      label: "Transactions",
+      value: "34",
+      icon: <IoLeafOutline size={24} className="text-blue-600" />,
+    },
+    {
+      label: "Users Reached",
+      value: "150",
+      icon: <IoPeopleOutline size={24} className="text-red-600" />,
+    },
+  ];
+
+  const salesData = {
+    Weekly: [2000, 2500, 1800, 3000],
+    Monthly: [8000, 9000, 7500, 9500],
+    Yearly: [60000, 72000, 80000, 70000],
   };
 
-  const profitData = {
-    week1: { profit: 6, loss: 3, average: 4.5 },
-    week2: { profit: 8, loss: 2, average: 5 },
-    week3: { profit: 12, loss: 4, average: 7 },
-  };
-
-  const orderedWeeks = Object.keys(activityDetails);
-  const currentData = profitData[selectedWeek];
-
-  // Chart.js Data for Profit
-  const chartData = {
-    labels: orderedWeeks,
+  const salesChartData = {
+    labels: ["Week 1", "Week 2", "Week 3", "Week 4"],
     datasets: [
       {
-        label: "Profit Rate (%)",
-        data: orderedWeeks.map((week) => profitData[week].profit),
-        backgroundColor: "rgba(3, 201, 169,1)",
-
-        barPercentage: 0.3,
-        categoryPercentage: 0.7,
-        borderRadius: 8,
-        
+        label: `${salesView} Sales ($)`,
+        data: salesData[salesView],
+        borderColor: "#6e912d",
+        backgroundColor: "#a8c686",
+        borderWidth: 2,
       },
     ],
   };
 
-  return (
-    <div className="w-full h-full overflow-y-auto bg-gray-100">
-        <header className="flex justify-between items-center bg-white shadow-sm mb-5 p-5">
-          {/* Search Bar */}
-          <div className="w-1/3 flex gap-2 items-center border border-gray-300 rounded-xl pl-2">
-            <AiOutlineSearch className=" text-gray-400" size={30} />
-            <input
-              type="text"
-              placeholder="Search"
-              className="w-full p-3 bg-transparent text-xl font-normal outline-none"
-            />
-          </div>
-          {/* Notifications and Profile */}
-          <div className="flex items-center gap-6">
-            <div className="relative">
-              <AiOutlineBell size={30} className="text-gray-600" />
-              <span className="absolute top-0 right-0 bg-orange-500 text-white text-xs rounded-full w-4 h-4 flex items-center justify-center">
-                2
-              </span>
-            </div>
-            <Link
-              to={"/Register"}
-              className="w-12 h-12 rounded-full flex items-center justify-center"
-            >
-              <BsPersonCircle
-                size={36}
-                className="text-gray-600 hover:scale-[1.05] hover:cursor-pointer"
-              />
-            </Link>
-          </div>
-        </header>
-      <div className="w-full h-full flex flex-col gap-4 px-6">
+  const userReachData = {
+    labels: ["Youths", "Adults", "Seniors"],
+    datasets: [
+      {
+        data: [60, 70, 20],
+        backgroundColor: ["#4caf50", "#2196f3", "#ff9800"],
+        borderWidth: 1,
+      },
+    ],
+  };
 
-        {/* Main Dashboard */}
-        <div className="w-full flex flex-col lg:flex-row gap-6">
-          {/* Left Section */}
-          <div className="w-full lg:w-2/3 bg-white p-6 rounded-3xl shadow-md">
-            <div className="flex justify-between items-center mb-6">
-              <h2 className="text-2xl font-bold text-gray-800">
-                Farmer Profit
-              </h2>
-              <select
-                value={selectedWeek}
-                onChange={(e) => setSelectedWeek(e.target.value)}
-                className="w-36 h-10 bg-[#03C9A9] text-white rounded-full px-4 text-center focus:outline-none focus:ring-2 focus:ring-green-700"
+  const transactionData = [
+    {
+      id: 1,
+      date: "2025-01-10",
+      amount: "$200",
+      description: "Sale of 20kg apples",
+    },
+    {
+      id: 2,
+      date: "2025-01-11",
+      amount: "$350",
+      description: "Sale of 30kg bananas",
+    },
+    {
+      id: 3,
+      date: "2025-01-12",
+      amount: "$120",
+      description: "Sale of 10kg oranges",
+    },
+  ];
+
+  return (
+    <div className="h-screen w-screen overflow-y-auto font-[Fjalla One] bg-[#f6eedb] text-[#2A293E]">
+      {/* Header */}
+      <div className="w-full h-[10vh] flex items-center justify-between px-4 border-b-2 border-[#2A293E]">
+        <div className="w-72 h-12 flex items-center gap-2 border-b-2 border-[#2A293E]">
+          <CgSearch size={28} />
+          <input
+            type="text"
+            className="w-full h-full bg-transparent outline-none text-md"
+            placeholder="Search"
+          />
+        </div>
+        <div className="flex items-center gap-4">
+          <div className="relative cursor-pointer">
+            <AiOutlineBell
+              size={32}
+              className="text-[#2A293E]"
+              onClick={() => setShowNotifications(!showNotifications)}
+            />
+            <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
+              {negotiations.length}
+            </span>
+          </div>
+          <IoPerson size={32} className="text-[#2A293E] cursor-pointer" />
+        </div>
+      </div>
+      {/* Notification Panel */}
+      {showNotifications && (
+        <div className="absolute top-[10vh] right-10 w-96 select-none rounded-lg border-1 border-[#2A293E] bg-[#6e912d] bg-opacity-90 shadow-lg overflow-y-auto scrollbar-none max-h-[70vh]">
+          <h3 className="text-lg font-bold ml-4 mt-2 pb-2 text-[#2A293E]">
+            Negotiations
+          </h3>
+          <ul className="flex flex-col">
+            {negotiations.map((negotiation) => (
+              <li
+                key={negotiation.id}
+                className="p-4 px-8 py-3 shadow-md border-b-[1px] border-[#2A293E] bg-[#f6eedb] bg-opacity-90"
               >
-                <option value="week1">Week 1</option>
-                <option value="week2">Week 2</option>
-                <option value="week3">Week 3</option>
-              </select>
+                {/* Requester Info */}
+                <div className="flex items-center gap-4 mb-3">
+                  <img
+                    src={negotiation.requester.image}
+                    alt={negotiation.requester.name}
+                    className="w-12 h-12 rounded-full"
+                  />
+                  <div>
+                    <h4 className="font-bold text-[#2A293E]">
+                      {negotiation.requester.name}
+                    </h4>
+                    <p className="text-sm text-gray-600">
+                      {negotiation.requester.location}
+                    </p>
+                  </div>
+                </div>
+
+                {/* Negotiation Details */}
+                <p className="text-sm text-gray-700 mb-3">
+                  {negotiation.message}
+                </p>
+
+                {/* Actions */}
+                <div className="flex items-center gap-4">
+                  <div className="w-10 h-10 bg-green-500 rounded-full flex items-center justify-center cursor-pointer hover:bg-green-600">
+                    <AiOutlineCheck
+                      size={20}
+                      className="text-white"
+                      title="Accept"
+                    />
+                  </div>
+                  <div className="w-10 h-10 bg-red-500 rounded-full flex items-center justify-center cursor-pointer hover:bg-red-600">
+                    <AiOutlineClose
+                      size={20}
+                      className="text-white"
+                      title="Decline"
+                    />
+                  </div>
+                  <div className="w-10 h-10 bg-blue-500 rounded-full flex items-center justify-center cursor-pointer hover:bg-blue-600">
+                    <AiOutlineMessage
+                      size={20}
+                      className="text-white"
+                      title="Chat"
+                    />
+                  </div>
+                </div>
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
+
+      {/* Farmer's Name */}
+      <div className="text-2xl font-bold px-4 py-4">
+        Welcome, <span className="text-[#6e912d]">{farmerName}</span>!
+      </div>
+
+      {/* Stats Row */}
+      <div className="flex justify-between px-4 gap-6 mb-6">
+        {stats.map((stat, index) => (
+          <div
+            key={index}
+            className="w-full md:w-[23%] flex items-center gap-4 bg-[#f0f7e4] p-4 rounded-lg shadow-md"
+          >
+            {stat.icon}
+            <div>
+              <h3 className="text-lg font-bold">{stat.label}</h3>
+              <p className="text-xl">{stat.value}</p>
             </div>
-            <div className="flex gap-4 overflow-x-auto">
-              {orderedWeeks.map((week) => (
-                <div
-                  key={week}
-                  className={`p-4 rounded-lg min-w-[200px] shadow-md ${
-                    week === selectedWeek
-                      ? "bg-[#03C9A9] text-white font-bold"
-                      : "bg-gray-100 text-gray-700"
+          </div>
+        ))}
+      </div>
+
+      {/* Main Content */}
+      <div className="flex flex-wrap px-4 gap-6">
+        {/* Sales with Toggle */}
+        <div className="w-full md:w-[48%] bg-[#f0f7e4] p-4 rounded-lg shadow-md">
+          <div className="flex justify-between items-center">
+            <h3 className="text-lg font-bold mb-2">Sales Data</h3>
+            <div className="flex gap-2">
+              {["Weekly", "Monthly", "Yearly"].map((view) => (
+                <button
+                  key={view}
+                  onClick={() => setSalesView(view)}
+                  className={`px-4 py-1 rounded-md ${
+                    salesView === view
+                      ? "bg-[#4caf50] text-white"
+                      : "bg-[#f6eedb] text-[#2A293E]"
                   }`}
                 >
-                  {activityDetails[week]}
-                </div>
+                  {view}
+                </button>
               ))}
             </div>
           </div>
-
-          {/* Right Section */}
-          <div className="w-full lg:w-1/3 bg-gray-50 p-6 rounded-3xl shadow-md">
-            <div className="mb-4 flex items-center justify-between p-4 bg-white rounded-full shadow-sm">
-              <span className="text-lg font-bold text-gray-800">
-                Profit: {currentData.profit}%
-              </span>
-              <AiOutlineArrowUp size={24} className="text-[#03C9A9]" />
-            </div>
-            <div className="mb-4 flex items-center justify-between p-4 bg-white rounded-full shadow-sm">
-              <span className="text-lg font-bold text-gray-800">
-                Loss: {currentData.loss}%
-              </span>
-              <AiOutlineArrowDown size={24} className="text-red-500" />
-            </div>
-            <div className="flex items-center justify-between p-4 bg-white rounded-full shadow-sm">
-              <span className="text-lg font-bold text-gray-800">
-                Average: {currentData.average}%
-              </span>
-              <AiOutlineInfoCircle size={24} className="text-yellow-500" />
-            </div>
+          <div className="h-72">
+            <Line data={salesChartData} />
           </div>
         </div>
 
-        {/* Bar Chart */}
-        <div className=" h-1/2 w-1/2">
-          <div className="bg-white p-6 rounded-3xl shadow-md h-full">
-            <Bar data={chartData} />
+        {/* User Reach */}
+        <div className="w-full md:w-[48%] bg-[#f0f7e4] p-4 rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300">
+          <h3 className="text-lg font-bold mb-4 text-[#2A293E]">User Reach</h3>
+          <div className="h-72 flex justify-center items-center">
+            <Pie
+              data={userReachData}
+              options={{
+                responsive: true,
+                plugins: {
+                  legend: {
+                    position: "top",
+                    labels: {
+                      font: {
+                        size: 14,
+                        weight: "bold",
+                        family: "Fjalla One",
+                      },
+                      color: "#2A293E",
+                    },
+                  },
+                  tooltip: {
+                    callbacks: {
+                      label: function (tooltipItem) {
+                        return `${tooltipItem.label}: ${tooltipItem.raw}%`;
+                      },
+                    },
+                  },
+                },
+              }}
+            />
           </div>
+        </div>
+
+        <div className="w-full bg-[#f0f7e4] p-4 rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300">
+          <h3 className="text-lg font-bold mb-4 text-[#2A293E]">
+            Recent Transactions
+          </h3>
+          <ul>
+            {transactionData.map((transaction) => (
+              <li
+                key={transaction.id}
+                className="flex justify-between items-center py-3 border-b border-[#2A293E] last:border-none hover:bg-[#e1e9c5] transition-colors duration-200  cursor-pointer"
+              >
+                <div className="flex gap-4 items-center">
+                  <div className="w-6 h-6 flex items-center justify-center bg-[#6e912d] rounded-full text-white">
+                    <IoBagCheckOutline size={16} />
+                  </div>
+                  <span className="font-medium text-[#2A293E]">
+                    {transaction.date}
+                  </span>
+                </div>
+                <span className="text-sm text-gray-700">
+                  {transaction.description}
+                </span>
+                <span className="font-bold text-[#4caf50]">
+                  {transaction.amount}
+                </span>
+              </li>
+            ))}
+          </ul>
         </div>
       </div>
     </div>
   );
 };
 
-export default Maindash;
+export default Dashboard;

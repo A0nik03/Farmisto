@@ -18,7 +18,7 @@ const NavBar = ({ transparent = false }) => {
 
   return (
     <div
-      className={`h-[13vh] px-6 py-4 flex justify-between items-center ${
+      className={`h-[13vh] w-full px-6 py-4 flex justify-between items-center ${
         transparent ? "bg-transparent" : "bg-zinc-100"
       }`}
     >

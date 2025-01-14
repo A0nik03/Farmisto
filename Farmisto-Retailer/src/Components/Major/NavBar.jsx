@@ -1,31 +1,90 @@
 import React from "react";
-import { FaCartShopping } from "react-icons/fa6";
+import { BsFillDoorOpenFill } from "react-icons/bs";
 import { FaUser } from "react-icons/fa";
-import assets from "../../assets/assets";
 import { Link } from "react-router-dom";
+import { useAuth } from "../../utils/Auth";
+import { motion } from "framer-motion";
+import { useState } from "react";
 
-const NavBar = () => {
+const NavBar = ({ transparent = false }) => {
+  const { authToken, logout } = useAuth();
+  const [active, setActive] = useState(0);
+
   const tabs = [
     { label: "Home", path: "/" },
-    { label: "Nearby Farmers", path: "/farmers" },
-    { label: "About", path: "/about" },
-    { label: "Contact", path: "/contact" }
+    { label: "Crops", path: "/crops" },
+    { label: "Market", path: "/market" },
+    { label: "Contact", path: "/contact" },
   ];
-  
+
   return (
-    <div className="h-[10vh] px-10 py-14 flex justify-between items-center bg-zinc-100">
-      <h1 className="text-3xl font-black text-[#0d331c] ml-10 z-50">Farmisto</h1>
-      <div className="flex gap-12">
+    <div
+      className={`h-[13vh] w-screen px-6 py-4 flex justify-between items-center ${
+        transparent ? "bg-transparent" : "bg-[#f7f3e9]"
+      }`}
+    >
+      {/* Brand Logo */}
+      <h1 className="text-3xl sm:text-5xl font-black font-[Aladin] text-[#6b4226] ml-4 z-50">
+        Farmisto
+      </h1>
+
+      {/* Navigation Links */}
+      <div className="hidden sm:flex gap-8">
         {tabs.map((tab, index) => (
-          <Link to={tab.path} key={index} className="text-xl text-green-800 font-semibold">
+          <Link
+            to={tab.path}
+            key={index}
+            className={`text-lg sm:text-xl w-[auto] flex flex-col gap-2 text-[#6b4226] font-semibold`}
+            onMouseEnter={() => setActive(index)}
+          >
             {tab.label}
+            {active === index && (
+              <motion.span
+                initial={{ width: "0%" }}
+                animate={{ width: "100%" }}
+                whileHover={{ width: "100%" }}
+                transition={{
+                  type: "spring",
+                  stiffness: 150,
+                  mass: 1,
+                  duration: 0.3,
+                }}
+                className="bg-[#7a9f35] shadow-lg shadow-[#5e7b28] h-[4px] block mx-auto rounded-sm"
+              />
+            )}
           </Link>
         ))}
       </div>
-      <div className="flex gap-7">
-        <Link to={'/Dashboard'} className="h-12 px-6 flex items-center justify-center gap-2 bg-[#0d331c] text-white rounded-full">
-            <p>Dashboard</p>
-        </Link>
+
+      {/* Icons Section */}
+      <div className="flex gap-4">
+        <div className="h-10 sm:h-12 px-1 flex items-center justify-center gap-2 bg-[#7a9f35] text-white rounded-full">
+          {authToken ? (
+            <div
+              onClick={() => logout()}
+              className="h-8 w-8 sm:h-10 sm:w-10 flex items-center justify-center bg-white rounded-full hover:scale-110 transition-all duration-300 hover:cursor-pointer"
+            >
+              <BsFillDoorOpenFill
+                size={16}
+                className="sm:size-18"
+                color="#405f27"
+              />
+            </div>
+          ) : (
+            <Link
+              to={"/register"}
+              className="h-8 w-8 sm:h-10 sm:w-10 flex items-center justify-center bg-white rounded-full hover:scale-110 transition-all duration-300 hover:cursor-pointer"
+            >
+              <FaUser size={16} className="sm:size-18 text-[#7a9f35]" />
+            </Link>
+          )}
+          <Link
+            to={"/Dashboard"}
+            className="h-10 px-6 flex items-center justify-center gap-2 bg-white text-[#7a9f35] hover:scale-[1.05] transition-all duration-300 hover:cursor-pointer rounded-full"
+          >
+            <p className="font-bold font-[satoshi]">Dashboard</p>
+          </Link>
+        </div>
       </div>
     </div>
   );

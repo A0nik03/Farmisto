@@ -2,7 +2,7 @@ const { GenerateToken } = require("../middleware/TokenAuth");
 const { hashPassword, comparePassword } = require("../middleware/Hashing");
 const Farmer = require("../models/Farmer");
 const { fetchLocation } = require("./GeoController");
-const validateProfileData = require('../utils/validation');
+const validateProfileData = require("../utils/validation");
 const bcrypt = require("bcrypt");
 
 const FarmerRegister = async (req, res) => {
@@ -162,20 +162,20 @@ const editPassword = async (req, res) => {
     res.status(401).send("Not Editable !!1 " + e);
   }
 };
-const loggedOut = async (req, res) => {
-  try {
-    const token = req.headers.authorization?.split(" ")[1];
-    if (!token) {
-      return res.status(400).json({ msg: "No token provided" });
-    }
-    // clear the token
-    res.setHeader("Authorization", "");
-    return res.status(200).json({ msg: "Logout successful" });
-  } catch (err) {
-    console.error("Error in logout:", err);
-    return res.status(500).json({ msg: "Server Error" });
-  }
-};
+// const loggedOut = async (req, res) => {
+//   try {
+//     const token = req.headers.authorization?.split(" ")[1];
+//     if (!token) {
+//       return res.status(400).json({ msg: "No token provided" });
+//     }
+//     // clear the token
+//     res.setHeader("Authorization", "");
+//     return res.status(200).json({ msg: "Logout successful" });
+//   } catch (err) {
+//     console.error("Error in logout:", err);
+//     return res.status(500).json({ msg: "Server Error" });
+//   }
+// };
 
 module.exports = {
   FarmerRegister,
@@ -183,5 +183,5 @@ module.exports = {
   getProfile,
   updateProfile,
   editPassword,
-  loggedOut,
+  // loggedOut,
 };

@@ -42,7 +42,6 @@ const HowItWorks = () => {
                   backgroundPosition: "center",
                   backgroundSize: "cover",
                   backgroundRepeat: "no-repeat",
-                  backgroundSize: "cover",
                 }}
                 className="h-full w-full flex items-center justify-center bg-red-100 select-none"
               >

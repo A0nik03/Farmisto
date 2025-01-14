@@ -1,13 +1,16 @@
-import React, { useState } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import SideNav from "./sidenav";
-import { useRef } from "react";
 import axios from "axios";
 import { useAuth } from "../utils/Auth";
-import { useEffect } from "react";
+import "./AddItem.css";
+import { motion } from "framer-motion";
 
 const AddItem = () => {
   const { authToken } = useAuth();
-  const [currentPage, setCurrentPage] = useState(1);
+  const [productData, setProductData] = useState([]);
+  const [hover, setHover] = useState(false);
+  const [image, setImage] = useState(null);
+
   const itemName = useRef();
   const itemPrice = useRef();
   const itemCategory = useRef();
@@ -15,28 +18,8 @@ const AddItem = () => {
   const itemType = useRef();
   const itemUnit = useRef();
   const perPrice = useRef();
-  const [productData, setProductData] = useState([]);
-  const [image, setImage] = useState(null);
 
   const productsPerPage = 8;
-
-  // const totalPages = Math.ceil(productData.length / productsPerPage);
-  // const currentProducts = productData.slice(
-  //   (currentPage - 1) * productsPerPage,
-  //   currentPage * productsPerPage
-  // );
-
-  const handleNextPage = () => {
-    if (currentPage < totalPages) {
-      setCurrentPage((prevPage) => prevPage + 1);
-    }
-  };
-
-  const handlePreviousPage = () => {
-    if (currentPage > 1) {
-      setCurrentPage((prevPage) => prevPage - 1);
-    }
-  };
 
   const handleImageChange = (e) => {
     setImage(e.target.files[0]);
@@ -44,7 +27,6 @@ const AddItem = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
     if (!image) {
       alert("Please select an image");
       return;
@@ -62,7 +44,7 @@ const AddItem = () => {
 
     try {
       const response = await axios.post(
-        `${"http://localhost:4000"}/market/add-item`,
+        "http://localhost:4000/market/add-item",
         formData,
         {
           headers: {
@@ -72,19 +54,18 @@ const AddItem = () => {
         }
       );
       alert("Item added successfully!");
-      console.log("Response: ", response.data);
+      setProductData([...productData, response.data.item]);
     } catch (error) {
       alert("Failed to add item. Please try again.");
       console.error("Failed to add item: ", error);
     }
   };
 
-  const GetAllItems = async () => {
+  const getAllItems = async () => {
     try {
       const response = await axios.get(
-        `${"http://localhost:4000"}/market/get-items`
+        "http://localhost:4000/market/get-items"
       );
-      console.log("Response: ", response.data);
       setProductData(response.data.items);
     } catch (error) {
       console.error("Failed to fetch items: ", error);
@@ -92,172 +73,227 @@ const AddItem = () => {
   };
 
   useEffect(() => {
-    GetAllItems();
+    getAllItems();
   }, []);
 
   return (
-    <div className="flex h-screen bg-gray-100">
+    <div className="flex h-screen w-screen">
       <SideNav />
-      <div className="h-full w-full flex flex-col overflow-y-auto">
-        <header className="flex justify-between items-center bg-white shadow-sm mb-3 p-5">
-          <h1 className="text-3xl font-bold text-gray-800">Add New Item</h1>
-        </header>
-        <div className="w-full h-full  p-6">
-          <div className="w-full bg-white rounded-xl overflow-hidden flex gap-5">
-          <div className="w-1/3 p-5 bg-green-300 rounded-xl overflow-hidden">
-          <label htmlFor="image">
-              <div
-                className="h-full w-full rounded-xl overflow-hidden shadow-xl flex items-center justify-center"
-                style={{
-                  backgroundImage: image
-                    ? `url(${URL.createObjectURL(image)})`
-                    : "none",
-                  backgroundSize: "contain",
-                  backgroundRepeat: "no-repeat",
-                  cursor: "pointer",
-                  transition: "background-color 0.3s ease",
-                }}
+      <div className="flex flex-col h-full w-full overflow-y-auto p-6">
+          <h2 className="text-3xl text-nowrap w-1/6 ml-5 font-bold border-b-4 p-2 border-[#70942e] text-[#2A293E] mb-8 font-[Fjalla One]">
+            Product Details
+          </h2>
+        {/* Form Section */}
+        <div
+          className="product bg-[#70942e] p-6 mb-4 rounded-xl shadow-lg"
+          style={{
+            boxShadow:
+              "15px 15px 1px #80e0a7, 15px 15px 1px 2px rgba(0, 128, 0, 0.8)",
+          }}
+        >
+          <form
+            onSubmit={handleSubmit}
+            className="add-item grid grid-cols-1 md:grid-cols-2 gap-4"
+          >
+            <div className="w-full">
+              <label className="block text-sm text-[#2A293E] mb-1 font-[Fjalla One]">
+                Product Name
+              </label>
+              <input
+                type="text"
+                ref={itemName}
+                className="w-full p-2 border-b-2 border-black bg-[#f7f3e9] focus:border-[#70942e] outline-none font-[Fjalla One] text-[#2A293E] text-sm"
+                placeholder="Enter product name"
+              />
+            </div>
+
+            <div className="w-full">
+              <label className="block text-sm text-[#2A293E] mb-1 font-[Fjalla One]">
+                Price
+              </label>
+              <input
+                type="number"
+                ref={itemPrice}
+                className="w-full p-2 border-b-2 border-black bg-[#f7f3e9] focus:border-[#70942e] outline-none font-[Fjalla One] text-[#2A293E] text-sm"
+                placeholder="Enter price"
+              />
+            </div>
+
+            <div className="w-full">
+              <label className="block text-sm text-[#2A293E] mb-1 font-[Fjalla One]">
+                Category
+              </label>
+              <select
+                ref={itemCategory}
+                className="w-full p-2 border-b-2 border-black bg-[#f7f3e9] focus:border-[#70942e] outline-none font-[Fjalla One] text-[#2A293E] text-sm"
               >
-                {!image && <div className="h-full w-full rounded-xl">
-                  <img src="https://cdn.dribbble.com/users/252114/screenshots/2618219/media/e0c7a8d4fa9d769eeb976e48508323e5.jpg?resize=800x600&vertical=center" className="h-full w-full object-cover" alt=""/>
-                </div>}
+                <option>Category</option>
+                <option>Vegetables</option>
+                <option>Fruits</option>
+              </select>
+            </div>
+
+            <div className="w-full">
+              <label className="block text-sm text-[#2A293E] mb-1 font-[Fjalla One]">
+                Quantity
+              </label>
+              <input
+                type="number"
+                ref={itemQuantity}
+                className="w-full p-2 border-b-2 border-black bg-[#f7f3e9] focus:border-[#70942e] outline-none font-[Fjalla One] text-[#2A293E] text-sm"
+                placeholder="Enter quantity"
+              />
+            </div>
+
+            <div className="w-full">
+              <label className="block text-sm text-[#2A293E] mb-1 font-[Fjalla One]">
+                Per Quantity
+              </label>
+              <input
+                type="number"
+                ref={perPrice}
+                className="w-full p-2 border-b-2 border-black bg-[#f7f3e9] focus:border-[#70942e] outline-none font-[Fjalla One] text-[#2A293E] text-sm"
+                placeholder="Enter per quantity price"
+              />
+            </div>
+
+            <div className="w-full">
+              <label className="block text-sm text-[#2A293E] mb-1 font-[Fjalla One]">
+                Unit
+              </label>
+              <select
+                ref={itemUnit}
+                className="w-full p-2 border-b-2 border-black bg-[#f7f3e9] focus:border-[#70942e] outline-none font-[Fjalla One] text-[#2A293E] text-sm"
+              >
+                <option>kg</option>
+                <option>g</option>
+                <option>l</option>
+                <option>ml</option>
+              </select>
+            </div>
+
+            <div className="w-full flex flex-col md:flex-row gap-4">
+              <div className="w-full md:w-1/3">
+                <label className="block text-sm text-[#2A293E] mb-1 font-[Fjalla One]">
+                  Product Type
+                </label>
+                <input
+                  type="text"
+                  ref={itemType}
+                  className="w-full p-2 border-b-2 border-black bg-[#f7f3e9] focus:border-[#70942e] outline-none font-[Fjalla One] text-[#2A293E] text-sm"
+                  placeholder="Enter product type"
+                />
               </div>
-            </label>
+            </div>
+            <div className="w-full flex gap-5 items-center">
+              <div className="w-full md:w-1/2 flex flex-col justify-center items-center">
+                <div
+                  onMouseEnter={() => setHover(true)}
+                  onMouseLeave={() => setHover(false)}
+                  className="w-full h-full relative bg-gray-200 rounded-md flex items-center justify-center cursor-pointer border-2 border-dashed border-[#70942e]"
+                  onClick={() => document.getElementById("image").click()}
+                  style={{
+                    backgroundImage: image
+                      ? `url(${URL.createObjectURL(image)})`
+                      : "none",
+                    backgroundSize: "cover",
+                    backgroundPosition: "center",
+                  }}
+                >
+                  {hover && (
+                    <motion.div
+                      initial={{ opacity: 0, height: "0%" }}
+                      animate={{ opacity: 1, height: "25%" }}
+                      exit={{ opacity: 0, height: "0%" }}
+                      transition={{
+                        duration: 0.3,
+                        damping: 25,
+                        type: "spring",
+                      }}
+                      className="absolute bottom-0 bg-green-100 h-24 w-full flex justify-center items-center"
+                    >
+                      <p className="text-2xl font-bold text-green-800">
+                        Add Image
+                      </p>
+                    </motion.div>
+                  )}
+                  {!image && (
+                    <img
+                      src="https://cdn.dribbble.com/users/252114/screenshots/2618219/media/e0c7a8d4fa9d769eeb976e48508323e5.jpg?resize=800x600&vertical=center"
+                      alt="Placeholder"
+                      className="w-full h-full object-cover rounded-md"
+                    />
+                  )}
+                </div>
+                <input
+                  type="file"
+                  id="image"
+                  accept="image/*"
+                  onChange={handleImageChange}
+                  className="hidden"
+                />
+              </div>
+              <button
+                type="submit"
+                className="mt-4 p-2 w-48 h-16 bg-[#03b79e] text-white rounded-md hover:bg-[#25a392] focus:ring-2 focus:ring-[#ffa580] text-xl font-semibold font-[Fjalla One]"
+              >
+                Add Product
+              </button>
+            </div>
+          </form>
+        </div>
+
+        <div className="bg-opacity-70 p-4 mt-10">
+          {/* Search Bar */}
+          <div className="mb-4 flex justify-between items-center">
+            <h2 className="text-3xl font-bold border-b-4 p-2 border-[#70942e] text-[#2A293E] mb-6 font-[Fjalla One]">
+              Product List
+            </h2>
             <input
-              type="file"
-              accept="image/*"
-              id="image"
-              onChange={handleImageChange}
-              className="hidden"
+              type="text"
+              placeholder="Search products..."
+              className="w-full sm:w-1/2 p-2 border-b-2 border-[#70942e] outline-none text-[#2A293E] font-[Fjalla One] focus:border-[#2A293E]"
             />
           </div>
-            {/* Details Section */}
-            <div className="w-2/3 bg-white p-8 rounded-3xl">
-              <h2 className="text-2xl font-bold text-gray-800 mb-6">
-                Product Details
-              </h2>
-              <form onSubmit={handleSubmit} className="space-y-4">
-                <div>
-                  <input
-                    type="text"
-                    placeholder="Product Name"
-                    className="w-full p-3 border border-gray-300 rounded-full"
-                    ref={itemName}
-                  />
-                  <input
-                    type="text"
-                    placeholder="Type"
-                    className="w-full p-3 mt-3 border border-gray-300 rounded-full"
-                    ref={itemType}
-                  />
-                </div>
-                <div>
-                  <select
-                    ref={itemCategory}
-                    className="w-full p-3 border border-gray-300 rounded-full"
-                  >
-                    <option>Category</option>
-                    <option>Vegetables</option>
-                    <option>Fruits</option>
-                  </select>
-                </div>
-                <div className="grid grid-cols-3 gap-4">
-                  <input
-                    type="number"
-                    placeholder="Quantity"
-                    className="p-3 border border-gray-300 rounded-full"
-                    ref={itemQuantity}
-                  />
-                  <input
-                    type="number"
-                    placeholder="Per Quantity"
-                    className="p-3 border border-gray-300 rounded-full"
-                    ref={perPrice}
-                  />
-                  <select
-                    ref={itemUnit}
-                    className="p-3 border border-gray-300 rounded-full"
-                  >
-                    <option>kg</option>
-                    <option>g</option>
-                    <option>l</option>
-                    <option>ml</option>
-                  </select>
-                  <input
-                    type="number"
-                    placeholder="Price"
-                    className="p-3 border border-gray-300 rounded-full"
-                    ref={itemPrice}
+
+          {/* Product List */}
+          <div className="space-y-4 w-full">
+            {productData.map((product, index) => (
+              <div
+                key={index}
+                className="flex items-center justify-between p-3 bg-green-100 shadow-sm rounded-md hover:bg-green-200"
+              >
+                {/* Product Image */}
+                <div className="flex-shrink-0 w-16 h-16">
+                  <img
+                    src={product.itemImage}
+                    alt={product.itemName}
+                    className="w-full h-full object-cover rounded-md"
                   />
                 </div>
 
-                <div className="flex gap-4">
-                  <button className="w-32 bg-[#03C9A9] text-white rounded-full">
-                    Add Item
-                  </button>
-                  <button className="w-32 bg-red-500 text-white rounded-full">
-                    Delete
-                  </button>
+                {/* Product Name */}
+                <div className="flex-1 px-4">
+                  <p className="text-lg font-semibold text-[#2A293E]">
+                    {product.itemName}
+                  </p>
                 </div>
-              </form>
-            </div>
-          </div>
-          <div className="mt-10 bg-white p-8 rounded-3xl shadow-md">
-            <h3 className="text-2xl font-bold text-gray-800 mb-6">
-              Product List
-            </h3>
-            <table className="w-full text-left border-collapse">
-              <thead>
-                <tr>
-                  <th className="px-6 py-4 text-lg font-semibold text-gray-700 border-b">
-                    Image
-                  </th>
-                  <th className="px-6 py-4 text-lg font-semibold text-gray-700 border-b">
-                    Name
-                  </th>
-                  <th className="px-6 py-4 text-lg font-semibold text-gray-700 border-b">
-                    Quantity
-                  </th>
-                  <th className="px-6 py-4 text-lg font-semibold text-gray-700 border-b">
-                    Rate
-                  </th>
-                </tr>
-              </thead>
-              <tbody>
-                {productData.map((product, index) => (
-                  <tr key={index} className="hover:bg-gray-50">
-                    <td className="px-6 py-4 border-b">
-                      <img
-                        src={product.itemImage}
-                        alt={product.itemName}
-                        className="w-16 h-16 rounded-lg"
-                      />
-                    </td>
-                    <td className="px-6 py-4 border-b">{product.itemName}</td>
-                    <td className="px-6 py-4 border-b">{product.quantity}</td>
-                    <td className="px-6 py-4 border-b">{product.itemPrice}</td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-            {/* <div className="flex justify-between mt-6">
-              <button
-                onClick={handlePreviousPage}
-                className={`px-4 py-2 bg-gray-300 text-gray-700 rounded-full ${
-                  currentPage === 1 ? "opacity-50" : ""
-                }`}
-              >
-                Previous
-              </button>
-              <button
-                onClick={handleNextPage}
-                className={`px-4 py-2 bg-[#03C9A9] text-white rounded-full ${
-                  currentPage === totalPages ? "opacity-50" : ""
-                }`}
-              >
-                Next
-              </button>
-            </div> */}
+
+                {/* Product Quantity */}
+                <div className="flex-shrink-0 px-4">
+                  <p className="text-sm font-medium text-[#2A293E]">
+                    {product.quantity}
+                  </p>
+                </div>
+
+                {/* Product Price */}
+                <div className="flex-shrink-0 px-4">
+                  <p className="text-sm font-medium text-[#2A293E]">
+                    {product.itemPrice}
+                  </p>
+                </div>
+              </div>
+            ))}
           </div>
         </div>
       </div>
