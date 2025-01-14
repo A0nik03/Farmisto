@@ -125,7 +125,7 @@ const AddItem = () => {
               </label>
               <select
                 ref={itemCategory}
-                className="w-full p-2 border-b-2 border-black bg-[#f7f3e9] focus:border-[#70942e] outline-none font-[Fjalla One] text-[#2A293E] text-sm"
+                className="w-full p-2 border-b-2 border-black bg-transparent focus:border-[#70942e] outline-none font-[Fjalla One] text-[#2A293E] text-sm"
               >
                 <option>Category</option>
                 <option>Vegetables</option>
@@ -163,7 +163,7 @@ const AddItem = () => {
               </label>
               <select
                 ref={itemUnit}
-                className="w-full p-2 border-b-2 border-black bg-[#f7f3e9] focus:border-[#70942e] outline-none font-[Fjalla One] text-[#2A293E] text-sm"
+                className="w-full p-2 border-b-2 border-black bg-transparent focus:border-[#70942e] outline-none font-[Fjalla One] text-[#2A293E] text-sm"
               >
                 <option>kg</option>
                 <option>g</option>
@@ -257,11 +257,11 @@ const AddItem = () => {
           </div>
 
           {/* Product List */}
-          <div className="space-y-4 w-full">
+          <div className="w-full">
             {productData.map((product, index) => (
               <div
                 key={index}
-                className="flex items-center justify-between p-3 bg-green-100 shadow-sm rounded-md hover:bg-green-200"
+                className="flex items-center justify-between p-3 bg-[#f0f7e4] shadow-sm even:bg-[#e6f4cc] transition ease-linear duration-200"
               >
                 {/* Product Image */}
                 <div className="flex-shrink-0 w-16 h-16">

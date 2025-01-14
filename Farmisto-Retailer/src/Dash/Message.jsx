@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
 import SideNav from './sidenav';
+import { FaStar } from "react-icons/fa6";
+import { CiStar } from "react-icons/ci";
 
 const Message = () => {
   const [notifications, setNotifications] = useState([
@@ -46,14 +48,18 @@ const Message = () => {
             {notifications.map((notification) => (
               <div
                 key={notification.id}
-                className="flex items-center justify-between p-4 border-b hover:bg-[#f5f0e3] transition"
+                className="flex items-center justify-between p-4 border-b hover:bg-[#f5f0e3] select-none transition"
               >
-                <div className="flex items-center space-x-2 cursor-pointer">
+                <div className="flex items-center space-x-3 cursor-pointer">
                   <div onClick={() => toggleFavorite(notification.id)}>
                     {notification.isFavorite ? (
-                      <span className="text-yellow-500 text-3xl">★</span>
+                      <span className="text-yellow-500 text-3xl">
+                        <FaStar size={24} />
+                      </span>
                     ) : (
-                      <span className="text-gray-400 text-3xl">☆</span>
+                      <span className="text-gray-400 text-3xl">
+                        <CiStar size={24} />
+                      </span>
                     )}
                   </div>
                   <span className="text-[#2A293E]">{notification.text}</span>

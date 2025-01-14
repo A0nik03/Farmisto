@@ -23,7 +23,7 @@ const Work = () => {
   ];
 
   return (
-    <div className="w-full h-[70vh] bg-[#f7f3e9] mx-auto flex flex-col justify-center items-center py-8 gap-8">
+    <div className="w-full h-[70vh] bg-[#f7f3e9] mx-auto flex rounded-t-full flex-col justify-center items-center py-8 gap-8">
       <div
         className="svg"
         style={{

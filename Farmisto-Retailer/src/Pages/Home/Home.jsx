@@ -9,13 +9,13 @@ const Home = () => {
     <div className="relative">
       <NavBar />
       <Homeheader />
-       <Panel />
-       <Work />
-      <Footer/>
-  
+      <Panel />
+      <div className="bg-[#d6e3bf]">
+        <Work />
+      </div>
+      <Footer />
     </div>
   );
 };
 
 export default Home;
-

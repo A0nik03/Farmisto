@@ -1,8 +1,9 @@
 import React, { useState } from "react";
 import SideNav from "./sidenav";
 
+
 const Order = () => {
-  const ordersPerPage = 8; // Number of orders per page
+  const ordersPerPage = 8;
   const allOrders = [
     {
       order: "Tamato",
@@ -93,7 +94,7 @@ const Order = () => {
           {currentOrders.map((item, index) => (
             <div
               key={index}
-              className="flex justify-between p-4 border-b hover:bg-[#f5f0e3] cursor-pointer"
+              className="flex justify-between p-4 border-b hover:bg-[#f4ead2] cursor-pointer transition ease-linear duration-300"
             >
               <div className="flex flex-col w-1/6">
                 <span className="font-medium">{item.order}</span>

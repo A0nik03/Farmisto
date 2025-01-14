@@ -35,7 +35,7 @@ const SideNav = () => {
   const toggleNav = () => {
     setIsOpen((prevState) => {
       const newState = !prevState;
-      localStorage.setItem("isOpen", JSON.stringify(newState)); // Save to localStorage
+      localStorage.setItem("isOpen", JSON.stringify(newState));
       return newState;
     });
   };
@@ -76,12 +76,12 @@ const SideNav = () => {
     >
       <div className="flex flex-col items-center w-full mt-4">
         {/* Toggle Button */}
-        <button
+        <div
           onClick={toggleNav}
-          className="mb-4 p-3 bg-[#3D5A4A] text-white hover:bg-[#7a9f35] transition-colors rounded-full transform hover:scale-110"
+          className="mb-4 p-3 bg-[#3D5A4A] text-white hover:bg-[#7a9f35] transition-colors rounded-full transform hover:scale-[1.05] cursor-pointer"
         >
           <HiOutlineBars3 size={25} />
-        </button>
+        </div>
       </div>
 
       <div className="flex-grow w-full">{links}</div>
