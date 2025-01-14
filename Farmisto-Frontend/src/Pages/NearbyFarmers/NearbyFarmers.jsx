@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
 import NavBar from "../../Components/NavBar/NavBar";
 import Footer from "../../Components/Footer/Footer";
 
@@ -7,9 +8,13 @@ const NearbyFarmers = () => {
   const [filteredFarmers, setFilteredFarmers] = useState([]);
   const [search, setSearch] = useState("");
   const [category, setCategory] = useState("");
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchFarmers = async () => {
+      setLoading(true);
+      await new Promise((resolve) => setTimeout(resolve, 1000)); // Simulated delay
+
       const data = [
         {
           id: 1,
@@ -53,6 +58,7 @@ const NearbyFarmers = () => {
       ];
       setFarmers(data);
       setFilteredFarmers(data);
+      setLoading(false);
     };
 
     fetchFarmers();
@@ -77,6 +83,26 @@ const NearbyFarmers = () => {
     setFilteredFarmers(updatedFarmers);
   }, [search, category, farmers]);
 
+  const debounce = (func, delay) => {
+    let timer;
+    return (...args) => {
+      clearTimeout(timer);
+      timer = setTimeout(() => func(...args), delay);
+    };
+  };
+
+  const handleSearch = debounce((value) => setSearch(value), 300);
+
+  const categories = Array.from(new Set(farmers.map((farmer) => farmer.category)));
+
+  if (loading) {
+    return (
+      <div className="flex justify-center items-center h-[50vh]">
+        <p className="text-xl font-medium text-green-800">Loading...</p>
+      </div>
+    );
+  }
+
   return (
     <div className="h-auto w-full bg-gradient-to-b from-zinc-100 to-white">
       <NavBar />
@@ -88,14 +114,13 @@ const NearbyFarmers = () => {
         <p className="text-md text-center text-gray-600 mt-2">
           Farmers within 30km of your location
         </p>
-        
+
         <div className="flex flex-wrap justify-center items-center gap-4 mt-10">
           <input
             type="text"
             placeholder="Search by name"
             className="p-2 border border-gray-300 rounded-md shadow-sm focus:ring focus:ring-green-200"
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
+            onChange={(e) => handleSearch(e.target.value)}
           />
           <select
             className="p-2 border border-gray-300 rounded-md shadow-sm focus:ring focus:ring-green-200"
@@ -103,19 +128,22 @@ const NearbyFarmers = () => {
             onChange={(e) => setCategory(e.target.value)}
           >
             <option value="">All Categories</option>
-            <option value="Veggies">Veggies</option>
-            <option value="Fruits">Fruits</option>
-            <option value="Dairy">Dairy</option>
-            <option value="Spices">Spices</option>
+            {categories.map((cat) => (
+              <option key={cat} value={cat}>
+                {cat}
+              </option>
+            ))}
           </select>
         </div>
 
         {filteredFarmers.length > 0 ? (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mt-10">
             {filteredFarmers.map((farmer) => (
-              <div
+              <Link
+                to="/Profile"
                 key={farmer.id}
                 className="bg-white p-6 shadow-lg rounded-lg hover:scale-[1.02] transition"
+                aria-label={`View profile of ${farmer.name}`}
               >
                 <div className="flex justify-center">
                   <img
@@ -123,7 +151,11 @@ const NearbyFarmers = () => {
                       farmer.picture ||
                       "https://via.placeholder.com/150/FFFFFF?text=No+Image"
                     }
-                    alt={farmer.name}
+                    alt={
+                      farmer.picture
+                        ? farmer.name
+                        : "Placeholder image for farmer profile"
+                    }
                     className="w-24 h-24 object-cover rounded-full shadow-lg"
                   />
                 </div>
@@ -150,7 +182,7 @@ const NearbyFarmers = () => {
                     {farmer.category}
                   </p>
                 </div>
-              </div>
+              </Link>
             ))}
           </div>
         ) : (
@@ -168,3 +200,4 @@ const NearbyFarmers = () => {
 };
 
 export default NearbyFarmers;
+

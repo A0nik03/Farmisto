@@ -1,4 +1,4 @@
-import React, { useRef, useEffect, useState } from "react";
+import React, { useRef, useEffect, useState, useContext } from "react";
 import { RiLeafFill } from "react-icons/ri";
 import { FaApple, FaArrowLeftLong } from "react-icons/fa6";
 import { PuffLoader } from "react-spinners";
@@ -9,7 +9,7 @@ import axios from "axios";
 import { useAuth } from "../../utils/Auth";
 
 const Register = () => {
-  const {setToken} = useAuth();
+  const {login} = useAuth();
   const navigate = useNavigate();
   const [isLogin, setIsLogin] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -68,40 +68,35 @@ const Register = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (
-      !emailRef.current.value ||
-      !passwordRef.current.value ||
-      (!isLogin && !nameRef.current.value)
-    ) {
+  
+    if (!emailRef.current?.value || !passwordRef.current?.value || (!isLogin && !nameRef.current?.value)) {
       alert("All fields are required!");
       return;
     }
-
+  
     setLoading(true);
-
+  
     const formData = {
       farmerName: nameRef.current?.value || "",
       farmerEmail: emailRef.current.value,
       farmerPassword: passwordRef.current.value,
       farmerLocation: locationRef.current,
     };
-
-    console.log(formData)
-
+  
+    console.log(formData);
+  
     try {
       const BASE_URL = "http://localhost:4000";
-
+  
       const response = await axios.post(
         `${BASE_URL}/farmer/${isLogin ? "login" : "register"}`,
         formData
       );
       console.log("Response: ", response.data);
       if (response.status === 200) {
-
-        // localStorage.setItem("authToken",response.data.token)
-        setToken(response.data.token);
-
-        nameRef.current.value = "";
+        login(response.data.token);
+  
+        nameRef.current && (nameRef.current.value = "");
         emailRef.current.value = "";
         passwordRef.current.value = "";
         locationRef.current = null;
@@ -112,11 +107,10 @@ const Register = () => {
         error
       );
     }
-
-    setTimeout(() => {
-      setLoading(false);
-    }, 2000);
+  
+    setLoading(false);
   };
+  
 
   useEffect(() => {
     if (!isLogin) {

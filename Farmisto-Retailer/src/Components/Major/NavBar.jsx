@@ -24,7 +24,7 @@ const NavBar = ({ transparent = false }) => {
       }`}
     >
       {/* Brand Logo */}
-      <h1 className="text-3xl sm:text-5xl font-black font-[Aladin] text-[#6b4226] ml-4 z-50">
+      <h1 className="text-3xl sm:text-5xl font-black text-[#6b4226] ml-4 z-50">
         Farmisto
       </h1>
 
@@ -82,7 +82,7 @@ const NavBar = ({ transparent = false }) => {
             to={"/Dashboard"}
             className="h-10 px-6 flex items-center justify-center gap-2 bg-white text-[#7a9f35] hover:scale-[1.05] transition-all duration-300 hover:cursor-pointer rounded-full"
           >
-            <p className="font-bold font-[satoshi]">Dashboard</p>
+            <p className="font-bold">Dashboard</p>
           </Link>
         </div>
       </div>

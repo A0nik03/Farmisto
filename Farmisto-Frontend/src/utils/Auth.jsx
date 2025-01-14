@@ -24,6 +24,7 @@ const AuthProvider = ({ children }) => {
 
   // Login function to save token and user details
   const login = (token, user) => {
+    console.log("Checking:", token)
     localStorage.setItem("authToken", token);
     localStorage.setItem("userDetails", JSON.stringify(user));
     setAuthToken(token);

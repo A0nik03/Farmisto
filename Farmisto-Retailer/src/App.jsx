@@ -12,7 +12,7 @@ import Settings from './Dash/Settings'
 
 const App = () => {
   return (
-    <div className='h-screen w-screen font-[Inter] bg-[#f7f3e9]'>
+    <div className='h-screen w-screen font-[Fjalla One] bg-[#f7f3e9]'>
     <Routes>
     <Route path='/' element={<Home/>}/>
     <Route path='/Dashboard' element={<Dashboard/>}/>

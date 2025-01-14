@@ -4,7 +4,7 @@ import { MdEmail } from "react-icons/md";
 
 const Footer = () => {
   return (
-    <div className="h-[80vh] bg-[#2c3e2e] flex flex-col font-[satoshi]">
+    <div className="h-[80vh] bg-[#2c3e2e] flex flex-col">
       {/* Top Gradient Bar */}
       <div className="w-full h-2 flex">
         <div className="w-1/2 h-full bg-[#7a9f35]"></div>

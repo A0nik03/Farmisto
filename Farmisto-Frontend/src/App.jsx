@@ -13,6 +13,7 @@ import Cart from './Pages/Cart/Cart'
 import Register from './Pages/Register/Register'
 import PlaceOrder from './Pages/PlaceOrder/PlaceOrder'
 import Confirmation from './Pages/Confirmation/Confirmation'
+import FarmerProfile from './Pages/NearbyFarmers/FarmerProfile'
 
 const App = () => {
   return (
@@ -23,6 +24,7 @@ const App = () => {
     <Route path='/about' element={<About/>}/>
     <Route path='/contact' element={<Contact/>}/>
     <Route path='/farmers' element={<NearbyFarmers/>}/>
+    <Route path='/Profile' element={<FarmerProfile/>}/>
     <Route path='/faq' element={<FAQs/>}/>
     <Route path='/terms-conditions' element={<TermsConditions/>}/>
     <Route path='/privacy-policy' element={<PrivacyPolicy/>}/>

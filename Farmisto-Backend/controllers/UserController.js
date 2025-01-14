@@ -83,7 +83,7 @@ const BuyItem = async (req, res) => {
         email: farmer.email,
       },
     });
-    console.log(ItemToCart)
+
     return res.status(200).json({
       msg: "Item added to cart",
       item: ItemToCart,
@@ -99,8 +99,25 @@ const BuyItem = async (req, res) => {
   }
 };
 
+const GetUser = async(req, res) => {
+  const id = req.params.id;
+  if (!id) {
+    return res.status(400).json({ msg: "No user id provided!" });
+  }
+  try {
+    const user = await User.findById(id);
+    if (!user) {
+      return res.status(404).json({ msg: "User not found!" });
+    }
+    return res.status(200).json({ user });
+  } catch (error) {
+    console.error(error);
+  }
+}
+
 module.exports = {
   UserRegister,
   UserLogin,
   BuyItem,
+  GetUser,
 };

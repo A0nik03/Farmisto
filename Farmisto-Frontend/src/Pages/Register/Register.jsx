@@ -93,7 +93,7 @@ const Register = () => {
         `${BASE_URL}/user/${isLogin ? "login" : "register"}`,
         formData
       );
-      console.log("Response: ", response.data);
+      console.log("Response Data: ", response.data);
 
       if (response.status === 200) {
         if (isLogin) {
@@ -106,7 +106,7 @@ const Register = () => {
         emailRef.current.value = "";
         passwordRef.current.value = "";
         locationRef.current = null;
-        navigate(-1)
+        navigate('/')
       }
     } catch (error) {
       console.error(

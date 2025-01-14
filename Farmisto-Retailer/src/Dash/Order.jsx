@@ -1,49 +1,35 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import SideNav from "./sidenav";
+import axios from "axios";
+import { useAuth } from "../utils/Auth";
+import moment from "moment";
 
 
 const Order = () => {
-  const ordersPerPage = 8;
-  const allOrders = [
-    {
-      order: "Tamato",
-      id: "#ID238976",
-      date: "Apr 24, 2022",
-      customer: "Chieko Chute",
-      payment: "Paid",
-      status: "Unfulfilled",
-      price: "500rs",
-    },
-    {
-      order: "Potato",
-      id: "#ID264923",
-      date: "May 10, 2022",
-      customer: "Jacob Jones",
-      payment: "Unpaid",
-      status: "Unfulfilled",
-      price: "300rs",
-    },
-    {
-      order: "Potato",
-      id: "#ID264923",
-      date: "May 10, 2022",
-      customer: "Jacob Jones",
-      payment: "Unpaid",
-      status: "Unfulfilled",
-      price: "300rs",
-    },
-    {
-      order: "Potato",
-      id: "#ID264923",
-      date: "May 10, 2022",
-      customer: "Jacob Jones",
-      payment: "Unpaid",
-      status: "Unfulfilled",
-      price: "300rs",
-    }
-  ];
+  const { authToken} = useAuth();
+  const [allOrders, setAllOrders] = useState([]);
 
-  const currentOrders = allOrders;
+  useEffect(() => {
+    const fetchOrders = async () => {
+      try {
+        const response = await axios.get(
+          "http://localhost:4000/payments/farmer-get-payment",
+          {
+            headers: {
+              Authorization: `Bearer ${authToken}`,
+              "Content-Type": "application/json",
+            },
+          }
+        );
+        console.log(response.data);
+        setAllOrders(response.data);
+      } catch (error) {
+        console.error("Error fetching orders:", error);
+      }
+    };
+    fetchOrders();
+  }, [authToken]);
+
 
   return (
     <div className="flex h-screen bg-[#f7f3e9]">
@@ -91,40 +77,40 @@ const Order = () => {
         </div>
 
         <div className="flex flex-col">
-          {currentOrders.map((item, index) => (
+          {allOrders.map((item, index) => (
             <div
               key={index}
               className="flex justify-between p-4 border-b hover:bg-[#f4ead2] cursor-pointer transition ease-linear duration-300"
             >
               <div className="flex flex-col w-1/6">
-                <span className="font-medium">{item.order}</span>
-                <span className="text-sm text-[#2A293E]">{item.id}</span>
+                <span className="font-medium">Order-{index}</span>
+                <span className="text-sm text-[#2A293E]">#{item._id}</span>
               </div>
-              <div className="w-1/6">{item.date}</div>
-              <div className="w-1/6">{item.customer}</div>
+              <div className="w-1/6">{moment(item.createdAt).format("MMMM D, YYYY")}</div>
+              <div className="w-1/6">{item.buyer.name}</div>
               <div className="w-1/6">
                 <span
                   className={`px-2 py-1 text-xs font-medium rounded ${
-                    item.payment === "Paid"
+                    item.paymentMethod === "Paid"
                       ? "bg-green-100 text-green-600"
                       : "bg-red-100 text-red-600"
                   }`}
                 >
-                  {item.payment}
+                  {item.paymentMethod}
                 </span>
               </div>
               <div className="w-1/6">
                 <span
                   className={`px-2 py-1 text-xs font-medium rounded ${
-                    item.status === "Shipping"
+                    item.paymentStatus === "Shipping"
                       ? "bg-blue-100 text-blue-600"
                       : "bg-orange-100 text-orange-600"
                   }`}
                 >
-                  {item.status}
+                  {item.paymentStatus}
                 </span>
               </div>
-              <div className="w-1/6">{item.price}</div>
+              <div className="w-1/6">{item.totalAmount}</div>
             </div>
           ))}
         </div>

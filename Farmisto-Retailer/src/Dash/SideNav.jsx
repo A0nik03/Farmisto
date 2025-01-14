@@ -54,14 +54,14 @@ const SideNav = () => {
           <NavLink
             to={route.path}
             key={key}
-            className={`flex items-center p-3 font-mono font-medium 
+            className={`flex items-center p-3 font-medium 
                 transition-all duration-300 ease-in-out 
                 ${isActive ? "text-white bg-gradient-to-r from-[#7a9f35] to-[#6b8e2b]" : "text-[#2E7D32]"} 
                 hover:bg-gradient-to-r hover:from-[#6b8e2b] hover:to-[#7a9f35] hover:text-white 
                 hover:shadow-lg rounded-xl`}
           >
             <route.icon className={`w-6 h-6 ${isOpen ? "ml-2" : "mr-0"}`} />
-            {isOpen && <span className="ml-7 text-xl font-[satoshi]">{route.name}</span>}
+            {isOpen && <span className="ml-7 text-xl">{route.name}</span>}
           </NavLink>
         );
       })}
@@ -92,7 +92,7 @@ const SideNav = () => {
       {/* Themed Banner Section */}
       {isOpen && (
         <div className="w-full p-3 bg-[#3D5A4A] text-white text-center">
-          <p className="text-sm font-semibold">"Grow your farm, grow your future"</p>
+          <p className="text-sm font-semibold">Grow your farm, grow your future</p>
         </div>
       )}
     </div>

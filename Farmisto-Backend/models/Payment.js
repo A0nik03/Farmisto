@@ -80,9 +80,6 @@ const paymentSchema = new mongoose.Schema(
       default: Date.now,
     },
   },
-  {
-    timestamps: true,
-  }
 );
 
 const Payment = mongoose.model("Payment", paymentSchema);

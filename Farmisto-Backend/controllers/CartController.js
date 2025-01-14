@@ -5,7 +5,6 @@ const GetCartDetail = async (req, res) => {
   try {
     const cartItems = await Cart.find({ buyer: id })
 
-    console.log(cartItems)
 
     if (!cartItems.length) {
       return res.status(200).json({
