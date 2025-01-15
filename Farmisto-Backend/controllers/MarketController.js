@@ -118,8 +118,22 @@ const GetItems = async (req, res) => {
   }
 };
 
+const GetItemsByFarmerEmail = async (req, res) => {
+  try {
+    const items = await Market.find({"seller.email": req.user.email});
+    console.log(items)
+    if (!items.length) {
+      return res.status(200).json({ message: "No items available!" });
+    }
+    return res.status(200).json({ message: "Items fetched successfully!", items });
+  } catch (error) {
+    return res.status(500).json({ message: "Error while fetching items!", error: error.message });
+  }
+};
+
 module.exports = {
   AddItem,
   DeleteItem,
   GetItems,
+  GetItemsByFarmerEmail
 };

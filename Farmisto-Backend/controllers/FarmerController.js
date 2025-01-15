@@ -58,6 +58,12 @@ const FarmerRegister = async (req, res) => {
 
 const FarmerLogin = async (req, res) => {
   const { farmerEmail, farmerPassword } = req.body;
+  console.log(
+    "Farmer Email:",
+    farmerEmail,
+    "Farmer Password:",
+    farmerPassword
+  )
   if (!farmerEmail || !farmerPassword) {
     return res.status(400).json({ msg: "All fields are required" });
   }
@@ -66,6 +72,8 @@ const FarmerLogin = async (req, res) => {
     if (!farmer) {
       return res.status(400).json({ msg: "Invalid Credentials" });
     }
+
+    console.log(farmer)
 
     const isMatch = await comparePassword(
       farmerPassword,

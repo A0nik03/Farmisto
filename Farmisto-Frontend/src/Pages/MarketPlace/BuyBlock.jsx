@@ -196,7 +196,7 @@ const BuyBlock = () => {
                         <p className="text-md font-semibold text-zinc-600 mt-2">
                           Price:{" "}
                           <span className="text-green-500">
-                            Rs {selectedProduct.itemPrice} / Kg
+                            Rs {selectedProduct.itemPrice} / {selectedProduct.itemUnit.unit}
                           </span>
                         </p>
                         <div className="flex h-10 flex-col gap-1 bg-green-400 w-full rounded-md mt-4 overflow-hidden">
@@ -272,7 +272,7 @@ const BuyBlock = () => {
                               {product.itemName}
                             </p>
                             <p className="text-md font-medium text-green-500">
-                              Rs {product.itemPrice} / Kg
+                              Rs {product.itemPrice} / {product.itemUnit.unit}
                             </p>
                             <p className="font-medium">By: {product.seller.name}</p>
                           </div>
@@ -387,7 +387,7 @@ const BuyBlock = () => {
                       {product.itemName}
                     </h3>
                     <span className="text-lg font-medium text-green-900">
-                      Rs {product.itemPrice} g
+                      Rs {product.itemPrice} {product.itemUnit.unit}
                     </span>
                   </div>
                   <div

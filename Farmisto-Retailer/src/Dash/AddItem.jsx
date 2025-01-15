@@ -10,6 +10,7 @@ const AddItem = () => {
   const [productData, setProductData] = useState([]);
   const [hover, setHover] = useState(false);
   const [image, setImage] = useState(null);
+  const [imageError, setImageError] = useState(false);
 
   const itemName = useRef();
   const itemPrice = useRef();
@@ -19,16 +20,15 @@ const AddItem = () => {
   const itemUnit = useRef();
   const perPrice = useRef();
 
-  const productsPerPage = 8;
-
   const handleImageChange = (e) => {
     setImage(e.target.files[0]);
+    setImageError(false); // Clear error when a new image is selected
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!image) {
-      alert("Please select an image");
+      setImageError(true);
       return;
     }
 
@@ -54,7 +54,7 @@ const AddItem = () => {
         }
       );
       alert("Item added successfully!");
-      setProductData([...productData, response.data.item]);
+      setProductData((prevData) => [...prevData, response.data.item]);
     } catch (error) {
       alert("Failed to add item. Please try again.");
       console.error("Failed to add item: ", error);
@@ -64,7 +64,12 @@ const AddItem = () => {
   const getAllItems = async () => {
     try {
       const response = await axios.get(
-        "http://localhost:4000/market/get-items"
+        `http://localhost:4000/market/get-items-farmer`,
+        {
+          headers: {
+            Authorization: `Bearer ${authToken}`,
+          },
+        }
       );
       setProductData(response.data.items);
     } catch (error) {
@@ -73,16 +78,18 @@ const AddItem = () => {
   };
 
   useEffect(() => {
-    getAllItems();
-  }, []);
+    if (authToken) {
+      getAllItems();
+    }
+  }, [authToken]);
 
   return (
     <div className="flex h-screen w-screen">
       <SideNav />
       <div className="flex flex-col h-full w-full overflow-y-auto p-6">
-          <h2 className="text-3xl text-nowrap w-1/6 ml-5 font-bold border-b-4 p-2 border-[#70942e] text-[#2A293E] mb-8 font-[Fjalla One]">
-            Product Details
-          </h2>
+        <h2 className="text-3xl text-nowrap w-1/6 ml-5 font-bold border-b-4 p-2 border-[#70942e] text-[#2A293E] mb-8 font-[Fjalla One]">
+          Product Details
+        </h2>
         {/* Form Section */}
         <div
           className="product bg-[#70942e] p-6 mb-4 rounded-xl shadow-lg"
@@ -95,6 +102,7 @@ const AddItem = () => {
             onSubmit={handleSubmit}
             className="add-item grid grid-cols-1 md:grid-cols-2 gap-4"
           >
+            {/* Form Inputs */}
             <div className="w-full">
               <label className="block text-sm text-[#2A293E] mb-1 font-[Fjalla One]">
                 Product Name
@@ -133,6 +141,7 @@ const AddItem = () => {
               </select>
             </div>
 
+            {/* Remaining Form Fields */}
             <div className="w-full">
               <label className="block text-sm text-[#2A293E] mb-1 font-[Fjalla One]">
                 Quantity
@@ -172,19 +181,7 @@ const AddItem = () => {
               </select>
             </div>
 
-            <div className="w-full flex flex-col md:flex-row gap-4">
-              <div className="w-full md:w-1/3">
-                <label className="block text-sm text-[#2A293E] mb-1 font-[Fjalla One]">
-                  Product Type
-                </label>
-                <input
-                  type="text"
-                  ref={itemType}
-                  className="w-full p-2 border-b-2 border-black bg-[#f7f3e9] focus:border-[#70942e] outline-none font-[Fjalla One] text-[#2A293E] text-sm"
-                  placeholder="Enter product type"
-                />
-              </div>
-            </div>
+            {/* Image Upload Section */}
             <div className="w-full flex gap-5 items-center">
               <div className="w-full md:w-1/2 flex flex-col justify-center items-center">
                 <div
@@ -232,7 +229,14 @@ const AddItem = () => {
                   onChange={handleImageChange}
                   className="hidden"
                 />
+                {imageError && (
+                  <p className="text-red-500 text-sm mt-2">
+                    Please select an image
+                  </p>
+                )}
               </div>
+
+              {/* Submit Button */}
               <button
                 type="submit"
                 className="mt-4 p-2 w-48 h-16 bg-[#03b79e] text-white rounded-md hover:bg-[#25a392] focus:ring-2 focus:ring-[#ffa580] text-xl font-semibold font-[Fjalla One]"
@@ -243,8 +247,8 @@ const AddItem = () => {
           </form>
         </div>
 
+        {/* Product List */}
         <div className="bg-opacity-70 p-4 mt-10">
-          {/* Search Bar */}
           <div className="mb-4 flex justify-between items-center">
             <h2 className="text-3xl font-bold border-b-4 p-2 border-[#70942e] text-[#2A293E] mb-6 font-[Fjalla One]">
               Product List
@@ -256,14 +260,13 @@ const AddItem = () => {
             />
           </div>
 
-          {/* Product List */}
+          {/* Product Data Display */}
           <div className="w-full">
-            {productData.map((product, index) => (
+            {productData.map((product) => (
               <div
-                key={index}
+                key={product._id}
                 className="flex items-center justify-between p-3 bg-[#f0f7e4] shadow-sm even:bg-[#e6f4cc] transition ease-linear duration-200"
               >
-                {/* Product Image */}
                 <div className="flex-shrink-0 w-16 h-16">
                   <img
                     src={product.itemImage}
@@ -271,22 +274,16 @@ const AddItem = () => {
                     className="w-full h-full object-cover rounded-md"
                   />
                 </div>
-
-                {/* Product Name */}
                 <div className="flex-1 px-4">
                   <p className="text-lg font-semibold text-[#2A293E]">
                     {product.itemName}
                   </p>
                 </div>
-
-                {/* Product Quantity */}
                 <div className="flex-shrink-0 px-4">
                   <p className="text-sm font-medium text-[#2A293E]">
                     {product.quantity}
                   </p>
                 </div>
-
-                {/* Product Price */}
                 <div className="flex-shrink-0 px-4">
                   <p className="text-sm font-medium text-[#2A293E]">
                     {product.itemPrice}
