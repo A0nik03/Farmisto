@@ -41,6 +41,7 @@ const AuthProvider = ({ children }) => {
       localStorage.setItem("authToken", token);
       setAuthToken(token);
       setUserDetails(decoded);
+     
     } catch (error) {
       console.error("Failed to decode token:", error.message);
     }

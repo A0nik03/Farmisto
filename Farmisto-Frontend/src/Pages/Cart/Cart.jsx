@@ -36,7 +36,7 @@ const Cart = () => {
   };
 
   const fetchCart = async (dsnt) => {
-    const id = userDetails?._id;
+    const id = userDetails?.id;
     if (authToken) {
       try {
         const response = await axios.post(
@@ -164,7 +164,7 @@ const Cart = () => {
   };
 
   const ClearCart = async () => {
-    const id = userDetails._id;
+    const id = userDetails.id;
 
     if (authToken) {
       try {

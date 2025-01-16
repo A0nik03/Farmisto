@@ -100,7 +100,7 @@ const Register = () => {
           const token = response.data.token;
           const user = response.data.user;
           console.log("User: ",user)
-          login(token, user);
+          login(token);
         }
         nameRef.current.value = "";
         emailRef.current.value = "";

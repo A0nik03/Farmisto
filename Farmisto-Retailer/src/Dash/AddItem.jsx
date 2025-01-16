@@ -22,7 +22,7 @@ const AddItem = () => {
 
   const handleImageChange = (e) => {
     setImage(e.target.files[0]);
-    setImageError(false); // Clear error when a new image is selected
+    setImageError(false);
   };
 
   const handleSubmit = async (e) => {
@@ -137,7 +137,22 @@ const AddItem = () => {
               >
                 <option>Category</option>
                 <option>Vegetables</option>
-                <option>Fruits</option>
+                <option>Nuts</option>
+                <option>Spices</option>
+              </select>
+            </div>
+
+            <div className="w-full">
+              <label className="block text-sm text-[#2A293E] mb-1 font-[Fjalla One]">
+                Type
+              </label>
+              <select
+                ref={itemType}
+                className="w-full p-2 border-b-2 border-black bg-transparent focus:border-[#70942e] outline-none font-[Fjalla One] text-[#2A293E] text-sm"
+              >
+                <option>All</option>
+                <option>Seasonal</option>
+                <option>Daily</option>
               </select>
             </div>
 

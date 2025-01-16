@@ -1,5 +1,7 @@
 import React, { useState } from "react";
 import { CgSearch } from "react-icons/cg";
+import { useAuth } from "../utils/Auth";
+import axios from "axios";
 import {
   AiOutlineBell,
   AiOutlineCheck,
@@ -25,6 +27,11 @@ import {
   Tooltip,
   Legend,
 } from "chart.js";
+import { useEffect } from "react";
+import moment from "moment";
+import { MapContainer, Marker, Popup, TileLayer, useMap } from "react-leaflet";
+import "leaflet/dist/leaflet.css";
+import { PuffLoader } from "react-spinners";
 
 ChartJS.register(
   CategoryScale,
@@ -38,9 +45,53 @@ ChartJS.register(
 );
 
 const Dashboard = () => {
+  const { authToken, userDetails } = useAuth();
   const [salesView, setSalesView] = useState("Weekly");
   const [showNotifications, setShowNotifications] = useState(false);
-  const farmerName = "John Doe";
+  const [salesData, setSalesData] = useState([]);
+  const [dashboardData, setDashboardData] = useState([]);
+  const [location, setLocation] = useState(null);
+
+  const GetLocation = async() => {
+    try {
+      const response = await axios.get("http://localhost:4000/farmer/location",{
+        headers: {
+          Authorization: `Bearer ${authToken}`,
+        },
+      });
+      if (response.status === 200) {
+        setLocation(response.data.farmerLocation);
+      } else {
+        console.log("Failed to get location.");
+      }
+    } catch (error) {
+      console.error("Error fetching location: ", error);
+    }
+  };
+
+  const GetDashboard = async () => {
+    try {
+      const response = await axios.get(
+        "http://localhost:4000/farmer/dashboard",
+        {
+          headers: {
+            Authorization: `Bearer ${authToken}`,
+          },
+        }
+      );
+      if (response.status === 200) {
+        setSalesData(response.data.dashboard.salesData);
+        setDashboardData(response.data.dashboard);
+      }
+    } catch (error) {
+      console.error("Error fetching dashboard data: ", error);
+    }
+  };
+
+  useEffect(() => {
+    GetDashboard();
+    GetLocation();
+  }, [authToken, userDetails]);
 
   const negotiations = [
     {
@@ -85,7 +136,6 @@ const Dashboard = () => {
     },
   ];
 
-  // Example Stats
   const stats = [
     {
       label: "Total Produce Sold",
@@ -94,33 +144,27 @@ const Dashboard = () => {
     },
     {
       label: "Total Revenue",
-      value: "$18,000",
+      value: `Rs ${dashboardData.revenue}`,
       icon: <IoWalletOutline size={24} className="text-yellow-600" />,
     },
     {
       label: "Transactions",
-      value: "34",
+      value: dashboardData.totalTransactions,
       icon: <IoLeafOutline size={24} className="text-blue-600" />,
     },
     {
       label: "Users Reached",
-      value: "150",
+      value: dashboardData.userReach,
       icon: <IoPeopleOutline size={24} className="text-red-600" />,
     },
   ];
 
-  const salesData = {
-    Weekly: [2000, 2500, 1800, 3000],
-    Monthly: [8000, 9000, 7500, 9500],
-    Yearly: [60000, 72000, 80000, 70000],
-  };
-
   const salesChartData = {
-    labels: ["Week 1", "Week 2", "Week 3", "Week 4"],
+    labels: ["Week 1", "Week 2", "Week 3", "Week 4", "Week 5", "Week 6"],
     datasets: [
       {
         label: `${salesView} Sales ($)`,
-        data: salesData[salesView],
+        data: salesData && salesData[salesView] ? salesData[salesView] : [],
         borderColor: "#6e912d",
         backgroundColor: "#a8c686",
         borderWidth: 2,
@@ -128,37 +172,8 @@ const Dashboard = () => {
     ],
   };
 
-  const userReachData = {
-    labels: ["Youths", "Adults", "Seniors"],
-    datasets: [
-      {
-        data: [60, 70, 20],
-        backgroundColor: ["#4caf50", "#2196f3", "#ff9800"],
-        borderWidth: 1,
-      },
-    ],
-  };
-
-  const transactionData = [
-    {
-      id: 1,
-      date: "2025-01-10",
-      amount: "$200",
-      description: "Sale of 20kg apples",
-    },
-    {
-      id: 2,
-      date: "2025-01-11",
-      amount: "$350",
-      description: "Sale of 30kg bananas",
-    },
-    {
-      id: 3,
-      date: "2025-01-12",
-      amount: "$120",
-      description: "Sale of 10kg oranges",
-    },
-  ];
+  console.log("Location:",location)
+  const isLoading = !location?.latitude;
 
   return (
     <div className="h-screen w-screen overflow-y-auto font-[Fjalla One] bg-[#f6eedb] text-[#2A293E]">
@@ -252,7 +267,8 @@ const Dashboard = () => {
 
       {/* Farmer's Name */}
       <div className="text-2xl font-bold px-4 py-4">
-        Welcome, <span className="text-[#6e912d]">{farmerName}</span>!
+        Welcome,{" "}
+        <span className="text-[#6e912d] capitalize">{userDetails?.name}</span>!
       </div>
 
       {/* Stats Row */}
@@ -265,7 +281,7 @@ const Dashboard = () => {
             {stat.icon}
             <div>
               <h3 className="text-lg font-bold">{stat.label}</h3>
-              <p className="text-xl">{stat.value}</p>
+              <p className="text-xl ml-2">{stat.value}</p>
             </div>
           </div>
         ))}
@@ -298,37 +314,46 @@ const Dashboard = () => {
           </div>
         </div>
 
-        {/* User Reach */}
+        {/* User Location */}
         <div className="w-full md:w-[48%] bg-[#f0f7e4] p-4 rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300">
-          <h3 className="text-lg font-bold mb-4 text-[#2A293E]">User Reach</h3>
-          <div className="h-72 flex justify-center items-center">
-            <Pie
-              data={userReachData}
-              options={{
-                responsive: true,
-                plugins: {
-                  legend: {
-                    position: "top",
-                    labels: {
-                      font: {
-                        size: 14,
-                        weight: "bold",
-                        family: "Fjalla One",
-                      },
-                      color: "#2A293E",
-                    },
-                  },
-                  tooltip: {
-                    callbacks: {
-                      label: function (tooltipItem) {
-                        return `${tooltipItem.label}: ${tooltipItem.raw}%`;
-                      },
-                    },
-                  },
-                },
-              }}
-            />
-          </div>
+          <h3 className="text-lg font-bold mb-4 text-[#2A293E]">Most Users</h3>
+          {isLoading ? (
+            <div className="flex justify-center items-center h-96">
+              <PuffLoader color="#65db9e" size={60} />
+            </div>
+          ) : (
+            <div className="relative w-full h-72 bg-red-100 overflow-hidden rounded-lg">
+              {isLoading ? (
+                <div className="flex justify-center items-center h-96">
+                  <PuffLoader color="#65db9e" size={60} />
+                </div>) : (
+                  <MapContainer
+                  center={[location.latitude, location.longitude]}
+                  zoom={13}
+                  attributionControl={true}
+                  scrollWheelZoom={true}
+                  style={{ width: "100%", height: "100%" }}
+                >
+                  <TileLayer
+                    attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+                    url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+                  />
+
+                  {dashboardData?.coordinates?.map((coord, index) => (
+                    <Marker
+                      key={index}
+                      position={[
+                        coord.latitude || "28.8",
+                        coord.longitude || "78.3",
+                      ]}
+                    >
+                      <Popup>{coord.name}</Popup>
+                    </Marker>
+                  ))}
+                </MapContainer>
+              )}
+            </div>
+          )}
         </div>
 
         <div className="w-full bg-[#f0f7e4] p-4 rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300">
@@ -336,9 +361,9 @@ const Dashboard = () => {
             Recent Transactions
           </h3>
           <ul>
-            {transactionData.map((transaction) => (
+            {dashboardData?.transactions?.map((transaction, index) => (
               <li
-                key={transaction.id}
+                key={index}
                 className="flex justify-between items-center py-3 border-b border-[#2A293E] last:border-none hover:bg-[#e1e9c5] transition-colors duration-200  cursor-pointer"
               >
                 <div className="flex gap-4 items-center">
@@ -346,14 +371,14 @@ const Dashboard = () => {
                     <IoBagCheckOutline size={16} />
                   </div>
                   <span className="font-medium text-[#2A293E]">
-                    {transaction.date}
+                    {moment(transaction.createdAt).format("MMMM D, YYYY")}
                   </span>
                 </div>
-                <span className="text-sm text-gray-700">
-                  {transaction.description}
+                <span className="text-md font-medium text-gray-700">
+                  {transaction.buyer.name}
                 </span>
                 <span className="font-bold text-[#4caf50]">
-                  {transaction.amount}
+                  Rs {transaction.totalAmount}
                 </span>
               </li>
             ))}

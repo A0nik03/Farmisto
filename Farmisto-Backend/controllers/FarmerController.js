@@ -4,6 +4,8 @@ const Farmer = require("../models/Farmer");
 const { fetchLocation } = require("./GeoController");
 const validateProfileData = require("../utils/validation");
 const bcrypt = require("bcrypt");
+const Payment = require("../models/Payment");
+const User = require("../models/User");
 
 const FarmerRegister = async (req, res) => {
   const { farmerName, farmerEmail, farmerPassword, farmerLocation } = req.body;
@@ -58,12 +60,7 @@ const FarmerRegister = async (req, res) => {
 
 const FarmerLogin = async (req, res) => {
   const { farmerEmail, farmerPassword } = req.body;
-  console.log(
-    "Farmer Email:",
-    farmerEmail,
-    "Farmer Password:",
-    farmerPassword
-  )
+  console.log("Farmer Email:", farmerEmail, "Farmer Password:", farmerPassword);
   if (!farmerEmail || !farmerPassword) {
     return res.status(400).json({ msg: "All fields are required" });
   }
@@ -73,7 +70,7 @@ const FarmerLogin = async (req, res) => {
       return res.status(400).json({ msg: "Invalid Credentials" });
     }
 
-    console.log(farmer)
+    console.log(farmer);
 
     const isMatch = await comparePassword(
       farmerPassword,
@@ -170,6 +167,180 @@ const editPassword = async (req, res) => {
     res.status(401).send("Not Editable !!1 " + e);
   }
 };
+
+const GetSalesData = async (req, res) => {
+  try {
+    const payments = await Payment.find({
+      orderStatus: "Delivered",
+    });
+
+    // Initialize sales data
+    const salesData = {
+      Weekly: [0, 0, 0, 0],
+      Monthly: [0, 0, 0, 0],
+      Yearly: [0, 0, 0, 0],
+    };
+
+    const currentDate = new Date();
+
+    payments.forEach((payment) => {
+      const orderDate = new Date(payment.createdAt);
+
+      const weekDifference = Math.floor(
+        (currentDate - orderDate) / (7 * 24 * 60 * 60 * 1000)
+      );
+      const monthDifference =
+        currentDate.getMonth() -
+        orderDate.getMonth() +
+        12 * (currentDate.getFullYear() - orderDate.getFullYear());
+      const yearDifference =
+        currentDate.getFullYear() - orderDate.getFullYear();
+
+      if (weekDifference < 4) {
+        salesData.Weekly[3 - weekDifference] += payment.totalAmount;
+      }
+
+      if (monthDifference < 4) {
+        salesData.Monthly[3 - monthDifference] += payment.totalAmount;
+      }
+
+      if (yearDifference < 4) {
+        salesData.Yearly[3 - yearDifference] += payment.totalAmount;
+      }
+    });
+
+    res.status(200).json(salesData);
+  } catch (error) {
+    res.status(500).json({ message: "Server error", error: error.message });
+  }
+};
+
+const GetDashboard = async (req, res) => {
+  try {
+    const payments = await Payment.find({ "farmers.email": req.user.email });
+
+    const revenue = payments.reduce((acc, order) => {
+      return order.orderStatus === "Delivered" ? acc + order.totalAmount : acc;
+    }, 0);
+
+    const transactions = payments.filter(
+      (order) => order.orderStatus === "Delivered"
+    );
+
+    const userReached = payments.reduce((acc, order) => {
+      if (!acc[order.buyer.email]) {
+        acc[order.buyer.email] = true;
+      }
+      return acc;
+    }, {});
+
+    const coordinates = await Promise.all(
+      transactions.map(async (payment) => {
+        const user = await User.findOne({ email: payment.buyer.email });
+        if (user && user.userLocation) {
+          return { email: payment.buyer.name, location: user.userLocation };
+        } else {
+          return null;
+        }
+      })
+    );
+
+    const validCoordinates = coordinates.filter(
+      (location) =>
+        location !== null &&
+        location.location.latitude !== undefined &&
+        location.location.longitude !== undefined
+    );
+    const uniqueCoordinates = [
+      ...new Set(validCoordinates.map((user) => JSON.stringify(user.location))),
+    ].map((location) => JSON.parse(location));
+
+    const validUniqueCoordinates = uniqueCoordinates.filter(
+      (loc) => loc.latitude !== null && loc.longitude !== null
+    );
+    console.log("Valid Unique Coordinates:", validUniqueCoordinates);
+
+    const periods = {
+      weeks: 6,
+      months: 12,
+      years: 5,
+    };
+
+    const salesData = {
+      Weekly: Array(periods.weeks).fill(0),
+      Monthly: Array(periods.months).fill(0),
+      Yearly: Array(periods.years).fill(0),
+    };
+
+    const currentDate = new Date();
+
+    transactions.forEach((payment) => {
+      const orderDate = new Date(payment.createdAt);
+
+      const weekDifference = Math.floor(
+        (currentDate - orderDate) / (7 * 24 * 60 * 60 * 1000)
+      );
+      const monthDifference =
+        currentDate.getMonth() -
+        orderDate.getMonth() +
+        12 * (currentDate.getFullYear() - orderDate.getFullYear());
+      const yearDifference =
+        currentDate.getFullYear() - orderDate.getFullYear();
+
+      if (weekDifference < 4) {
+        salesData.Weekly[3 - weekDifference] += payment.totalAmount;
+      }
+
+      if (monthDifference < 4) {
+        salesData.Monthly[3 - monthDifference] += payment.totalAmount;
+      }
+
+      if (yearDifference < 4) {
+        salesData.Yearly[3 - yearDifference] += payment.totalAmount;
+      }
+    });
+
+    const dashData = {
+      revenue: revenue,
+      totalTransactions: transactions.length,
+      userReach: Object.keys(userReached).length,
+      salesData: salesData,
+      transactions: transactions,
+      coordinates: validUniqueCoordinates,
+    };
+
+    return res.json({
+      message: "Dashboard Fetched Successfully",
+      dashboard: dashData,
+    });
+  } catch (error) {
+    console.error("Error in dashboard:", error);
+    return res
+      .status(500)
+      .json({ message: "Server Error", error: error.message });
+  }
+};
+
+const GetFarmerLocation = async (req, res) => {
+  try {
+    const farmer = await Farmer.findOne({ farmerEmail: req.user.email });
+    if (!farmer) {
+      return res.status(404).json({ message: "Farmer not found" });
+    }
+    return res.status(200).json({
+      farmerLocation: {
+        latitude: farmer.farmerLocation?.latitude,
+        longitude: farmer.farmerLocation?.longitude,
+      }
+    });
+  } catch (error) {
+    console.error("Error in getting farmer location:", error);
+    return res
+      .status(500)
+      .json({ message: "Server Error", error: error.message });
+  }
+};
+
 // const loggedOut = async (req, res) => {
 //   try {
 //     const token = req.headers.authorization?.split(" ")[1];
@@ -191,5 +362,7 @@ module.exports = {
   getProfile,
   updateProfile,
   editPassword,
+  GetDashboard,
+  GetFarmerLocation,
   // loggedOut,
 };
