@@ -9,7 +9,6 @@ const Authentication = async(req, res, next) => {
 
     const token = authHeader?.split(" ")[1];
     const person = await verifyToken(token);
-    console.log("Person from token: ", person);
 
     if (!person) {
       return res.status(401).json({ msg: "Unauthorized: Invalid or expired token" });

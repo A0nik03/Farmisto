@@ -21,6 +21,17 @@ const cartSchema = new mongoose.Schema(
       max: 100,
       default: 0,
     },
+    itemUnit:{
+      value:{
+        type: Number,
+        required: true,
+      },
+      unit:{
+        type: String,
+        required: true,
+        enum:["kg", "liter", "g", "ml"]
+      }
+    },
     quantity: {
       type: Number,
       required: true,

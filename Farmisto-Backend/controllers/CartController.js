@@ -35,6 +35,7 @@ const GetCartDetail = async (req, res) => {
         quantity: item.quantity,
         totalCost: totalCost,
         discountedPrice: discountedPrice,
+        itemUnit:item.itemUnit,
         farmer:{
           id:item.farmer.id,
           name:item.farmer.name,

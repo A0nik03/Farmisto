@@ -137,6 +137,7 @@ const AddItem = () => {
               >
                 <option>Category</option>
                 <option>Vegetables</option>
+                <option>Fruits</option>
                 <option>Nuts</option>
                 <option>Spices</option>
               </select>

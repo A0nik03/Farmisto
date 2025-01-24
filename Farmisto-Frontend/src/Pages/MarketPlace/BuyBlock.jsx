@@ -73,12 +73,17 @@ const BuyBlock = () => {
   };
 
   const AddToCart = async (product, quantity = 1) => {
+    console.log(product);
     const item = {
       id: product._id,
       itemName: product.itemName,
       itemPrice: product.itemPrice,
       imageUrl: product.itemImage,
       quantity: quantity,
+      itemUnit:{
+        value: product.itemPrice,
+        unit: product.itemUnit.unit,
+      },
       farmer: {
         id: product.seller.id,
         name: product.seller.name,

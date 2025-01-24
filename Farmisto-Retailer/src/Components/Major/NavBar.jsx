@@ -57,7 +57,7 @@ const NavBar = ({ transparent = false }) => {
       </div>
 
       {/* Icons Section */}
-      <div className="flex gap-4">
+      <div className="w-48 flex gap-4 justify-end pr-5">
         <div className="h-10 sm:h-12 px-1 flex items-center justify-center gap-2 bg-[#7a9f35] text-white rounded-full">
           {authToken ? (
             <div
@@ -75,15 +75,15 @@ const NavBar = ({ transparent = false }) => {
               to={"/register"}
               className="h-8 w-8 sm:h-10 sm:w-10 flex items-center justify-center bg-white rounded-full hover:scale-110 transition-all duration-300 hover:cursor-pointer"
             >
-              <FaUser size={16} className="sm:size-18 text-[#7a9f35]" />
+              <FaUser size={16} className="sm:size-18 text-[#405f27]" />
             </Link>
           )}
-          <Link
+          {authToken && <Link
             to={"/Dashboard"}
             className="h-10 px-6 flex items-center justify-center gap-2 bg-white text-[#7a9f35] hover:scale-[1.05] transition-all duration-300 hover:cursor-pointer rounded-full"
           >
-            <p className="font-bold">Dashboard</p>
-          </Link>
+            <p className="font-bold text-[#405f27]">Dashboard</p>
+          </Link>}
         </div>
       </div>
     </div>

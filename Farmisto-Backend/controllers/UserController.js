@@ -65,7 +65,7 @@ const UserLogin = async (req, res) => {
 
 const BuyItem = async (req, res) => {
   console.log(req)
-  const { itemName, itemPrice, imageUrl, quantity,id,farmer} = req.body;
+  const { itemName, itemPrice, imageUrl, quantity,id,farmer,itemUnit} = req.body;
   if (!itemName || !itemPrice || !imageUrl || !quantity || !id || !farmer) {
     return res.status(400).json({ msg: "Please enter all fields" });
   }
@@ -77,6 +77,7 @@ const BuyItem = async (req, res) => {
       imageUrl: imageUrl,
       quantity: quantity,
       buyer: req.user.id,
+      itemUnit:itemUnit,
       farmer: {
         id: farmer.id,
         name: farmer.name,

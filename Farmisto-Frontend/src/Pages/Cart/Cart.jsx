@@ -294,7 +294,7 @@ const Cart = () => {
                       <p className="text-md font-medium text-zinc-400 mt-2">
                         Price:{" "}
                         <span className="text-green-500">
-                          {item.itemPrice} g
+                          {item.itemPrice} {item.itemUnit.unit}
                         </span>
                       </p>
                       <motion.span

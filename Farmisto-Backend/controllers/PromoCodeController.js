@@ -21,7 +21,7 @@ const PromoCodeGenerator = async (req, res) => {
     console.log(promoCode);
     return res
       .status(200)
-      .json({ message: "Promo Code created successfully", promo: promoCode});
+      .json({ message: "Promo Code created successfully", promo: promoCode });
   } catch (error) {
     console.error(error);
   }
@@ -50,7 +50,7 @@ const PromoCodeApply = async (req, res) => {
     }
 
     if (
-      promoCode.usageLimit !== 0 &&
+      Number(promoCode.usageLimit) !== 0 &&
       promoCode.usedCount >= promoCode.usageLimit
     ) {
       return res
@@ -73,4 +73,38 @@ const PromoCodeApply = async (req, res) => {
   }
 };
 
-module.exports = { PromoCodeGenerator, PromoCodeApply };
+const PromoCodeDelete = async (req, res) => {
+  const { id } = req.params;
+  if (!id) {
+    return res
+      .status(400)
+      .json({ message: "Please provide all the required fields!" });
+  }
+  try {
+    const promoCode = await PromoCode.findByIdAndDelete(id);
+    if (!promoCode) {
+      return res.status(404).json({ message: "Promo Code not found!" });
+    }
+    return res.status(200).json({ message: "Promo Code deleted successfully" });
+  } catch (error) {
+    console.error("Error deleting promo code", error);
+  }
+};
+
+const PromoCodeList = async (req, res) => {
+  try {
+    const promoCodes = await PromoCode.find();
+    return res
+      .status(200)
+      .json({ message: "Promo Codes fetched successfully!", promoCodes });
+  } catch (error) {
+    console.error("Error fetching promo codes", error);
+  }
+};
+
+module.exports = {
+  PromoCodeGenerator,
+  PromoCodeApply,
+  PromoCodeDelete,
+  PromoCodeList,
+};

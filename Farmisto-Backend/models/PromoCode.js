@@ -11,19 +11,16 @@ const PromoCodeSchema = new mongoose.Schema({
         unique:true
     },
     discountPercentage:{
-        type:Number,
-        required:true,
-        min:0,
-        max:100
+        type:String,
+        required:true
     },
     expiryDate:{
         type:Date,
         required:true
     },
     usageLimit:{
-        type:Number,
-        required:true,
-        min:1
+        type:String,
+        required:true
     },
     usedCount:{
         type:Number,

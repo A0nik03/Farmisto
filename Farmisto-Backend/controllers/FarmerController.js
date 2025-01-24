@@ -60,7 +60,6 @@ const FarmerRegister = async (req, res) => {
 
 const FarmerLogin = async (req, res) => {
   const { farmerEmail, farmerPassword } = req.body;
-  console.log("Farmer Email:", farmerEmail, "Farmer Password:", farmerPassword);
   if (!farmerEmail || !farmerPassword) {
     return res.status(400).json({ msg: "All fields are required" });
   }
@@ -69,8 +68,6 @@ const FarmerLogin = async (req, res) => {
     if (!farmer) {
       return res.status(400).json({ msg: "Invalid Credentials" });
     }
-
-    console.log(farmer);
 
     const isMatch = await comparePassword(
       farmerPassword,
@@ -174,7 +171,6 @@ const GetSalesData = async (req, res) => {
       orderStatus: "Delivered",
     });
 
-    // Initialize sales data
     const salesData = {
       Weekly: [0, 0, 0, 0],
       Monthly: [0, 0, 0, 0],
@@ -218,6 +214,21 @@ const GetSalesData = async (req, res) => {
 const GetDashboard = async (req, res) => {
   try {
     const payments = await Payment.find({ "farmers.email": req.user.email });
+    const filtered = payments.filter((item) => item.cartItems != undefined);
+    const allFilteredCartItems = filtered
+      .flatMap((payment) => payment.cartItems)
+      .filter((item) => item.itemUnit != undefined);
+
+      const totalProduce = allFilteredCartItems.reduce((acc, cartItem) => {
+        if (cartItem.itemUnit.unit) {
+          if (!acc.unit) {
+            acc.unit = cartItem.itemUnit.unit; 
+          }
+          acc.amount = (acc.amount || 0) + cartItem.quantity; 
+        }
+        return acc;
+      }, {});
+      
 
     const revenue = payments.reduce((acc, order) => {
       return order.orderStatus === "Delivered" ? acc + order.totalAmount : acc;
@@ -258,7 +269,6 @@ const GetDashboard = async (req, res) => {
     const validUniqueCoordinates = uniqueCoordinates.filter(
       (loc) => loc.latitude !== null && loc.longitude !== null
     );
-    console.log("Valid Unique Coordinates:", validUniqueCoordinates);
 
     const periods = {
       weeks: 6,
@@ -301,6 +311,7 @@ const GetDashboard = async (req, res) => {
     });
 
     const dashData = {
+      produceCount: totalProduce,
       revenue: revenue,
       totalTransactions: transactions.length,
       userReach: Object.keys(userReached).length,
@@ -331,7 +342,7 @@ const GetFarmerLocation = async (req, res) => {
       farmerLocation: {
         latitude: farmer.farmerLocation?.latitude,
         longitude: farmer.farmerLocation?.longitude,
-      }
+      },
     });
   } catch (error) {
     console.error("Error in getting farmer location:", error);

@@ -1,19 +1,18 @@
 import React, { useState, useEffect } from "react";
 import { NavLink } from "react-router-dom";
+import { FaBox } from "react-icons/fa";
 import {
-  AiOutlineHome,
-  AiOutlineSchedule,
-  AiOutlineMessage,
-  AiOutlineSetting,
-} from "react-icons/ai";
-import { MdSpaceDashboard } from "react-icons/md";
-import { BsFillTreeFill, BsCreditCard } from "react-icons/bs";
+  MdDiscount,
+  MdHome,
+  MdMessage,
+  MdShoppingCart,
+  MdSpaceDashboard,
+} from "react-icons/md";
 import { HiOutlineBars3 } from "react-icons/hi2";
 
 const SideNav = () => {
   const [isOpen, setIsOpen] = useState(true);
 
-  // Load the initial state from localStorage on component mount
   useEffect(() => {
     const savedState = localStorage.getItem("isOpen");
     if (savedState) {
@@ -21,17 +20,15 @@ const SideNav = () => {
     }
   }, []);
 
-  // Define the routes and icons
   const routes = [
-    { path: "/", name: "Home", icon: AiOutlineHome },
+    { path: "/", name: "Home", icon: MdHome },
     { path: "/dashboard", name: "Dashboard", icon: MdSpaceDashboard },
-    { path: "/Additem", name: "Add-item", icon: AiOutlineSchedule },
-    { path: "/Orders", name: "Orders", icon: BsFillTreeFill },
-    { path: "/Message", name: "Messages", icon: AiOutlineMessage },
-    { path: "/settings", name: "Settings", icon: AiOutlineSetting },
+    { path: "/Additem", name: "Add Items", icon: MdShoppingCart },
+    { path: "/Orders", name: "Orders", icon: FaBox },
+    { path: "/Message", name: "Messages", icon: MdMessage },
+    { path: "/Discounts", name: "Discounts", icon: MdDiscount },
   ];
 
-  // Toggle the nav state and save it to localStorage
   const toggleNav = () => {
     setIsOpen((prevState) => {
       const newState = !prevState;
@@ -40,12 +37,10 @@ const SideNav = () => {
     });
   };
 
-  // Helper function to check if the current route is active
   function activeRoute(routeName) {
     return window.location.href.indexOf(routeName) > -1;
   }
 
-  // Generate the list of links
   const links = (
     <div className="space-y-4 px-3 mt-8">
       {routes.map((route, key) => {
@@ -56,7 +51,11 @@ const SideNav = () => {
             key={key}
             className={`flex items-center p-3 font-medium 
                 transition-all duration-300 ease-in-out 
-                ${isActive ? "text-white bg-gradient-to-r from-[#7a9f35] to-[#6b8e2b]" : "text-[#2E7D32]"} 
+                ${
+                  isActive
+                    ? "text-white bg-gradient-to-r from-[#7a9f35] to-[#6b8e2b]"
+                    : "text-[#405f27]"
+                } 
                 hover:bg-gradient-to-r hover:from-[#6b8e2b] hover:to-[#7a9f35] hover:text-white 
                 hover:shadow-lg rounded-xl`}
           >
@@ -72,15 +71,15 @@ const SideNav = () => {
     <div
       className={`${
         isOpen ? "w-[20%]" : "w-[5%]"
-      } h-screen flex flex-col items-center bg-[#F7F3E9] shadow-2xl border-r-2 border-[#D9CDA3] transition-all duration-300`}
+      } h-screen flex flex-col items-center bg-[#F7F3E9] shadow-2xl select-none border-r-2 border-[#D9CDA3] transition-all duration-300`}
     >
-      <div className="flex flex-col items-center w-full mt-4">
+      <div className="flex flex-col w-full items-start mt-4">
         {/* Toggle Button */}
         <div
           onClick={toggleNav}
-          className="mb-4 p-3 bg-[#3D5A4A] text-white hover:bg-[#7a9f35] transition-colors rounded-full transform hover:scale-[1.05] cursor-pointer"
+          className="mb-4 p-3 pl-5 text-[#3D5A4A] transition-colors rounded-full transform hover:scale-[1.08] cursor-pointer"
         >
-          <HiOutlineBars3 size={25} />
+          <HiOutlineBars3 size={30} />
         </div>
       </div>
 
@@ -92,7 +91,9 @@ const SideNav = () => {
       {/* Themed Banner Section */}
       {isOpen && (
         <div className="w-full p-3 bg-[#3D5A4A] text-white text-center">
-          <p className="text-sm font-semibold">Grow your farm, grow your future</p>
+          <p className="text-sm font-semibold">
+            Grow your farm, grow your future
+          </p>
         </div>
       )}
     </div>
