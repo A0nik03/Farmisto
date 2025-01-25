@@ -8,6 +8,7 @@ import Payments from "./Dash/Payments";
 import Register from "./Pages/Register/Register";
 import Settings from "./Dash/Settings";
 import Discounts from "./Pages/Discounts/Discounts";
+import Learn from "./Pages/Learn/Learn";
 
 const App = () => {
   return (
@@ -17,6 +18,7 @@ const App = () => {
         <Route path="/Dashboard" element={<Dashboard />} />
 
         <Route path="/Additem" element={<AddItem />} />
+        <Route path="/learn" element={<Learn />} />
         <Route path="/Orders" element={<Order />} />
         <Route path="/Message" element={<Message />} />
         <Route path="/Payments" element={<Payments />} />

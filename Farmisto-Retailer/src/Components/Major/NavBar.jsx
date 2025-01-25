@@ -12,7 +12,7 @@ const NavBar = ({ transparent = false }) => {
 
   const tabs = [
     { label: "Home", path: "/" },
-    { label: "Crops", path: "/crops" },
+    { label: "Learn", path: "/learn" },
     { label: "Market", path: "/market" },
     { label: "Contact", path: "/contact" },
   ];
