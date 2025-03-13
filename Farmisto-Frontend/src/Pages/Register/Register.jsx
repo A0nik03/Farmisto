@@ -14,7 +14,7 @@ const Register = () => {
   const [isLogin, setIsLogin] = useState(false);
   const [loading, setLoading] = useState(false);
   const [showModal, setShowModal] = useState(false);
-  const [locationError, setLocationError] = useState(null);
+  const [locationError, setLocationError] = useState("");
   const locationRef = useRef(null);
 
   const nameRef = useRef();
@@ -69,55 +69,56 @@ const Register = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (
-      !emailRef.current.value ||
-      !passwordRef.current.value ||
-      (!isLogin && !nameRef.current.value)
+      !emailRef.current?.value ||
+      !passwordRef.current?.value ||
+      (!isLogin && !nameRef.current?.value)
     ) {
       alert("All fields are required!");
       return;
     }
-
+  
     setLoading(true);
-
+  
     const formData = {
       userName: nameRef.current?.value || "",
       email: emailRef.current.value,
       password: passwordRef.current.value,
       userLocation: locationRef.current,
     };
-
+  
+    let isMounted = true;
+  
     try {
       const BASE_URL = "http://localhost:4000";
-
+  
       const response = await axios.post(
         `${BASE_URL}/user/${isLogin ? "login" : "register"}`,
         formData
       );
       console.log("Response Data: ", response.data);
-
-      if (response.status === 200) {
+  
+      if (isMounted && response.status === 200) {
         if (isLogin) {
           const token = response.data.token;
           const user = response.data.user;
-          console.log("User: ",user)
+          console.log("User: ", user);
           login(token);
         }
-        nameRef.current.value = "";
-        emailRef.current.value = "";
-        passwordRef.current.value = "";
-        locationRef.current = null;
-        navigate('/')
+        if (nameRef.current) nameRef.current.value = "";
+        if (emailRef.current) emailRef.current.value = "";
+        if (passwordRef.current) passwordRef.current.value = "";
+        if (locationRef.current) locationRef.current = "";
+        navigate("/");
       }
     } catch (error) {
       console.error(
         `Error while ${isLogin ? "logging in" : "registering"}!`,
         error
       );
-    }
-
-    setTimeout(() => {
+    } finally {
+      isMounted = false;
       setLoading(false);
-    }, 2000);
+    }
   };
 
   useEffect(() => {

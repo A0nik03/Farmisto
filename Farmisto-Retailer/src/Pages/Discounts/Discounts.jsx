@@ -101,22 +101,21 @@ const Discounts = () => {
   }, [authToken]);
 
   return (
-    <div className="relative flex h-screen bg-[#f7f3e9]">
+    <div className="relative flex min-h-screen overflow-y-auto bg-[#f7f3e9]">
       <SideNav />
-      <div className="w-full h-screen p-2 overflow-y-auto font-[Fjalla One]">
+      <div className="w-full h-screen p-4 md:p-6 overflow-y-auto font-[Fjalla One]">
         {/* Heading */}
-        <h2 className="text-3xl w-full ml-5 font-bold border-b-4 p-2 border-[#70942e] text-[#2A293E] mb-5">
+        <h2 className="absolute right-5 text-2xl sm:text-3xl w-40 flex items-center justify-center ml-0 sm:ml-5 font-bold border-b-4 p-2 border-[#70942e] text-[#2A293E] mb-5">
           Discounts
         </h2>
 
-        {/* Tab Navigation */}
-        <div className="flex space-x-6 mb-4">
+        <div className="flex flex-wrap gap-2 sm:gap-6 mb-4 mt-20 sm:mt-10">
           {["All Discounts", "Expired Discounts", "Active Discounts"].map(
             (tab, index) => (
               <button
                 key={index}
                 onClick={() => setActiveTab(tab)}
-                className={`px-4 py-2 text-sm font-medium border-b-2 ${
+                className={`px-3 py-1 sm:px-4 sm:py-2 text-sm font-medium border-b-2 ${
                   activeTab === tab ? "border-[#70942e]" : "border-transparent"
                 } bg-transparent hover:border-[#70942e]`}
               >
@@ -127,13 +126,13 @@ const Discounts = () => {
         </div>
 
         {/* Search Input */}
-        <div className="mb-4 flex justify-between items-center">
+        <div className="mb-4 flex flex-col sm:flex-row justify-between items-center gap-4">
           <input
             type="text"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             placeholder="Search by promo code..."
-            className="px-4 py-2 border outline-none rounded shadow-sm"
+            className="w-full sm:w-auto px-4 py-2 border outline-none rounded shadow-sm"
           />
         </div>
 
@@ -151,65 +150,69 @@ const Discounts = () => {
             return (
               <div
                 key={index}
-                className="flex justify-between p-4 border-b hover:bg-[#f4ead2] cursor-pointer transition ease-linear duration-300"
+                className="flex flex-col sm:flex-row justify-between p-4 border-b bg-[#f4ead2] rounded-md cursor-pointer transition ease-linear duration-300 gap-4"
               >
-                {/* Image */}
                 <div
-                  className="w-20 h-20 bg-cover bg-center rounded-full mx-4"
+                  className="w-20 h-20 bg-cover bg-center rounded-full mx-auto sm:mx-4 shrink-0"
                   style={{ backgroundImage: `url(${product.itemImage})` }}
                 ></div>
 
-                {/* Content Columns */}
-                <div className="flex flex-col justify-center flex-1 pl-5 space-y-2">
-                  <span className="font-medium text-lg tracking-wide">
-                    {product.itemName}
-                  </span>
-                  <span className="text-sm text-[#2A293E]">
-                    #{discount._id}
-                  </span>
-                  <span className="text-sm text-[#2A293E]">
-                    Code:{" "}
-                    <span className="text-[#70942e] font-semibold">
-                      {discount.code}
+                <div className="flex flex-col sm:flex-row flex-1 gap-4">
+                  <div className="flex flex-col justify-center flex-1 space-y-2 text-left">
+                    <span className="font-medium text-lg tracking-wide">
+                      {product.itemName}
                     </span>
-                  </span>
-                </div>
-
-                <div className="flex flex-col justify-center flex-1 ml-10 space-y-2">
-                  <div className="text-sm text-[#2A293E]">
-                    Issued: {moment(discount.createdAt).format("MMMM D, YYYY")}
-                  </div>
-                  <div className="text-sm text-[#2A293E]">
-                    Expires:{" "}
-                    {moment(discount.expiryDate).format("MMMM D, YYYY")}
-                  </div>
-                </div>
-
-                <div className="flex flex-col justify-center flex-1 space-y-2">
-                  <div className="text-sm text-[#ff6347] font-semibold">
-                    Original Price:{" "}
-                    <span className="line-through">{product.itemPrice} ₹</span>
-                  </div>
-                  <div className="text-md text-[#70942e] font-bold">
-                    Discounted Price: {discountedPrice} ₹
-                  </div>
-                </div>
-
-                <div className="flex flex-col justify-center flex-1 space-y-2">
-                  <div className="text-sm text-[#2A293E]">
-                    Uses Left:{" "}
-                    <span className="text-[#ff6347]">
-                      {discount.usageLimit - discount.usedCount}
+                    <span className="text-sm text-[#2A293E]">
+                      #{discount._id}
+                    </span>
+                    <span className="text-sm text-[#2A293E]">
+                      Code:{" "}
+                      <span className="text-[#70942e] font-semibold">
+                        {discount.code}
+                      </span>
                     </span>
                   </div>
-                </div>
 
-                <div className="h-12 w-12 rounded-full flex justify-center items-center">
-                  <div
-                    onClick={() => handleDeleteDiscount(discount._id)}
-                    className="px-3 py-1 bg-red-600 text-white rounded-lg hover:bg-red-700 transition duration-300"
-                  >
-                    <MdDelete size={20} />
+                  <div className="flex flex-col justify-center flex-1 space-y-2 sm:text-left">
+                    <div className="text-sm text-[#2A293E]">
+                      Issued:{" "}
+                      {moment(discount.createdAt).format("MMMM D, YYYY")}
+                    </div>
+                    <div className="text-sm text-[#2A293E]">
+                      Expires:{" "}
+                      {moment(discount.expiryDate).format("MMMM D, YYYY")}
+                    </div>
+                  </div>
+
+                  <div className="flex flex-col justify-center flex-1 space-y-2 sm:text-left">
+                    <div className="text-sm text-[#ff6347] font-semibold">
+                      Original Price:{" "}
+                      <span className="line-through">
+                        {product.itemPrice} ₹
+                      </span>
+                    </div>
+                    <div className="text-md text-[#70942e] font-bold">
+                      Discounted Price: {discountedPrice} ₹
+                    </div>
+                  </div>
+
+                  <div className="flex items-center w-full">
+                    <div className="flex flex-1 space-y-2 sm:text-left">
+                      <div className="text-sm text-[#2A293E]">
+                        Uses Left:{" "}
+                        <span className="text-[#ff6347]">
+                          {discount.usageLimit - discount.usedCount}
+                        </span>
+                      </div>
+                    </div>
+                    <div className="flex justify-center items-center">
+                      <div
+                        onClick={() => handleDeleteDiscount(discount._id)}
+                        className="px-3 py-1 bg-red-600 text-white rounded-lg hover:bg-red-700 transition duration-300 h-10 w-10 flex items-center justify-center"
+                      >
+                        <MdDelete size={20} />
+                      </div>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -218,8 +221,8 @@ const Discounts = () => {
         </div>
 
         {/* Pagination */}
-        <div className="flex justify-center mt-10 absolute bottom-10 left-[50%]">
-          <Stack spacing={2}>
+        <div className="absolute sm:bottom-10 flex left-1/2 -translate-x-1/2 py-6">
+          <Stack spacing={4}>
             <Pagination
               count={Math.ceil(filteredPromos.length / itemsPerPage)}
               page={currentPage}
@@ -227,6 +230,7 @@ const Discounts = () => {
               color="primary"
               variant="outlined"
               shape="rounded"
+              size="small"
             />
           </Stack>
         </div>

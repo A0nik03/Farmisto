@@ -12,7 +12,7 @@ import {
   FaDollarSign,
   FaBoxOpen,
   FaRocket,
-} from "react-icons/fa"; // Updated icons
+} from "react-icons/fa";
 
 const Work = () => {
   const steps = [
@@ -61,25 +61,30 @@ const Work = () => {
   ];
 
   return (
-    <div className="w-full h-screen bg-[#f7f3e9] mx-auto flex rounded-t-full flex-col justify-center items-center py-8 gap-8">
-      <h1 className="text-4xl font-bold mt-12 text-gray-700">
+    <div className="w-full min-h-screen bg-[#f7f3e9] flex flex-col justify-center items-center py-8">
+      <h1 className="text-4xl font-bold mt-8 text-gray-700">
         Our Work Process
       </h1>
-      <div className="h-full w-[70%] mt-10 flex items-center justify-center">
+
+      <div className="w-full max-w-4xl mt-12 px-4">
         <Timeline minEvents={6}>
           {steps.map((step) => (
             <Event
               key={step.id}
               color={step.color}
-              className="relative flex flex-col items-center justify-center"
+              className="flex flex-col items-center"
             >
-              <div className="flex items-center justify-center -translate-y-28 p-2">
-                <step.icon className="text-3xl text-white shadow-sm"/>
+              <div
+                className="flex items-center justify-center w-16 h-16 rounded-full shadow-lg"
+                style={{ backgroundColor: step.color }}
+              >
+                <step.icon className="text-3xl text-white" />
               </div>
-              <Title className="text-xl font-medium text-gray-800 mt-2 text-center">
+
+              <Title className="mt-4 text-lg font-semibold text-gray-800 text-center">
                 {step.title}
               </Title>
-              <Subtitle className="text-lg text-gray-600 text-center mt-2">
+              <Subtitle className="mt-2 text-sm text-gray-600 text-center">
                 {step.subtitle}
               </Subtitle>
             </Event>

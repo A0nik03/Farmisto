@@ -60,25 +60,26 @@ const DashHeader = () => {
 
   return (
     <>
-      <div className="w-full h-[10vh] flex items-center justify-between border-b-2 mb-5 border-[#2A293E]">
-        {/* Farmer's Name */}
-        <div className="text-2xl font-bold pl-10 py-4">
+      <div className="w-full h-[10vh] relative flex items-center justify-between px-4 sm:px-10 border-b-2 mb-5 border-[#2A293E]">
+        <div className="hidden sm:block text-xl sm:text-2xl font-bold py-2">
           Welcome,{" "}
-          <span className="text-[#405f27] capitalize">{userDetails?.name}</span>
+          <span className="text-[#405f27] capitalize">
+            {userDetails?.name || "Guest"}
+          </span>
           !
         </div>
-        <div className="flex items-center gap-4 pr-4">
+        <div className="absolute right-5 sm:block  flex items-center gap-3 sm:gap-4">
           <div className="h-10 sm:h-12 px-1 flex items-center gap-2 justify-center bg-[#7a9f35] text-white rounded-full">
             <Link
               to={"/Settings"}
-              className="h-8 w-8 sm:h-10 sm:w-10 flex items-center justify-center bg-white rounded-full hover:scale-110 transition-all duration-300 hover:cursor-pointer"
+              className="h-8 w-8 sm:h-10 sm:w-10 flex items-center justify-center bg-white rounded-full hover:scale-110 transition-all duration-300"
             >
-              <AiFillSetting size={23} className="sm:size-18 text-[#405f27]" />
+              <AiFillSetting size={20} className="text-[#405f27]" />
             </Link>
-            <div className="relative h-8 w-8 sm:h-10 sm:w-10 flex items-center justify-center bg-white rounded-full hover:scale-110 transition-all duration-300 hover:cursor-pointer">
+            <div className="relative h-8 w-8 sm:h-10 sm:w-10 flex items-center justify-center bg-white rounded-full hover:scale-110 transition-all duration-300">
               <AiFillBell
-                size={23}
-                className="sm:size-18 text-[#405f27]"
+                size={20}
+                className="text-[#405f27]"
                 onClick={() => setShowNotifications(!showNotifications)}
               />
               <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
@@ -88,28 +89,23 @@ const DashHeader = () => {
             {authToken ? (
               <div
                 onClick={() => logout()}
-                className="h-8 w-8 sm:h-10 sm:w-10 flex items-center justify-center bg-white rounded-full hover:scale-110 transition-all duration-300 hover:cursor-pointer"
+                className="h-8 w-8 sm:h-10 sm:w-10 flex items-center justify-center bg-white rounded-full hover:scale-110 transition-all duration-300"
               >
-                <BsFillDoorOpenFill
-                  size={16}
-                  className="sm:size-18"
-                  color="#405f27"
-                />
+                <BsFillDoorOpenFill size={16} className="text-[#405f27]" />
               </div>
             ) : (
               <Link
                 to={"/register"}
-                className="h-8 w-8 sm:h-10 sm:w-10 flex items-center justify-center bg-white rounded-full hover:scale-110 transition-all duration-300 hover:cursor-pointer"
+                className="h-8 w-8 sm:h-10 sm:w-10 flex items-center justify-center bg-white rounded-full hover:scale-110 transition-all duration-300"
               >
-                <FaUser size={16} className="sm:size-18 text-[#7a9f35]" />
+                <FaUser size={16} className="text-[#7a9f35]" />
               </Link>
             )}
           </div>
         </div>
       </div>
-      {/* Notification Panel */}
       {showNotifications && (
-        <div className="absolute top-[10vh] right-10 w-96 select-none z-50 rounded-lg border-1 border-[#2A293E] bg-[#6e912d] bg-opacity-90 shadow-lg overflow-y-auto scrollbar-none max-h-[70vh]">
+        <div className="absolute top-[10vh] right-5 sm:right-10 sm:w-80 w-[90%] z-50 rounded-lg border border-[#2A293E] bg-[#6e912d] bg-opacity-90 shadow-lg overflow-y-auto scrollbar-none max-h-[70vh]">
           <h3 className="text-lg font-bold ml-4 mt-2 pb-2 text-[#2A293E]">
             Negotiations
           </h3>
@@ -117,53 +113,48 @@ const DashHeader = () => {
             {negotiations.map((negotiation) => (
               <li
                 key={negotiation.id}
-                className="p-4 px-8 py-3 shadow-md border-b-[1px] border-[#2A293E] bg-[#f6eedb] bg-opacity-90"
+                className="p-4 px-8 py-3 shadow-md border-b border-[#2A293E] bg-[#f6eedb] bg-opacity-90"
               >
-                {/* Requester Info */}
                 <div className="flex items-center gap-4 mb-3">
                   <img
                     src={negotiation.requester.image}
                     alt={negotiation.requester.name}
-                    className="w-12 h-12 rounded-full"
+                    className="w-10 h-10 sm:w-12 sm:h-12 rounded-full"
                   />
                   <div>
-                    <h4 className="font-bold text-[#2A293E]">
+                    <h4 className="font-bold text-[#2A293E] truncate">
                       {negotiation.requester.name}
                     </h4>
-                    <p className="text-sm text-gray-600">
+                    <p className="text-sm text-gray-600 truncate">
                       {negotiation.requester.location}
                     </p>
                   </div>
                 </div>
-
-                {/* Negotiation Details */}
-                <p className="text-sm text-gray-700 mb-3">
+                <p className="text-sm text-gray-700 mb-3 truncate">
                   {negotiation.message}
                 </p>
-
-                {/* Actions */}
                 <div className="flex items-center gap-4">
-                  <div className="w-10 h-10 bg-green-500 rounded-full flex items-center justify-center cursor-pointer hover:bg-green-600">
-                    <AiOutlineCheck
-                      size={20}
-                      className="text-white"
-                      title="Accept"
-                    />
-                  </div>
-                  <div className="w-10 h-10 bg-red-500 rounded-full flex items-center justify-center cursor-pointer hover:bg-red-600">
-                    <AiOutlineClose
-                      size={20}
-                      className="text-white"
-                      title="Decline"
-                    />
-                  </div>
-                  <div className="w-10 h-10 bg-blue-500 rounded-full flex items-center justify-center cursor-pointer hover:bg-blue-600">
-                    <AiOutlineMessage
-                      size={20}
-                      className="text-white"
-                      title="Chat"
-                    />
-                  </div>
+                  <button
+                    aria-label="Accept"
+                    className="w-10 h-10 bg-green-500 rounded-full flex items-center justify-center hover:bg-green-600"
+                    onClick={() => console.log("Accepted", negotiation.id)}
+                  >
+                    <AiOutlineCheck size={20} className="text-white" />
+                  </button>
+                  <button
+                    aria-label="Decline"
+                    className="w-10 h-10 bg-red-500 rounded-full flex items-center justify-center hover:bg-red-600"
+                    onClick={() => console.log("Declined", negotiation.id)}
+                  >
+                    <AiOutlineClose size={20} className="text-white" />
+                  </button>
+                  <button
+                    aria-label="Chat"
+                    className="w-10 h-10 bg-blue-500 rounded-full flex items-center justify-center hover:bg-blue-600"
+                    onClick={() => console.log("Chat", negotiation.id)}
+                  >
+                    <AiOutlineMessage size={20} className="text-white" />
+                  </button>
                 </div>
               </li>
             ))}

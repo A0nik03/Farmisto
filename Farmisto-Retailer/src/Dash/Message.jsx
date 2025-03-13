@@ -116,52 +116,54 @@ const Message = () => {
   ]);
 
   return (
-    <div className="flex h-screen bg-[#f7f3e9]">
-      <SideNav />
-      <div className="w-full h-screen bg-[#f7f3e9] p-6 overflow-y-auto">
-        <h2 className="text-4xl mb-8 text-[#2A293E]">Messages</h2>
-        <div className="p-4">
-          <div className="flex justify-between items-center mb-4">
-            <h3 className="text-xl font-semibold text-[#2A293E]">
-              {messages.length} Messages
-            </h3>
-            <input
-              type="text"
-              placeholder="Search by Name"
-              className="p-2 border border-[#d9d4b7] rounded-md"
-            />
-          </div>
+    <div className="flex flex-col min-h-screen relative bg-[#f7f3e9] md:flex-row">
+  <SideNav className="hidden md:block md:w-1/4 lg:w-1/5" />
+  <div className="w-full h-screen p-2 md:p-6 overflow-y-auto bg-[#f7f3e9]">
+    <h2 className="absolute right-5 text-2xl md:text-4xl mb-6 md:mb-8 text-[#2A293E] font-bold">
+      Messages ({messages.length})
+    </h2>
+    <div className="p-2 md:p-4 mt-12">
+      <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-4 gap-2 md:gap-0">
 
-          <div className="flex flex-col overflow-y-auto scrollbar-none">
-            {messages.map((message) => (
-              <div
-                key={message.id}
-                className="relative flex items-center justify-between cursor-pointer p-4 border-b hover:bg-[#f5f0e3] select-none transition"
-              >
-                <div className="flex items-center cursor-pointer">
-                  <div className="h-14 w-14 rounded-lg overflow-hidden">
-                    <img
-                      src={message.profileImage}
-                      className="w-full h-full object-cover"
-                      alt=""
-                    />
-                  </div>
-                  <div className="flex flex-col ml-6">
-                    <span className="text-[#2A293E] text-[1.1rem] font-semibold">
-                      {message.name}
-                    </span>
-                    <span className="text-[#2A293E] text-[1rem]">
-                      {message.message}
-                    </span>
-                  </div>
-                  <span className="absolute right-10 text-[#2A293E] text-md font-medium">45+</span>
-                </div>
+        <input
+          type="text"
+          placeholder="Search by Name"
+          className="w-full md:w-64 p-2 border border-[#d9d4b7] rounded-md text-sm outline-none"
+        />
+      </div>
+
+      <div className="flex flex-col overflow-y-auto max-h-[calc(100vh-200px)] scrollbar-none">
+        {messages.map((message) => (
+          <div
+            key={message.id}
+            className="relative flex flex-col md:flex-row items-start md:items-center justify-between cursor-pointer p-3 md:p-4 border-b hover:bg-[#f5f0e3] select-none transition duration-300 ease-linear"
+          >
+            <div className="flex items-center w-full cursor-pointer">
+              <div className="h-12 w-12 md:h-14 md:w-14 rounded-lg overflow-hidden flex-shrink-0">
+                <img
+                  src={message.profileImage}
+                  className="w-full h-full object-cover"
+                  alt={message.name}
+                />
               </div>
-            ))}
+              <div className="flex flex-col ml-4 md:ml-6 flex-grow overflow-hidden">
+                <span className="text-[#2A293E] text-base md:text-[1.1rem] font-semibold truncate">
+                  {message.name}
+                </span>
+                <span className="text-[#2A293E] text-sm md:text-[1rem] truncate">
+                  {message.message}
+                </span>
+              </div>
+              <span className="text-[#2A293E] text-sm md:text-md font-medium mt-2 md:mt-0 md:ml-4 flex-shrink-0">
+                45+
+              </span>
+            </div>
           </div>
-        </div>
+        ))}
       </div>
     </div>
+  </div>
+</div>
   );
 };
 

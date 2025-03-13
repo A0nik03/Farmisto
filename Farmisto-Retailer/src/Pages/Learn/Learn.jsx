@@ -1,6 +1,6 @@
 import React from "react";
-import NavBar from "../../Components/Major/NavBar";
-import { Footer } from "rsuite";
+import NavBar from "../../Components/Major/Navbar";
+import Footer from '../../Components/Footer/Footer'
 
 const Learn = () => {
   return (

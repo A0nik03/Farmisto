@@ -9,6 +9,7 @@ const GenerateToken = (person) => {
       id: person._id,
       email: person.farmerEmail || person.email,
       name: person.userName || person.farmerName,
+      location: person.userLocation || person.farmerLocation,
     },
     process.env.SECRET_KEY,
     { expiresIn: "3d" }

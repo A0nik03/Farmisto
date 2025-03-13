@@ -14,14 +14,9 @@ const MainContent = () => {
 
   const GetLocation = async () => {
     try {
-      const response = await axios.get(
-        "http://localhost:4000/farmer/location",
-        {
-          headers: {
-            Authorization: `Bearer ${authToken}`,
-          },
-        }
-      );
+      const response = await axios.get("http://localhost:4000/farmer/location", {
+        headers: { Authorization: `Bearer ${authToken}` },
+      });
       if (response.status === 200) {
         setLocation(response.data.farmerLocation);
       } else {
@@ -34,17 +29,11 @@ const MainContent = () => {
 
   const GetDashboard = async () => {
     try {
-      const response = await axios.get(
-        "http://localhost:4000/farmer/dashboard",
-        {
-          headers: {
-            Authorization: `Bearer ${authToken}`,
-          },
-        }
-      );
+      const response = await axios.get("http://localhost:4000/farmer/dashboard", {
+        headers: { Authorization: `Bearer ${authToken}` },
+      });
       if (response.status === 200) {
         setSalesData(response.data.dashboard.salesData);
-        console.log(response.data.dashboard);
         setDashboardData(response.data.dashboard);
       }
     } catch (error) {
@@ -75,21 +64,21 @@ const MainContent = () => {
   }, [authToken, userDetails]);
 
   return (
-    <div>
+    <div className="w-full p-2 sm:p-5 py-6 scrollbar-none">
       {/* Main Content */}
-      <div className=" w-full px-5 flex flex-nowrap gap-5">
+      <div className="flex flex-wrap gap-5 justify-center">
         {/* Sales with Toggle */}
-        <div className="w-full md:w-[50vw] bg-gradient-to-r from-green-50 to-yellow-100 p-6 rounded-lg shadow-lg hover:shadow-xl transition-shadow duration-300">
-          <div className="flex justify-between items-center">
-            <h3 className="text-xl font-semibold text-[#405f27] mb-2">
+        <div className="w-full lg:w-[48%] bg-gradient-to-r from-green-50 to-yellow-100 p-6 rounded-md">
+          <div className="flex flex-wrap gap-2 justify-between items-center mb-4">
+            <h3 className="text-xl font-semibold text-[#405f27]">
               Sales Data
             </h3>
-            <div className="flex gap-4">
+            <div className="flex gap-2">
               {["Weekly", "Monthly", "Yearly"].map((view) => (
                 <div
                   key={view}
                   onClick={() => setSalesView(view)}
-                  className={`px-6 py-2 rounded-lg text-sm cursor-pointer hover:scale-[1.08] font-semibold  transition-all duration-300 ${
+                  className={`px-4 py-2 rounded-lg text-sm cursor-pointer hover:scale-[1.08] font-semibold transition-all duration-300 ${
                     salesView === view
                       ? "bg-[#405f27] text-white"
                       : "bg-[#f6eedb] text-[#2A293E]"
@@ -100,22 +89,22 @@ const MainContent = () => {
               ))}
             </div>
           </div>
-          <div className="h-72">
+          <div className="sm:h-72">
             <Line data={salesChartData} />
           </div>
         </div>
 
         {/* User Location */}
-        <div className="w-full md:w-[50vw] bg-gradient-to-r from-green-50 to-yellow-100 p-6 rounded-lg shadow-lg hover:shadow-xl transition-shadow duration-300">
-          <h3 className="text-xl font-semibold text-[#405f27] mb-4">
+        <div className="w-full lg:w-[48%] bg-gradient-to-r from-green-50 to-yellow-100 p-2 rounded-md transition-shadow duration-300">
+          <h3 className="text-xl font-semibold text-[#405f27] mb-2">
             Most Users
           </h3>
           {isLoading ? (
-            <div className="flex justify-center items-center h-96">
+            <div className="flex justify-center items-center h-72">
               <PuffLoader color="#65db9e" size={60} />
             </div>
           ) : (
-            <div className="w-full h-72 bg-green-50 overflow-hidden rounded-lg">
+            <div className="w-full h-80 rounded-lg overflow-hidden">
               <MapContainer
                 center={[location.latitude, location.longitude]}
                 zoom={13}

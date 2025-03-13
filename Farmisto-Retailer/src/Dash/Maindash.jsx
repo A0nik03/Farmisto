@@ -1,10 +1,11 @@
-import React, { useRef, useState } from "react";
+import React, { useRef, useState, useEffect } from "react";
 import { useAuth } from "../utils/Auth";
 import axios from "axios";
 import { RiPlantFill } from "react-icons/ri";
 import { IoWallet } from "react-icons/io5";
 import { GrTransaction } from "react-icons/gr";
 import { BsPeopleFill } from "react-icons/bs";
+import Footer from '../Components/Footer/Footer'
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -16,9 +17,7 @@ import {
   Tooltip,
   Legend,
 } from "chart.js";
-import { useEffect } from "react";
 import "leaflet/dist/leaflet.css";
-import { RxCross2 } from "react-icons/rx";
 import DashHeader from "../Pages/Dashboard/DashHeader";
 import MainContent from "../Pages/Dashboard/MainContent";
 import DiscountSection from "../Pages/Dashboard/DiscountSection";
@@ -35,7 +34,7 @@ ChartJS.register(
 );
 
 const Dashboard = () => {
-  const { authToken} = useAuth();
+  const { authToken } = useAuth();
   const [dashboardData, setDashboardData] = useState([]);
 
   const GetDashboard = async () => {
@@ -60,22 +59,22 @@ const Dashboard = () => {
     {
       label: "Total Produce Sold",
       value: `${dashboardData.produceCount?.amount} ${dashboardData.produceCount?.unit}`,
-      icon: <RiPlantFill size={24} className="text-green-700" />,
+      icon: <RiPlantFill size={26} className="text-green-700" />,
     },
     {
       label: "Total Revenue",
       value: `Rs ${dashboardData.revenue}`,
-      icon: <IoWallet size={24} className="text-yellow-600" />,
+      icon: <IoWallet size={26} className="text-yellow-600" />,
     },
     {
       label: "Transactions",
       value: dashboardData.totalTransactions,
-      icon: <GrTransaction size={24} className="text-blue-600" />,
+      icon: <GrTransaction size={26} className="text-blue-600" />,
     },
     {
       label: "Users Reached",
       value: dashboardData.userReach,
-      icon: <BsPeopleFill size={24} className="text-red-600" />,
+      icon: <BsPeopleFill size={26} className="text-red-600" />,
     },
   ];
 
@@ -85,27 +84,29 @@ const Dashboard = () => {
 
   return (
     <div className="h-screen w-screen relative overflow-y-auto scrollbar-none font-[Fjalla One] bg-[#f6eedb] text-[#2A293E]">
-      {/* Header: -> LogOut,Notification,Settings */}
       <DashHeader />
-      {/* Stats Row */}
-      <div className="flex justify-between px-5 gap-6 mb-6">
+      
+      <div className="w-full grid grid-cols-2 sm:grid-cols-4 gap-2 sm:px-6 px-2 sm:ml-3">
         {stats.map((stat, index) => (
           <div
             key={index}
-            className="w-full md:w-[24%] flex items-center gap-5 bg-gradient-to-r from-green-100 to-yellow-100 p-4 rounded-lg shadow-md"
+            className="sm:w-80 flex items-center gap-5 bg-gradient-to-r from-green-100 to-yellow-100 p-4 rounded-md shadow-sm"
           >
             {stat.icon}
             <div>
-              <h3 className="text-lg font-bold">{stat.label}</h3>
-              <p className="text-xl font-medium ml-2">{stat.value}</p>
+              <h3 className="text-base md:text-lg font-bold">{stat.label}</h3>
+              <p className="text-lg md:text-xl font-medium ml-2">{stat.value}</p>
             </div>
           </div>
         ))}
       </div>
-      {/* Users Location and Sales Chart (Weekly,Monthly,Yearly) */}
+      
+
       <MainContent />
-      {/* PromoCode Generate */}
+
+      <div className="p-2 sm:px-5">
       <DiscountSection />
+      </div>
     </div>
   );
 };

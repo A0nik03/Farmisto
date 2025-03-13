@@ -5,6 +5,16 @@ const FarmerSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+  farmerProfilePhoto:{
+    type: String,
+    default: "default_farmer_profile.jpg",
+  },
+  farmerMobile: {
+    type: Number,
+    unique: true,
+    minlength: 10,
+    maxlength: 10,
+  },
   farmerEmail: {
     type: String,
     required: true,

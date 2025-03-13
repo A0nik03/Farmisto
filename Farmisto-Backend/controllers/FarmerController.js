@@ -2,10 +2,12 @@ const { GenerateToken } = require("../middleware/TokenAuth");
 const { hashPassword, comparePassword } = require("../middleware/Hashing");
 const Farmer = require("../models/Farmer");
 const { fetchLocation } = require("./GeoController");
-const validateProfileData = require("../utils/validation");
 const bcrypt = require("bcrypt");
 const Payment = require("../models/Payment");
 const User = require("../models/User");
+const cloudinary = require("cloudinary").v2;
+const connectCloudinary = require("../config/cloudinary");
+connectCloudinary();
 
 const FarmerRegister = async (req, res) => {
   const { farmerName, farmerEmail, farmerPassword, farmerLocation } = req.body;
@@ -57,7 +59,6 @@ const FarmerRegister = async (req, res) => {
     res.status(500).json({ msg: "Server Error" });
   }
 };
-
 const FarmerLogin = async (req, res) => {
   const { farmerEmail, farmerPassword } = req.body;
   if (!farmerEmail || !farmerPassword) {
@@ -87,55 +88,73 @@ const FarmerLogin = async (req, res) => {
 };
 const getProfile = async (req, res) => {
   try {
-    const user = req.person;
-    const {
-      farmerName,
-      farmerEmail,
-      farmerAddress,
-      farmerCity,
-      farmerCityZip,
-      farmerCountry,
-    } = user;
-    res.json({
-      message: "Profile Fetched Successfully",
-      profile: {
-        farmerName,
-        farmerEmail,
-        farmerAddress,
-        farmerCity,
-        farmerCityZip,
-        farmerCountry,
-      },
-    });
+    const { email } = req.user;
+    const farmer = await Farmer.findOne({ farmerEmail: email });
+    if (!farmer) {
+      return res.status(404).json({ message: "Farmer not found" });
+    }
+    return res.status(200).json({ farmer });
   } catch (err) {
     res.status(400).json({
-      message: err,
+      "Error fetching Profile": err.message,
     });
   }
 };
+
 const updateProfile = async (req, res) => {
+  const { email } = req.user;
+  const fields = req.body;
+
+  if (!fields && !req.file) {
+    return res.status(400).json({ message: "No fields or file provided!" });
+  }
+
   try {
-    const user = req.person;
-    if (!user) {
-      throw new Error("Invalid Credentials");
+    const profile = await Farmer.findOne({ farmerEmail: email });
+
+    if (!profile) {
+      return res.status(404).json({ message: "Farmer profile not found!" });
     }
-    if (!validateProfileData(req)) {
-      return new Error("not able to Edit");
+
+    const validKeys = [
+      "farmerName",
+      "farmerMobile",
+      "farmerPassword",
+      "farmerAddress",
+      "farmerCity",
+      "farmerStateZip",
+      "farmerCountry",
+    ];
+
+    Object.keys(fields).forEach((key) => {
+      if (validKeys.includes(key)) {
+        profile[key] = fields[key];
+      }
+    });
+
+    if (req.file) {
+      const result = await cloudinary.uploader.upload(req.file.path, {
+        folder: "Farmer_Profiles",
+      });
+
+      profile.farmerProfilePhoto = result.secure_url;
     }
-    const farmerId = user?._id;
-    const profile = await Farmer.findById(farmerId);
-    Object.keys(req.body).forEach((key) => (profile[key] = req.body[key]));
+
     await profile.save();
+
     res.status(200).json({
-      message: "Profile update Successfully",
+      message: "Profile updated successfully",
       data: profile,
     });
   } catch (err) {
-    res.status(400).json({
-      message: "Not able to edit the profile",
+    console.error("Error updating profile: ", err);
+    res.status(500).json({
+      message: "Unable to edit the profile due to server error",
+      error: err.message,
     });
   }
 };
+
 const editPassword = async (req, res) => {
   try {
     const { currentPassword, newPassword } = req.body;
@@ -219,16 +238,15 @@ const GetDashboard = async (req, res) => {
       .flatMap((payment) => payment.cartItems)
       .filter((item) => item.itemUnit != undefined);
 
-      const totalProduce = allFilteredCartItems.reduce((acc, cartItem) => {
-        if (cartItem.itemUnit.unit) {
-          if (!acc.unit) {
-            acc.unit = cartItem.itemUnit.unit; 
-          }
-          acc.amount = (acc.amount || 0) + cartItem.quantity; 
+    const totalProduce = allFilteredCartItems.reduce((acc, cartItem) => {
+      if (cartItem.itemUnit.unit) {
+        if (!acc.unit) {
+          acc.unit = cartItem.itemUnit.unit;
         }
-        return acc;
-      }, {});
-      
+        acc.amount = (acc.amount || 0) + cartItem.quantity;
+      }
+      return acc;
+    }, {});
 
     const revenue = payments.reduce((acc, order) => {
       return order.orderStatus === "Delivered" ? acc + order.totalAmount : acc;

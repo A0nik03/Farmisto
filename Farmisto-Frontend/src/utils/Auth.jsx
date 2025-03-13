@@ -34,7 +34,6 @@ const AuthProvider = ({ children }) => {
     }
   }, []);
 
-  // Login function to save token and user details in localStorage
   const login = (token) => {
     try {
       const decoded = jwtDecode(token);

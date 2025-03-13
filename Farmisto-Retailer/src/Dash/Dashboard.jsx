@@ -1,10 +1,13 @@
 import React from "react";
 import Maindash from "./MainDash";
-import SideNav from "./sidenav";
+import SideNav from "./SideNav";
 const Dashboard = () => {
   return (
     <div className="flex w-screen h-screen scrollbar-none">
-      <SideNav />
+    {/* hidden sm:block */}
+      <div className="">
+      </div>
+        <SideNav />
       <Maindash />
     </div>
   );

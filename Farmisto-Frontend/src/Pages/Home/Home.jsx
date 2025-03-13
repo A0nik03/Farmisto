@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import NavBar from "../../Components/NavBar/NavBar";
 import Header from "../../Components/Header/HomeHeader";
 import CircularOverlay from "../../Components/Minor/CircularOverlay";
@@ -7,8 +7,10 @@ import FeaturedProduct from "../../Components/FeaturedProduct/FeaturedProduct";
 import HowItWorks from "../../Components/Minor/HowItWorks";
 import Footer from "../../Components/Footer/Footer";
 import Trusted from "../../Components/Header/Trusted";
+import SideBar from "../../Components/SideBar/SideBar";
 
 const Home = () => {
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const images = [
     {
       src: "https://picsum.photos/id/1040/300/300",
@@ -36,14 +38,14 @@ const Home = () => {
   return (
     <div className="relative w-full h-full">
       <CircularOverlay />
-      <NavBar />
+      <NavBar transparent={false} />
       <Header />
       <Trusted/>
       <main>
         <Story />
         <FeaturedProduct />
 
-        <HowItWorks images={images} />
+        {/* <HowItWorks images={images} /> */}
       </main>
       <Footer/>
     </div>

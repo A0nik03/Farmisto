@@ -10,13 +10,16 @@ import {
   FaSearch,
   FaMinus,
   FaPlus,
+  FaCartPlus,
+  FaTractor,
 } from "react-icons/fa";
-import { BsCart4 } from "react-icons/bs";
-import assets from "../../assets/assets";
+import { ImCross } from "react-icons/im";
 import axios from "axios";
 import { useAuth } from "../../utils/Auth";
-import { ImCross } from "react-icons/im";
 import { motion } from "framer-motion";
+import MobileBuyBlock from "../../Components/BuySection/MobileBuyBlock";
+import { BsCart4 } from "react-icons/bs";
+import AllBuyBlock from "../../Components/BuySection/AllBuyBlock";
 
 const BuyBlock = () => {
   const { userDetails, authToken } = useAuth();
@@ -29,42 +32,29 @@ const BuyBlock = () => {
   const [selectedKind, setSelectedKind] = useState(null);
   const [selectedCategory, setSelectedCategory] = useState(null);
 
+    
   const sideBarKinds = [
-    { name: "Seasonal", icon: <FaSeedling /> },
-    { name: "Daily", icon: <FaShoppingBasket /> },
+    { name: "Seasonal", icon: <FaSeedling className="text-[#155724]" /> },
+    { name: "Daily", icon: <FaShoppingBasket className="text-[#155724]" /> },
   ];
 
   const sideBarCategory = [
-    { name: "Vegetables", icon: <FaCarrot /> },
-    { name: "Fruits", icon: <FaAppleAlt /> },
-    { name: "Nuts", icon: <FaLeaf /> },
-    { name: "Dairy", icon: <FaFish /> },
-    { name: "Spices", icon: <FaPepperHot /> },
-    { name: "Pulses", icon: <FaSeedling /> },
+    { name: "Vegetables", icon: <FaCarrot className="text-[#155724]" /> },
+    { name: "Fruits", icon: <FaAppleAlt className="text-[#155724]" /> },
+    { name: "Nuts", icon: <FaLeaf className="text-[#155724]" /> },
+    { name: "Dairy", icon: <FaFish className="text-[#155724]" /> },
+    { name: "Spices", icon: <FaPepperHot className="text-[#155724]" /> },
+    { name: "Pulses", icon: <FaSeedling className="text-[#155724]" /> },
   ];
 
   const GetProducts = async () => {
     try {
-      const response = await axios.get(
-        "http://localhost:4000/market/get-items"
-      );
-      const allItems = response.data.items;
+      const response = await axios.get("http://localhost:4000/market/get-items");
+      const allItems = response.data.items || [];
       setAllProducts(allItems);
-
-      const filteredProducts = Object.values(
-        allItems.reduce((acc, item) => {
-          if (
-            !acc[item.itemName] ||
-            acc[item.itemName].itemPrice > item.itemPrice
-          ) {
-            acc[item.itemName] = item;
-          }
-          return acc;
-        }, {})
-      );
-      setProducts(filteredProducts);
+      setProducts(allItems);
     } catch (error) {
-      console.error("Failed to fetch products: ", error);
+      console.error("Failed to fetch farmer produce: ", error);
     }
   };
 
@@ -73,14 +63,14 @@ const BuyBlock = () => {
   };
 
   const AddToCart = async (product, quantity = 1) => {
-    console.log(product);
+    console.log(product)
     const item = {
       id: product._id,
       itemName: product.itemName,
       itemPrice: product.itemPrice,
       imageUrl: product.itemImage,
       quantity: quantity,
-      itemUnit:{
+      itemUnit: {
         value: product.itemPrice,
         unit: product.itemUnit.unit,
       },
@@ -97,13 +87,15 @@ const BuyBlock = () => {
         item,
         {
           headers: {
-            Authorization: `Bearer ${authToken}`,
+            Authorization: `Bearer ${localStorage.getItem("authToken")}`,
           },
         }
       );
-      console.log("Response: ", response.data);
+      console.log("Added to cart: ", response.data);
+      closeModal();
     } catch (error) {
       console.error("Failed to add item to cart: ", error);
+      alert("Failed to add item to cart.");
     }
   };
 
@@ -124,25 +116,19 @@ const BuyBlock = () => {
   const filterProducts = () => {
     let filtered = allProducts;
     if (selectedCategory) {
-      filtered = filtered.filter(
-        (product) => product.itemCategory === selectedCategory
-      );
+      filtered = filtered.filter((product) => product.itemCategory === selectedCategory);
     }
-
     if (selectedKind) {
-      filtered = filtered.filter(
-        (product) => product.itemKind === selectedKind
-      );
+      filtered = filtered.filter((product) => product.itemType === selectedKind);
     }
-
     if (searchTerm) {
       filtered = filtered.filter(
         (product) =>
           product.itemName.toLowerCase().includes(searchTerm.toLowerCase()) ||
-          product.itemCategory.toLowerCase().includes(searchTerm.toLowerCase())
+          product.itemCategory.toLowerCase().includes(searchTerm.toLowerCase()) ||
+          product.farmerName.toLowerCase().includes(searchTerm.toLowerCase())
       );
     }
-
     setProducts(filtered);
   };
 
@@ -155,262 +141,154 @@ const BuyBlock = () => {
   }, [searchTerm, selectedKind, selectedCategory]);
 
   return (
-    <div className="relative h-full w-full p-10 overflow-hidden mb-20">
+    <div className="w-full min-h-screen bg-green-50 p-4 sm:p-6 md:p-8 lg:p-10 overflow-x-hidden mt-10">
+      {/* Modal */}
       {modal && selectedProduct && (
-        <div className="fixed inset-28 z-50 max-h-[65%] w-1/2 mx-auto rounded-2xl">
-          <span
-            onClick={() => closeModal()}
-            className="absolute -right-2 -top-5 hover:cursor-pointer select-none"
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+          <div className="fixed inset-0 bg-[#155724]/50" onClick={closeModal} />
+          <motion.div
+            className="relative w-full max-w-md sm:max-w-lg md:max-w-xl bg-[#f0f7e4] rounded-lg shadow-xl max-h-[90vh] z-50"
+            initial={{ opacity: 0, scale: 0.8 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 0.3 }}
           >
-            <ImCross size={18} />
-          </span>
-          <div className="h-full w-full flex flex-col gap-1 p-1">
-            {/* Modal Content */}
-            {modal && selectedProduct && (
-              <motion.div
-                className="fixed inset-28 z-50 max-h-[65%] w-1/2 mx-auto bg-white rounded-2xl shadow-2xl"
-                initial={{ opacity: 0, scale: 0.8 }}
-                animate={{ opacity: 1, scale: 1 }}
-                transition={{ duration: 0.3 }}
-              >
-                <motion.span
-                  onClick={() => closeModal()}
-                  className="absolute -right-2 -top-5 hover:cursor-pointer"
-                  initial={{ opacity: 0, scale: 0.8 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  exit={{ opacity: 0, scale: 0.8 }}
-                  transition={{ duration: 0.3 }}
-                >
-                  <ImCross size={18} />
-                </motion.span>
-
-                <div className="h-full w-full flex flex-col gap-1 p-1">
-                  <div className="h-44 w-full rounded-xl border-[1px] border-zinc-400 flex items-center justify-between">
-                    <div className="flex gap-2">
-                      <div className="h-40 w-40 m-1 bg-green-200 rounded-xl flex justify-center items-center">
-                        <img
-                          src={selectedProduct.itemImage || assets.defaultImage}
-                          alt={selectedProduct.itemName || "Product"}
-                          className="h-40 w-40 object-contain"
-                        />
-                      </div>
-                      <div className="h-full ml-4">
-                        <h1 className="text-xl font-semibold mt-5">
-                          {selectedProduct.itemName}
-                        </h1>
-                        <p className="text-md font-semibold text-zinc-600 mt-2">
-                          Price:{" "}
-                          <span className="text-green-500">
-                            Rs {selectedProduct.itemPrice} / {selectedProduct.itemUnit.unit}
-                          </span>
-                        </p>
-                        <div className="flex h-10 flex-col gap-1 bg-green-400 w-full rounded-md mt-4 overflow-hidden">
-                          <div className="h-full w-full flex rounded-lg">
-                            <motion.div
-                              onClick={() => handleQuantityChange(-1)}
-                              className="w-1/3 h-full flex justify-center items-center cursor-pointer hover:scale-[1.2] shadow-xl select-none"
-                              whileTap={{ scale: 0.9 }}
-                              transition={{
-                                type: "spring",
-                                stiffness: 400,
-                                damping: 10,
-                              }}
-                            >
-                              <FaMinus className="text-white" />
-                            </motion.div>
-
-                            <div className="w-1/3 h-full flex justify-center items-center bg-white">
-                              <p className="text-zinc-600 font-semibold text-lg">
-                                {quantity}
-                              </p>
-                            </div>
-                            <motion.div
-                              onClick={() => handleQuantityChange(1)}
-                              className="w-1/3 h-full flex justify-center items-center cursor-pointer hover:scale-[1.2] shadow-xl select-none"
-                              whileTap={{ scale: 0.9 }}
-                              transition={{
-                                type: "spring",
-                                stiffness: 400,
-                                damping: 10,
-                              }}
-                            >
-                              <FaPlus className="text-white" />
-                            </motion.div>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                    <div className="w-40 h-full mt-10">
+            <motion.span
+              onClick={closeModal}
+              className="absolute -top-5 -right-5 p-2 cursor-pointer hover:scale-105 z-50"
+              initial={{ opacity: 0, scale: 0.8 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ duration: 0.3 }}
+            >
+              <ImCross size={18} className="text-[#6b8e23] hover:text-[#8ab644]" />
+            </motion.span>
+            <div className="flex flex-col gap-4 p-4 sm:p-6">
+              <div className="flex flex-col sm:flex-row items-center justify-between border border-[#a3cfae] rounded-lg p-4">
+                <div className="flex flex-col sm:flex-row items-center gap-4 w-full sm:w-auto">
+                  <div className="h-24 w-24 sm:h-32 sm:w-32 bg-[#d4edda] rounded-lg flex justify-center items-center">
+                    <img
+                      src={selectedProduct.itemImage || "https://via.placeholder.com/150"}
+                      alt={selectedProduct.itemName || "Produce"}
+                      className="h-full w-full object-contain"
+                    />
+                  </div>
+                  <div className="text-center sm:text-left">
+                    <h1 className="text-lg sm:text-xl font-semibold text-[#155724]">
+                      {selectedProduct.itemName}
+                    </h1>
+                    <p className="text-sm sm:text-base font-medium text-[#155724] mt-1">
+                      From: <span className="text-[#6b8e23]">{selectedProduct.farmerName}</span>
+                    </p>
+                    <p className="text-sm sm:text-base font-medium text-[#155724] mt-1">
+                      Price: <span className="text-[#6b8e23]">₹{selectedProduct.itemPrice} / {selectedProduct.unit}</span>
+                    </p>
+                    <div className="flex items-center justify-center sm:justify-start gap-2 mt-3">
                       <motion.div
-                        onClick={() => AddToCart(selectedProduct, quantity)}
-                        className="h-12 mt-10 mr-5 flex items-center justify-center border rounded-xl bg-amber-500 hover:bg-amber-600 hover:cursor-pointer select-none"
-                        whileTap={{ scale: 0.95 }}
-                        transition={{
-                          type: "spring",
-                          stiffness: 400,
-                          damping: 10,
-                        }}
+                        onClick={() => handleQuantityChange(-1)}
+                        className="w-8 h-8 flex justify-center items-center bg-[#6b8e23] text-white rounded-md cursor-pointer hover:bg-[#8ab644]"
+                        whileTap={{ scale: 0.9 }}
                       >
-                        <p className="text-xl font-semibold text-white">
-                          Add To Cart
-                        </p>
+                        <FaMinus />
+                      </motion.div>
+                      <div className="w-10 h-8 flex justify-center items-center bg-[#f0f7e4] border border-[#a3cfae] rounded-md">
+                        <p className="text-lg font-semibold text-[#155724]">{quantity}</p>
+                      </div>
+                      <motion.div
+                        onClick={() => handleQuantityChange(1)}
+                        className="w-8 h-8 flex justify-center items-center bg-[#6b8e23] text-white rounded-md cursor-pointer hover:bg-[#8ab644]"
+                        whileTap={{ scale: 0.9 }}
+                      >
+                        <FaPlus />
                       </motion.div>
                     </div>
                   </div>
-                  <div className="h-full w-full flex flex-col gap-2 rounded-2xl p-1">
-                    {allProducts
-                      .filter(
-                        (product) =>
-                          product.itemName === selectedProduct.itemName
-                      )
-                      .map((product) => (
-                        <div className="h-32 w-full flex items-center bg-zinc-100 border-[1px] border-zinc-400 rounded-xl px-2">
-                          <div className="h-28 w-28 bg-zinc-50 rounded-xl">
-                            <img
-                              src={product.itemImage}
-                              alt="Cart Icon"
-                              className="h-full w-full object-contain"
-                            />
-                          </div>
-                          <div className="h-full w-1/2 flex flex-col gap-2 p-4">
-                            <p className="text-md font-medium text-black">
-                              {product.itemName}
-                            </p>
-                            <p className="text-md font-medium text-green-500">
-                              Rs {product.itemPrice} / {product.itemUnit.unit}
-                            </p>
-                            <p className="font-medium">By: {product.seller.name}</p>
-                          </div>
-                          <motion.div
-                            onClick={() => setSelectedProduct(product)}
-                            whileHover={{ scale: 1 }}
-                            whileTap={{ scale: 0.1 }}
-                            className="px-6 py-2 border-2 ml-32 border-green-800 rounded-xl bg-green-900 text-center shadow-lg hover:cursor-pointer hover:bg-green-800 transition-all duration-300 ease-in-out select-none"
-                          >
-                            <p className="text-xl font-semibold text-white">
-                              Switch
-                            </p>
-                          </motion.div>
-                        </div>
-                      ))}
-                  </div>
                 </div>
-              </motion.div>
-            )}
-          </div>
+                <motion.div
+                  onClick={() => AddToCart(selectedProduct, quantity)}
+                  className="w-full sm:w-32 h-10 mt-4 sm:mt-0 flex items-center justify-center bg-[#6b8e23] hover:bg-[#8ab644] text-white rounded-md cursor-pointer shadow-sm"
+                  whileTap={{ scale: 0.95 }}
+                >
+                  <p className="text-sm font-medium flex items-center gap-2">
+                    <FaCartPlus /> Buy Now
+                  </p>
+                </motion.div>
+              </div>
+              <div className="space-y-2">
+                {allProducts
+                  .filter((product) => product.itemName === selectedProduct.itemName)
+                  .map((product) => (
+                    <div
+                      key={product._id}
+                      className="flex items-center bg-[#e6f4cc] border border-[#a3cfae] rounded-lg p-3"
+                    >
+                      <div className="h-16 w-16 bg-[#d4edda] rounded-md flex-shrink-0">
+                        <img
+                          src={product.itemImage}
+                          alt={product.itemName}
+                          className="h-full w-full object-contain"
+                        />
+                      </div>
+                      <div className="flex-1 px-3">
+                        <p className="text-sm font-medium text-[#155724]">
+                          {product.farmerName}
+                        </p>
+                        <p className="text-sm text-[#6b8e23]">
+                          ₹{product.itemPrice} / {product.unit}
+                        </p>
+                        <p className="text-xs text-[#155724]/80">
+                          Stock: {product.quantity} {product.unit}
+                        </p>
+                      </div>
+                      <motion.div
+                        onClick={() => setSelectedProduct(product)}
+                        className="px-3 py-1 bg-[#6b8e23] hover:bg-[#8ab644] text-white rounded-md shadow-sm cursor-pointer"
+                        whileTap={{ scale: 0.95 }}
+                      >
+                        <p className="text-sm font-medium">Select</p>
+                      </motion.div>
+                    </div>
+                  ))}
+              </div>
+            </div>
+          </motion.div>
         </div>
       )}
 
-      <p
-        style={{
-          textShadow: "2px 2px 4px rgba(0, 0, 0, 0.2)",
-        }}
-        className="text-center text-7xl font-extrabold text-[#0d331c] font-[kurale] mt-8 w-[80%] mx-auto"
-      >
-        Shop healthy fruits and vegetables like never before.
-      </p>
-      <div className="w-[99%] flex gap-2 mt-10 mx-auto rounded-3xl">
-        {/* Sidebar */}
-        <div
-          style={{
-            background: "linear-gradient(to left,  #6ee7b7, #34d399, #10b981)",
-          }}
-          className="w-1/5 h-full flex flex-col gap-2 rounded-3xl p-3 pt-7 transition-all duration-400"
-        >
-          {/* Search Bar */}
-          <div className="h-14 w-full bg-white rounded-full p-3 flex items-center shadow-md mb-3 hover:scale-[1.02] transition-all duration-300 hover:cursor-pointer">
-            <FaSearch className="text-gray-500 mr-3" size={20} />
-            <input
-              type="text"
-              placeholder="Search..."
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-              className="w-full h-full p-3 border-none outline-none rounded-full text-gray-600 placeholder-gray-400"
-            />
-          </div>
-          <hr className="mt-2 mb-2 border-t-2 border-green-400" />
-          {/* Kinds */}
-          {sideBarKinds.map((kind, index) => (
-            <div
-              key={index}
-              onClick={() => setSelectedKind(kind.name)}
-              className={`h-14 w-full hover:bg-amber-300 hover:cursor-pointer rounded-xl p-5 flex items-center gap-3 ${
-                selectedKind === kind.name ? "bg-green-300" : ""
-              }`}
-            >
-              <div className="text-2xl">{kind.icon}</div>
-              <p className="text-xl font-semibold">{kind.name}</p>
-            </div>
-          ))}
-          <hr className="mt-2 mb-2 border-t-2 border-green-400" />
-          {/* Categories */}
-          {sideBarCategory.map((category, index) => (
-            <div
-              key={index}
-              onClick={() => setSelectedCategory(category.name)}
-              className={`h-14 w-full hover:bg-amber-300 hover:cursor-pointer rounded-xl p-5 flex items-center gap-3 ${
-                selectedCategory === category.name ? "bg-green-300" : ""
-              }`}
-            >
-              <div className="text-2xl">{category.icon}</div>
-              <p className="text-xl font-semibold">{category.name}</p>
-            </div>
-          ))}
-        </div>
-        {/* Product List */}
-        <div className="w-4/5 h-full rounded-3xl p-5">
-          {!products.length ? (
-            <div className="flex justify-center items-center h-full">
-              <img
-                src="https://www.breathearomatherapy.com/assets/images/global/no-product.png"
-                alt="No Products"
-                className="max-w-full h-auto object-contain"
-                style={{ height: "600px", width: "600px" }}
-              />
-            </div>
-          ) : (
-            <div className="grid grid-cols-5 gap-4">
-              {products.map((product) => (
-                <div
-                  key={product._id}
-                  className="h-56 w-48 bg-red-100 rounded-3xl hover:shadow-green-400 shadow-md cursor-pointer overflow-hidden relative"
-                  style={{
-                    background:
-                      "radial-gradient(circle at center, #a7f3d0, #6ee7b7, #34d399, #10b981, #059669)",
-                    textShadow: "0.2px 0.2px 0.2px #000",
-                  }}
-                >
-                  <div className="h-[65%] w-full flex justify-center items-center">
-                    <img
-                      src={product.itemImage}
-                      className="object-cover h-[75%] w-[75%]"
-                      alt={product.itemName}
-                    />
-                  </div>
-                  <div className="p-3">
-                    <h3 className="text-xl font-semibold text-green-900">
-                      {product.itemName}
-                    </h3>
-                    <span className="text-lg font-medium text-green-900">
-                      Rs {product.itemPrice} {product.itemUnit.unit}
-                    </span>
-                  </div>
-                  <div
-                    onClick={() => openModal(product)}
-                    className="h-16 w-14 absolute -bottom-2 -right-3 rounded-2xl flex justify-center items-center hover:scale-[1.05] hover:cursor-pointer"
-                    style={{
-                      background:
-                        "radial-gradient(circle at center, #fde68a, #f59e0b)",
-                    }}
-                  >
-                    <BsCart4 size={26} className="mr-2 mb-2 text-green-900 select-none" />
-                  </div>
-                </div>
-              ))}
-            </div>
-          )}
-        </div>
+      {/* Header */}
+      <div className="text-center p-4">
+        <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-semibold text-[#155724] tracking-tight flex items-center justify-center gap-2">
+          <FaTractor className="text-[#6b8e23]" />Farmisto
+        </h1>
+        <p className="text-base sm:text-lg md:text-xl text-[#155724]/80 mt-2">
+          Fresh Produce Direct from Local Farmers
+        </p>
       </div>
+
+      {/* Main Content */}
+      <div className="hidden lg:block w-full">
+          <AllBuyBlock
+            products={products}
+            openModal={openModal}
+            sideBarKinds={sideBarKinds}
+            sideBarCategory={sideBarCategory}
+            setSelectedKind={setSelectedKind}
+            setSelectedCategory={setSelectedCategory}
+            selectedKind={selectedKind}
+            selectedCategory={selectedCategory}
+          />
+        </div>
+
+      <div className="lg:hidden w-full">
+          <MobileBuyBlock
+            products={products}
+            openModal={openModal}
+            sideBarKinds={sideBarKinds}
+            sideBarCategory={sideBarCategory}
+            setSelectedKind={setSelectedKind}
+            setSelectedCategory={setSelectedCategory}
+            selectedKind={selectedKind}
+            selectedCategory={selectedCategory}
+          />
+        </div>
     </div>
   );
 };

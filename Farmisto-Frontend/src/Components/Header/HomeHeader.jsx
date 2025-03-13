@@ -4,14 +4,14 @@ import { FaArrowRightLong } from "react-icons/fa6";
 
 const Header = () => {
   return (
-    <div className="h-[84vh] w-full overflow-hidden p-5 bg-zinc-100">
+    <div className="h-[84vh] w-full overflow-hidden p-5 ">
       <div className="h-full w-full flex flex-col lg:flex-row">
         {/* Text Section */}
         <div className="lg:w-2/3 h-full p-5 pl-5 lg:ml-20">
           <div className="h-full w-full p-5 lg:p-10">
             {/* Heading */}
             <h1 className="text-4xl lg:text-7xl text-[#242424] font-bold font-[satoshi] flex flex-col gap-2 mt-5">
-              <span className="z-50 flex items-center gap-2">
+              <span className="z-10 flex items-center gap-2">
                 Healthy Veggies{" "}
                 <span className="relative flex w-20 h-full mt-3 lg:w-32 lg:mt-5">
                   <span className="h-8 w-8 lg:h-11 lg:w-11 border-[2px] border-[#0d331c] rounded-full"></span>
@@ -20,7 +20,7 @@ const Header = () => {
                   </span>
                 </span>
               </span>
-              <span className="z-50">for a better health.</span>
+              <span className="z-10">for a better health.</span>
             </h1>
 
             {/* Tagline */}

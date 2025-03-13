@@ -9,6 +9,7 @@ import farm from './farm.png'
 import hand from './hand.png'
 import chip from './chip.png'
 import truck from './truck.png'
+import cart from './cart.png'
 
 const assets = {
     colors,
@@ -21,7 +22,8 @@ const assets = {
     farm,
     hand,
     chip,
-    truck
+    truck,
+    cart
 }
 
 export default assets;

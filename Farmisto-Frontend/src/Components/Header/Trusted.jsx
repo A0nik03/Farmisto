@@ -14,7 +14,7 @@ const Trusted = () => {
   };
 
   return (
-    <div className="h-[40vh] w-full pb-8 bg-zinc-100 p-5 flex flex-col justify-center items-center font-[satoshi]">
+    <div className="h-[40vh] w-full pb-8 p-5 flex flex-col justify-center items-center font-[satoshi]">
       {/* Heading */}
       <h1 className="text-3xl lg:text-5xl font-semibold text-[#242424] text-center">
         Trusted by Over 20,000 Partners
@@ -29,8 +29,8 @@ const Trusted = () => {
               key={index}
               className="flex flex-col items-center justify-center"
             >
-              <Icon size={40} className="text-zinc-400 mb-2" />
-              <p className="text-lg lg:text-3xl text-zinc-400 font-medium">
+              <Icon size={40} className="text-emerald-900 mb-2" />
+              <p className="text-lg lg:text-3xl text-emerald-700 font-medium">
                 {partner}
               </p>
             </div>

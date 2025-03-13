@@ -43,7 +43,10 @@ const calculateDistance = (lat1, lng1, lat2, lng2) => {
 // Nearby Farmers in a Radius of 30 Km
 
 const fetchNearbyFarmers = async (req, res) => {
-  const { lat, lng } = req.body;
+  console.log(req.user)
+  const lat = req.user.location.latitude;
+  const lng = req.user.location.longitude;
+
   if (!lat || !lng) {
     return res
       .status(400)
@@ -51,6 +54,9 @@ const fetchNearbyFarmers = async (req, res) => {
   }
   try {
     const farmers = await Farmer.find({});
+    if (farmers.length === 0) {
+      return res.status(404).json({ message: "No farmers found nearby" });
+    }
     const nearbyFarmers = farmers.filter((farmer) => {
       const distance = calculateDistance(
         lat,
@@ -60,7 +66,7 @@ const fetchNearbyFarmers = async (req, res) => {
       );
       return distance <= 30;
     });
-    res.status(200).json({ success: nearbyFarmers });
+    res.status(200).json({ farmers: nearbyFarmers });
   } catch (error) {
     res.status(500).json({ error: "Server Error" });
     console.error("Error fetching nearby farmers: ", error);

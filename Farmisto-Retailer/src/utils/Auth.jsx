@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useState, useEffect } from "react";
-import {jwtDecode} from "jwt-decode";
+import { jwtDecode } from "jwt-decode";
 
 const AuthContext = createContext();
 
@@ -18,14 +18,17 @@ const AuthProvider = ({ children }) => {
       try {
         const decoded = jwtDecode(token);
         const isTokenExpired = decoded.exp * 1000 < Date.now();
-        
+
         if (isTokenExpired) {
           console.warn("Token expired");
           logout();
         } else {
           console.log("Decoded Token:", decoded);
           setAuthToken(token);
-          setUserDetails(decoded);
+          setUserDetails({
+            isAuthenticated: true,
+            user: decoded,
+          });
         }
       } catch (error) {
         console.error("Invalid token:", error.message);
@@ -34,20 +37,20 @@ const AuthProvider = ({ children }) => {
     }
   }, []);
 
-  // Login function to save token and user details in localStorage
   const login = (token) => {
     try {
       const decoded = jwtDecode(token);
       localStorage.setItem("authToken", token);
       setAuthToken(token);
-      setUserDetails(decoded);
-     
+      setUserDetails({
+        isAuthenticated: true,
+        user: decoded,
+      });
     } catch (error) {
       console.error("Failed to decode token:", error.message);
     }
   };
 
-  // Logout function to clear token and user details from localStorage
   const logout = () => {
     localStorage.removeItem("authToken");
     setAuthToken(null);

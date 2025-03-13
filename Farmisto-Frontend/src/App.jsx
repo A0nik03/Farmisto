@@ -17,7 +17,8 @@ import FarmerProfile from './Pages/NearbyFarmers/FarmerProfile'
 
 const App = () => {
   return (
-    <div className='h-screen w-screen font-[Inter]'>
+    <div className='h-screen w-screen font-[Inter] bg-gradient-to-b from-green-50 to-white'>
+
     <Routes>
     <Route path='/' element={<Home/>}/>
     <Route path='/market' element={<MarketPlace/>}/>

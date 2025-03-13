@@ -3,6 +3,8 @@ const User = require("../models/User");
 const { GenerateToken } = require("../middleware/TokenAuth");
 const { comparePassword, hashPassword } = require("../middleware/Hashing");
 const Cart = require("../models/Cart");
+const Farmer = require("../models/Farmer");
+const Market = require("../models/Market");
 
 const UserRegister = async (req, res) => {
   const { userName, email, password, userLocation } = req.body;
@@ -64,7 +66,6 @@ const UserLogin = async (req, res) => {
 };
 
 const BuyItem = async (req, res) => {
-  console.log(req)
   const { itemName, itemPrice, imageUrl, quantity,id,farmer,itemUnit} = req.body;
   if (!itemName || !itemPrice || !imageUrl || !quantity || !id || !farmer) {
     return res.status(400).json({ msg: "Please enter all fields" });
@@ -84,6 +85,7 @@ const BuyItem = async (req, res) => {
         email: farmer.email,
       },
     });
+    console.log("Buy:", ItemToCart)
 
     return res.status(200).json({
       msg: "Item added to cart",
@@ -116,9 +118,43 @@ const GetUser = async(req, res) => {
   }
 }
 
+const getFarmerByEmail = async (req, res) => {
+  const {farmerEmail} = req.body;
+  if (!farmerEmail) {
+    return res.status(400).json({ msg: "No farmer email provided!" });
+  }
+  try {
+    const farmer = await Farmer.findOne({ farmerEmail: farmerEmail });
+    if (!farmer) {
+      return res.status(404).json({ msg: "Farmer not found!" });
+    }
+    return res.status(200).json({ farmer });
+  } catch (error) {
+    console.error(error, "Farmer fetching Failed!");
+  }
+};
+
+const GetItemsByFarmerEmail = async (req, res) => {
+  const {farmerEmail} = req.body;
+  if (!farmerEmail) {
+    return res.status(400).json({ msg: "No farmer email provided!" });
+  }
+  try {
+    const items = await Market.find({"seller.email": farmerEmail});
+    if (!items.length) {
+      return res.status(200).json({ message: "No items available!" });
+    }
+    return res.status(200).json({ message: "Items fetched successfully!", items });
+  } catch (error) {
+    return res.status(500).json({ message: "Error while fetching items!", error: error.message });
+  }
+};
+
 module.exports = {
   UserRegister,
   UserLogin,
   BuyItem,
   GetUser,
+  getFarmerByEmail,
+  GetItemsByFarmerEmail,
 };

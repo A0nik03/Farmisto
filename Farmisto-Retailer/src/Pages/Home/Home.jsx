@@ -6,13 +6,13 @@ import Panel from "../../Components/Panel/Panel";
 import Work from "../../Components/Work/Work";
 const Home = () => {
   return (
-    <div className="relative">
+    <div className="relative h-screen">
       <NavBar />
       <Homeheader />
       <Panel />
-      <div className="bg-[#d6e3bf]">
+      {/* <div className="bg-[#d6e3bf]">
         <Work />
-      </div>
+      </div> */}
       <Footer />
     </div>
   );

@@ -9,7 +9,7 @@ import Footer from "../../Components/Footer/Footer";
 
 const MarketPlace = () => {
   return (
-    <div className="w-full">
+    <div className="w-full bg-green-50">
       <NavBar />
       <CircularOverlay />
       <MarketHeader />

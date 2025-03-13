@@ -49,7 +49,7 @@ const SideNav = () => {
           <NavLink
             to={route.path}
             key={key}
-            className={`flex items-center p-3 font-medium 
+            className={`flex items-center ${isOpen ? "p-3" : ""} sm:p-3 font-medium 
                 transition-all duration-300 ease-in-out 
                 ${
                   isActive
@@ -57,10 +57,10 @@ const SideNav = () => {
                     : "text-[#405f27]"
                 } 
                 hover:bg-gradient-to-r hover:from-[#6b8e2b] hover:to-[#7a9f35] hover:text-white 
-                hover:shadow-lg rounded-xl`}
+                hover:shadow-lg rounded-lg`}
           >
             <route.icon className={`w-6 h-6 ${isOpen ? "ml-2" : "mr-0"}`} />
-            {isOpen && <span className="ml-7 text-xl">{route.name}</span>}
+            {isOpen && <span className="ml-7 text-base lg:text-xl">{route.name}</span>}
           </NavLink>
         );
       })}
@@ -70,8 +70,8 @@ const SideNav = () => {
   return (
     <div
       className={`${
-        isOpen ? "w-[20%]" : "w-[5%]"
-      } h-screen flex flex-col items-center bg-[#F7F3E9] shadow-2xl select-none border-r-2 border-[#D9CDA3] transition-all duration-300`}
+        isOpen ? "w-[60%] lg:w-[15%]" : "w-[0%] lg:w-[5%]"
+      } h-screen sm:relative absolute z-20 left-0 top-0 flex flex-col items-center bg-[#F7F3E9] shadow-2xl select-none border-r-2 border-[#D9CDA3] transition-all duration-300 scrollbar-none`}
     >
       <div className="flex flex-col w-full items-start mt-4">
         {/* Toggle Button */}
@@ -90,9 +90,12 @@ const SideNav = () => {
 
       {/* Themed Banner Section */}
       {isOpen && (
-        <div className="w-full p-3 bg-[#3D5A4A] text-white text-center">
-          <p className="text-sm font-semibold">
-            Grow your farm, grow your future
+        <div className={`w-full h-16 hidden sm:block p-3 bg-[#3D5A4A] text-white text-center`}>
+          <p className="text-sm lg:text-base font-semibold">
+            Grow your farm
+          </p>
+          <p className="text-sm lg:text-base font-semibold">
+           Grow your future
           </p>
         </div>
       )}

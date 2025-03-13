@@ -5,6 +5,7 @@ import { useAuth } from "../utils/Auth";
 import moment from "moment";
 import Pagination from "@mui/material/Pagination";
 import Stack from "@mui/material/Stack";
+import Footer from "../Components/Footer/Footer";
 
 const Order = () => {
   const { authToken } = useAuth();
@@ -13,7 +14,7 @@ const Order = () => {
   const [orderIndex, setOrderIndex] = useState();
   const [currentPage, setCurrentPage] = useState(1);
   const [activeTab, setActiveTab] = useState("All Orders");
-  const [searchQuery, setSearchQuery] = useState(""); 
+  const [searchQuery, setSearchQuery] = useState("");
   const [dateRange, setDateRange] = useState([null, null]);
   const itemsPerPage = 5;
 
@@ -73,7 +74,6 @@ const Order = () => {
   const filterOrders = () => {
     let filtered = allOrders;
 
-
     if (activeTab !== "All Orders") {
       filtered = filtered.filter((order) => order.orderStatus === activeTab);
     }
@@ -100,16 +100,16 @@ const Order = () => {
   const displayedOrders = filteredOrders.slice(start, end);
 
   return (
-    <div className="relative flex h-screen bg-[#f7f3e9]">
-      <SideNav />
-      <div className="w-full h-screen p-2 overflow-y-auto font-[Fjalla One]">
-        <h2 className="text-3xl w-full ml-5 font-bold border-b-4 p-2 border-[#70942e] text-[#2A293E] mb-5 font-[Fjalla One]">
+    <div className="relative flex flex-col min-h-screen bg-[#f7f3e9] md:flex-row">
+      <SideNav className="hidden md:block md:w-1/4 lg:w-1/5" />
+      <div className="w-full h-screen p-2 md:p-4 overflow-y-auto font-[Fjalla One]">
+        <h2 className="text-2xl md:text-3xl w-32 flex items-center mt-10 md:ml-5 font-bold border-b-4 p-2 border-[#70942e] text-[#2A293E] mb-4 md:mb-6">
           Orders
         </h2>
 
         {/* Header */}
-        <div className="flex justify-between items-center mb-4">
-          <div className="flex space-x-4">
+        <div className="flex flex-col space-y-2 md:flex-row md:flex-wrap md:justify-between md:items-center mb-4 px-2 md:px-4">
+          <div className="flex flex-wrap gap-2 md:gap-4">
             {[
               "All Orders",
               "Processing",
@@ -120,9 +120,9 @@ const Order = () => {
               <button
                 key={index}
                 onClick={() => setActiveTab(tab)}
-                className={`px-4 py-2 text-sm font-medium border-b-2 ${
+                className={`px-2 py-1 md:px-4 md:py-2 text-sm font-medium border-b-2 ${
                   activeTab === tab ? "border-[#70942e]" : "border-transparent"
-                } bg-transparent hover:border-[#70942e]`}
+                } bg-transparent hover:border-[#70942e] whitespace-nowrap`}
               >
                 {tab}
               </button>
@@ -131,88 +131,99 @@ const Order = () => {
         </div>
 
         {/* Filters */}
-        <div className="flex justify-between items-center mb-4">
+        <div className="flex flex-col md:flex-row justify-between items-center mb-4 gap-2 md:gap-4 px-2 md:px-4">
           <input
             type="text"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             placeholder="Search..."
-            className="px-4 py-2 border outline-none rounded shadow-sm"
+            className="px-2 py-1 md:px-4 md:py-2 border outline-none rounded shadow-sm w-full max-w-md text-sm"
           />
-          <div className="flex space-x-4">
-            <div
-              onClick={() =>
-                setDateRange([moment("2025-01-01"), moment("2025-01-30")])
-              }
-              className="px-4 py-2 text-white bg-[#70942e] text-md font-medium cursor-pointer rounded"
-            >
-              01 Jan - 30 Jan
-            </div>
+          <div
+            onClick={() =>
+              setDateRange([moment("2025-01-01"), moment("2025-01-30")])
+            }
+            className="px-2 py-1 md:px-4 md:py-2 text-white bg-[#70942e] text-sm font-medium cursor-pointer rounded w-full max-w-[200px] text-center"
+          >
+            01 Jan - 30 Jan
           </div>
         </div>
 
         {/* Orders */}
-        <div className="flex flex-col">
-          {displayedOrders.map((item, index) => (
-            <div
-              key={index}
-              onMouseLeave={() => setOrderIndex(null)}
-              className="flex justify-between p-3 border-b hover:bg-[#f4ead2] cursor-pointer transition ease-linear duration-300"
-            >
-              <div className="flex flex-col justify-center flex-1 pl-5">
-                <span className="font-medium">Order-{index + 1}</span>
-                <span className="text-sm text-[#2A293E]">#{item._id}</span>
-              </div>
-              <div className="flex-1 ml-14">
-                {moment(item.createdAt).format("MMMM D, YYYY")}
-              </div>
-              <div className="flex-1">{item.buyer.name}</div>
-              <div className="flex-1">
-                <span
-                  className={`px-2 py-1 text-xs font-medium rounded ${
-                    item.paymentMethod === "Paid"
-                      ? "bg-green-100 text-green-600"
-                      : "bg-red-100 text-red-600"
-                  }`}
-                >
-                  {item.paymentMethod}
-                </span>
-              </div>
-              <div className="flex-1 relative select-none">
-                <span
-                  onClick={() => setOrderIndex(index)}
-                  className={`px-2 py-1 text-xs font-medium cursor-pointer hover:scale-[1.02] rounded ${
-                    item.paymentStatus === "Shipping"
-                      ? "bg-blue-100 text-blue-600"
-                      : "bg-orange-100 text-orange-600"
-                  }`}
-                >
-                  <span>{item.orderStatus}</span>
-                  {index === orderIndex && (
-                    <span className="absolute flex gap-1 top-8 -left-28 py-1 px-2 h-4 text-xs font-medium transition-all ease-linear duration-200">
-                      {["Processing", "Shipped", "Delivered", "Cancelled"].map(
-                        (status, i) => (
-                          <p>
+        <div className="flex flex-col px-2 md:px-4 overflow-x-auto">
+          <div className="min-w-[768px]">
+            {displayedOrders.map((item, index) => (
+              <div
+                key={index}
+                onMouseLeave={() => setOrderIndex(null)}
+                className="flex justify-between items-center p-2 md:p-3 border-b hover:bg-[#f4ead2] cursor-pointer transition ease-linear duration-300"
+              >
+                <div className="flex flex-col justify-center w-[15%] min-w-[80px]">
+                  <span className="font-medium text-sm">Order-{index + 1}</span>
+                  <span className="text-xs text-[#2A293E] truncate">
+                    #{item._id}
+                  </span>
+                </div>
+                <div className="w-[20%] min-w-[100px] text-sm truncate">
+                  {moment(item.createdAt).format("MMM D, YYYY")}
+                </div>
+                <div className="w-[15%] min-w-[80px] text-sm truncate">
+                  {item.buyer.name}
+                </div>
+                <div className="w-[15%] min-w-[80px]">
+                  <span
+                    className={`px-1 py-0.5 md:px-2 md:py-1 text-xs font-medium rounded ${
+                      item.paymentMethod === "Paid"
+                        ? "bg-green-100 text-green-600"
+                        : "bg-red-100 text-red-600"
+                    }`}
+                  >
+                    {item.paymentMethod}
+                  </span>
+                </div>
+                <div className="w-[20%] min-w-[100px] relative select-none">
+                  <span
+                    onClick={() => setOrderIndex(index)}
+                    className={`px-1 py-0.5 md:px-2 md:py-1 text-xs font-medium cursor-pointer hover:scale-[1.02] rounded ${
+                      item.paymentStatus === "Shipping"
+                        ? "bg-blue-100 text-blue-600"
+                        : "bg-orange-100 text-orange-600"
+                    }`}
+                  >
+                    <span>{item.orderStatus}</span>
+                    {index === orderIndex && (
+                      <span className="absolute flex flex-col md:flex-row gap-1 top-6 md:top-8 left-0 md:-left-28 py-1 px-2 text-xs font-medium transition-all ease-linear duration-200 z-10 bg-white shadow-md">
+                        {[
+                          "Processing",
+                          "Shipped",
+                          "Delivered",
+                          "Cancelled",
+                        ].map((status, i) => (
+                          <p key={i}>
                             <span
                               onClick={() => SetOrderStatus(item._id, status)}
-                              className={`hover:text-green-800 font-medium rounded-sm py-1 px-2 bg-white text-center transition ease-linear duration-300`}
+                              className="hover:text-green-800 font-medium rounded-sm py-0.5 px-1 md:py-1 md:px-2 text-center transition ease-linear duration-300 whitespace-nowrap"
                             >
                               {status}
                             </span>
                           </p>
-                        )
-                      )}
-                    </span>
-                  )}
-                </span>
+                        ))}
+                      </span>
+                    )}
+                  </span>
+                </div>
+                <div className="w-[15%] min-w-[80px] text-sm truncate">
+                  {item.totalAmount}
+                </div>
               </div>
-              <div className="flex-1 ml-10">{item.totalAmount}</div>
-            </div>
-          ))}
+            ))}
+          </div>
         </div>
 
-        {/* Pagination */}
-        <Stack spacing={2} className="absolute bottom-10 left-[50%]">
+        <Stack
+          spacing={2}
+          className="w-full md:w-60 mt-6 pb-4 md:absolute md:bottom-5 md:left-[50%] md:translate-x-[-50%]"
+        >
           <Pagination
             count={Math.ceil(filteredOrders.length / itemsPerPage)}
             page={currentPage}
@@ -220,6 +231,7 @@ const Order = () => {
             color="primary"
             variant="outlined"
             shape="rounded"
+            className="flex justify-center"
           />
         </Stack>
       </div>

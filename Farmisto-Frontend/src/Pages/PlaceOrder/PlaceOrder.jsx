@@ -1,8 +1,8 @@
 import React, { useState } from "react";
 import NavBar from "../../Components/NavBar/NavBar";
-import Cards from "react-credit-cards-2";
-import { color, motion } from "framer-motion";
 import { SiVisa } from "react-icons/si";
+import { FaLeaf, FaTractor } from "react-icons/fa"; // Farm-themed icons
+import { motion } from "framer-motion";
 import assets from "../../assets/assets";
 
 const PlaceOrder = () => {
@@ -12,8 +12,18 @@ const PlaceOrder = () => {
     expiry: "",
     cvc: "",
   });
+  const [personalData, setPersonalData] = useState({
+    firstName: "",
+    lastName: "",
+    email: "",
+    phone: "",
+    street: "",
+    city: "",
+    state: "",
+    zip: "",
+  });
 
-  const handleInputChange = (e) => {
+  const handleCardInputChange = (e) => {
     const { name, value } = e.target;
     setCardData((prevData) => ({
       ...prevData,
@@ -21,12 +31,33 @@ const PlaceOrder = () => {
     }));
   };
 
-  const isFormValid = () => {
+  const handlePersonalInputChange = (e) => {
+    const { name, value } = e.target;
+    setPersonalData((prevData) => ({
+      ...prevData,
+      [name]: value,
+    }));
+  };
+
+  const isCardFormValid = () => {
     return (
       cardData.number.length === 16 &&
       cardData.expiry.length === 5 &&
       cardData.cvc.length === 3 &&
-      cardData.name !== ""
+      cardData.name.trim() !== ""
+    );
+  };
+
+  const isPersonalFormValid = () => {
+    return (
+      personalData.firstName.trim() !== "" &&
+      personalData.lastName.trim() !== "" &&
+      personalData.email.includes("@") &&
+      personalData.phone.trim() !== "" &&
+      personalData.street.trim() !== "" &&
+      personalData.city.trim() !== "" &&
+      personalData.state.trim() !== "" &&
+      personalData.zip.trim() !== ""
     );
   };
 
@@ -41,245 +72,236 @@ const PlaceOrder = () => {
       .replace(/(\d{2})(\d{1,2})?/, (match, p1, p2) => (p2 ? `${p1}/${p2}` : p1))
       .slice(0, 5);
   };
-  
 
   return (
-    <div className="w-full flex flex-col bg-gradient-to-b from-green-200 to-green-400">
+    <div className="min-h-screen w-full flex flex-col bg-gradient-to-b from-green-200 to-green-100 font-sans">
       <NavBar transparent={true} />
-      <div className="w-[80%] mx-auto my-8 p-4 bg-white shadow-lg rounded-lg flex flex-col lg:flex-row">
-
-        <div className="w-full lg:w-1/2 p-6 rounded-lg bg-green-50">
-          <h2 className="text-3xl font-bold text-green-800 mb-6">
-            Personal Details
-          </h2>
-          <div className="flex flex-col gap-6">
-            <div className="flex gap-6">
-              <div className="w-1/2">
-                <label className="block text-green-700 font-semibold mb-2">
-                  First Name
-                </label>
+      <div className="w-full max-w-5xl mx-auto my-6 px-4 sm:px-6">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8 }}
+          className="bg-white shadow-2xl rounded-2xl overflow-hidden flex flex-col lg:flex-row border border-green-200"
+        >
+          {/* Personal Details */}
+          <div className="w-full lg:w-1/2 p-6 bg-green-50">
+            <h2 className="text-2xl md:text-3xl font-bold text-[#4a7043] mb-5 flex items-center gap-2">
+              <FaLeaf className="text-[#6b9e5b]" /> Your Details
+            </h2>
+            <form className="flex flex-col gap-5">
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-[#6b9e5b] font-medium text-sm mb-1">First Name</label>
+                  <input
+                    type="text"
+                    name="firstName"
+                    value={personalData.firstName}
+                    onChange={handlePersonalInputChange}
+                    className="w-full p-3 border border-green-200 rounded-lg focus:ring-2 focus:ring-[#6b9e5b] focus:outline-none text-[#4a7043] bg-green-50 placeholder-[#a3b899]"
+                    placeholder="John"
+                  />
+                </div>
+                <div>
+                  <label className="block text-[#6b9e5b] font-medium text-sm mb-1">Last Name</label>
+                  <input
+                    type="text"
+                    name="lastName"
+                    value={personalData.lastName}
+                    onChange={handlePersonalInputChange}
+                    className="w-full p-3 border border-green-200 rounded-lg focus:ring-2 focus:ring-[#6b9e5b] focus:outline-none text-[#4a7043] bg-green-50 placeholder-[#a3b899]"
+                    placeholder="Doe"
+                  />
+                </div>
+              </div>
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-[#6b9e5b] font-medium text-sm mb-1">Email</label>
+                  <input
+                    type="email"
+                    name="email"
+                    value={personalData.email}
+                    onChange={handlePersonalInputChange}
+                    className="w-full p-3 border border-green-200 rounded-lg focus:ring-2 focus:ring-[#6b9e5b] focus:outline-none text-[#4a7043] bg-green-50 placeholder-[#a3b899]"
+                    placeholder="john.doe@example.com"
+                  />
+                </div>
+                <div>
+                  <label className="block text-[#6b9e5b] font-medium text-sm mb-1">Phone</label>
+                  <input
+                    type="text"
+                    name="phone"
+                    value={personalData.phone}
+                    onChange={handlePersonalInputChange}
+                    className="w-full p-3 border border-green-200 rounded-lg focus:ring-2 focus:ring-[#6b9e5b] focus:outline-none text-[#4a7043] bg-green-50 placeholder-[#a3b899]"
+                    placeholder="+1234567890"
+                  />
+                </div>
+              </div>
+              <div>
+                <label className="block text-[#6b9e5b] font-medium text-sm mb-1">Street Address</label>
                 <input
                   type="text"
-                  className="w-full p-3 border border-green-300 rounded-md shadow-sm focus:ring-2 focus:ring-green-500"
-                  placeholder="John"
+                  name="street"
+                  value={personalData.street}
+                  onChange={handlePersonalInputChange}
+                  className="w-full p-3 border border-green-200 rounded-lg focus:ring-2 focus:ring-[#6b9e5b] focus:outline-none text-[#4a7043] bg-green-50 placeholder-[#a3b899]"
+                  placeholder="123 Farm Lane"
                 />
               </div>
-              <div className="w-1/2">
-                <label className="block text-green-700 font-semibold mb-2">
-                  Last Name
-                </label>
-                <input
-                  type="text"
-                  className="w-full p-3 border border-green-300 rounded-md shadow-sm focus:ring-2 focus:ring-green-500"
-                  placeholder="Doe"
-                />
+              <div className="grid grid-cols-3 gap-4">
+                <div>
+                  <label className="block text-[#6b9e5b] font-medium text-sm mb-1">City</label>
+                  <input
+                    type="text"
+                    name="city"
+                    value={personalData.city}
+                    onChange={handlePersonalInputChange}
+                    className="w-full p-3 border border-green-200 rounded-lg focus:ring-2 focus:ring-[#6b9e5b] focus:outline-none text-[#4a7043] bg-green-50 placeholder-[#a3b899]"
+                    placeholder="Greenville"
+                  />
+                </div>
+                <div>
+                  <label className="block text-[#6b9e5b] font-medium text-sm mb-1">State</label>
+                  <input
+                    type="text"
+                    name="state"
+                    value={personalData.state}
+                    onChange={handlePersonalInputChange}
+                    className="w-full p-3 border border-green-200 rounded-lg focus:ring-2 focus:ring-[#6b9e5b] focus:outline-none text-[#4a7043] bg-green-50 placeholder-[#a3b899]"
+                    placeholder="NY"
+                  />
+                </div>
+                <div>
+                  <label className="block text-[#6b9e5b] font-medium text-sm mb-1">Zip</label>
+                  <input
+                    type="text"
+                    name="zip"
+                    value={personalData.zip}
+                    onChange={handlePersonalInputChange}
+                    className="w-full p-3 border border-green-200 rounded-lg focus:ring-2 focus:ring-[#6b9e5b] focus:outline-none text-[#4a7043] bg-green-50 placeholder-[#a3b899]"
+                    placeholder="10001"
+                  />
+                </div>
               </div>
-            </div>
-
-            <div className="flex gap-6">
-              <div className="w-1/2">
-                <label className="block text-green-700 font-semibold mb-2">
-                  Email Address
-                </label>
-                <input
-                  type="email"
-                  className="w-full p-3 border border-green-300 rounded-md shadow-sm focus:ring-2 focus:ring-green-500"
-                  placeholder="john.doe@example.com"
-                />
-              </div>
-              <div className="w-1/2">
-                <label className="block text-green-700 font-semibold mb-2">
-                  Phone Number
-                </label>
-                <input
-                  type="text"
-                  className="w-full p-3 border border-green-300 rounded-md shadow-sm focus:ring-2 focus:ring-green-500"
-                  placeholder="+1 234 567 890"
-                />
-              </div>
-            </div>
-
-            <div className="">
-              <label className="block text-green-700 font-semibold mb-2">
-                Street Address
-              </label>
-              <input
-                type="text"
-                className="w-full p-3 border border-green-300 rounded-md shadow-sm focus:ring-2 focus:ring-green-500"
-                placeholder="123 Main St"
-              />
-            </div>
-
-            <div className="">
-              <label className="block text-green-700 font-semibold mb-2">
-                City
-              </label>
-              <input
-                type="text"
-                className="w-full p-3 border border-green-300 rounded-md shadow-sm focus:ring-2 focus:ring-green-500"
-                placeholder="New York"
-              />
-            </div>
-
-            <div className="flex gap-6 mb-6">
-              <div className="w-1/2">
-                <label className="block text-green-700 font-semibold mb-2">
-                  State
-                </label>
-                <input
-                  type="text"
-                  className="w-full p-3 border border-green-300 rounded-md shadow-sm focus:ring-2 focus:ring-green-500"
-                  placeholder="NY"
-                />
-              </div>
-              <div className="w-1/2">
-                <label className="block text-green-700 font-semibold mb-2">
-                  Zip Code
-                </label>
-                <input
-                  type="text"
-                  className="w-full p-3 border border-green-300 rounded-md shadow-sm focus:ring-2 focus:ring-green-500"
-                  placeholder="10001"
-                />
-              </div>
-            </div>
+            </form>
           </div>
-        </div>
 
-
-        <div className="w-full lg:w-1/2 p-6 rounded-lg bg-green-50">
-          <h2 className="text-3xl font-bold text-green-800 mb-6">
-            Payment Information
-          </h2>
-          <form>
-            <div className="w-96 h-56 rounded-2xl flex flex-col justify-between items-start mb-6">
+          {/* Payment Information */}
+          <div className="w-full lg:w-1/2 p-6 bg-green-50">
+            <h2 className="text-2xl md:text-3xl font-bold text-[#4a7043] mb-5 flex items-center gap-2">
+              <FaTractor className="text-[#6b9e5b]" /> Payment
+            </h2>
+            <form className="flex flex-col gap-5">
+              {/* Card Preview */}
               <motion.div
-                className="bg-gradient-to-tr from-green-400 via-yellow-400 to-blue-400 via-pink-400 rounded-xl h-full shadow-lg text-white w-full p-5 relative overflow-hidden"
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ duration: 1 }}
+                className="w-full max-w-sm mx-auto rounded-xl overflow-hidden shadow-lg relative bg-gradient-to-br from-[#6b9e5b] to-[#4a7043] text-white p-4"
+                initial={{ scale: 0.95 }}
+                animate={{ scale: 1 }}
+                transition={{ duration: 0.5 }}
               >
                 <img
                   src={assets.chip}
                   alt="Chip"
-                  className="absolute top-12 left-4 w-12 h-12"
+                  className="absolute top-6 left-3 w-10 h-10"
                 />
-
-                <div className="absolute top-2 right-4">
-                  <SiVisa size={70} />
+                <div className="absolute top-2 right-3">
+                  <SiVisa size={50} />
                 </div>
-
-                <div className="flex flex-col justify-between h-full">
-                  <p className="text-2xl tracking-widest font-mono mt-20">
+                <div className="flex flex-col justify-between h-48">
+                  <p className="text-lg md:text-xl tracking-widest font-mono mt-14">
                     {formatCardNumber(cardData.number) || "1234 5678 1234 5678"}
                   </p>
-
                   <div className="flex justify-between items-center w-full">
-                    <span className="text-md uppercase font-medium">
+                    <span className="text-sm md:text-md uppercase font-medium truncate max-w-[50%]">
                       {cardData.name || "John Doe"}
                     </span>
-                    <span className="flex gap-4">
-                    <span className="text-md font-medium">
-                      {formatExpiryDate(cardData.expiry) || "MM/YY"}
-                    </span>
-                    <span className="text-md font-medium">
-                      {cardData.cvc || "CVC"}
-                    </span>
+                    <span className="flex gap-2">
+                      <span className="text-sm md:text-md font-medium">
+                        {formatExpiryDate(cardData.expiry) || "MM/YY"}
+                      </span>
+                      <span className="text-sm md:text-md font-medium">
+                        {cardData.cvc || "CVC"}
+                      </span>
                     </span>
                   </div>
                 </div>
-
-                {/* Shine Effect */}
                 <motion.div
-                  className="absolute top-0 left-0 w-full h-full bg-gradient-to-r from-transparent via-white to-transparent"
+                  className="absolute top-0 left-0 w-full h-full bg-gradient-to-r from-transparent via-white to-transparent opacity-20"
                   animate={{ x: ["-100%", "100%"] }}
-                  transition={{
-                    duration: 6,
-                    repeat: Infinity,
-                    ease: "easeInOut",
-                  }}
+                  transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
                 />
               </motion.div>
-            </div>
 
-            <div className="w-full flex flex-col gap-4">
-              {/* Card Number */}
-              <div className="w-full">
-                <label className="block text-green-700 font-semibold">
-                  Card Number
-                </label>
-                <input
-                  type="text"
-                  name="number"
-                  className="w-full p-3 border border-green-300 rounded-md shadow-sm focus:ring-2 focus:ring-green-500"
-                  placeholder="1234 5678 1234 5678"
-                  value={cardData.number}
-                  onChange={handleInputChange}
-                  maxLength={16}
-                />
-              </div>
-
-            
-              <div className="w-full">
-                <label className="block text-green-700 font-semibold">
-                  Card Holder Name
-                </label>
-                <input
-                  type="text"
-                  name="name"
-                  className="w-full p-3 border border-green-300 rounded-md shadow-sm focus:ring-2 focus:ring-green-500"
-                  placeholder="John Doe"
-                  value={cardData.name}
-                  onChange={handleInputChange}
-                />
-              </div>
-
-              <div className="w-full flex gap-2 mb-4">
-                <div className="w-1/2">
-                  <label className="block text-green-700 font-semibold">
-                    Expiry Date
-                  </label>
+              {/* Card Inputs */}
+              <div className="flex flex-col gap-4">
+                <div>
+                  <label className="block text-[#6b9e5b] font-medium text-sm mb-1">Card Number</label>
                   <input
                     type="text"
-                    name="expiry"
-                    className="w-full p-3 border border-green-300 rounded-md shadow-sm focus:ring-2 focus:ring-green-500"
-                    placeholder="MM/YY"
-                    value={cardData.expiry}
-                    onChange={handleInputChange}
-                    maxLength={5}
+                    name="number"
+                    value={cardData.number}
+                    onChange={handleCardInputChange}
+                    className="w-full p-3 border border-green-200 rounded-lg focus:ring-2 focus:ring-[#6b9e5b] focus:outline-none text-[#4a7043] bg-green-50 placeholder-[#a3b899]"
+                    placeholder="1234 5678 1234 5678"
+                    maxLength={16}
                   />
                 </div>
-
-    
-                <div className="w-1/2">
-                  <label className="block text-green-700 font-semibold">
-                    CVV
-                  </label>
+                <div>
+                  <label className="block text-[#6b9e5b] font-medium text-sm mb-1">Card Holder Name</label>
                   <input
                     type="text"
-                    name="cvc"
-                    className="w-full p-3 border border-green-300 rounded-md shadow-sm focus:ring-2 focus:ring-green-500"
-                    placeholder="123"
-                    value={cardData.cvc}
-                    onChange={handleInputChange}
-                    maxLength={3}
+                    name="name"
+                    value={cardData.name}
+                    onChange={handleCardInputChange}
+                    className="w-full p-3 border border-green-200 rounded-lg focus:ring-2 focus:ring-[#6b9e5b] focus:outline-none text-[#4a7043] bg-green-50 placeholder-[#a3b899]"
+                    placeholder="John Doe"
                   />
                 </div>
+                <div className="grid grid-cols-2 gap-4">
+                  <div>
+                    <label className="block text-[#6b9e5b] font-medium text-sm mb-1">Expiry</label>
+                    <input
+                      type="text"
+                      name="expiry"
+                      value={cardData.expiry}
+                      onChange={handleCardInputChange}
+                      className="w-full p-3 border border-green-200 rounded-lg focus:ring-2 focus:ring-[#6b9e5b] focus:outline-none text-[#4a7043] bg-green-50 placeholder-[#a3b899]"
+                      placeholder="MM/YY"
+                      maxLength={5}
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-[#6b9e5b] font-medium text-sm mb-1">CVV</label>
+                    <input
+                      type="text"
+                      name="cvc"
+                      value={cardData.cvc}
+                      onChange={handleCardInputChange}
+                      className="w-full p-3 border border-green-200 rounded-lg focus:ring-2 focus:ring-[#6b9e5b] focus:outline-none text-[#4a7043] bg-green-50 placeholder-[#a3b899]"
+                      placeholder="123"
+                      maxLength={3}
+                    />
+                  </div>
+                </div>
               </div>
-            </div>
 
-   
-            <div className="text-center">
-              <button
+              {/* Pay Now Button */}
+              <motion.button
                 type="submit"
-                className="w-full py-3 bg-green-600 text-white rounded-md shadow-md hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 transition"
-                disabled={!isFormValid()}
+                className={`w-full py-3 px-6 rounded-lg shadow-md text-white font-semibold text-md transition-all duration-300 flex items-center justify-center gap-2 ${
+                  isCardFormValid() && isPersonalFormValid()
+                    ? "bg-[#6b9e5b] hover:bg-[#5a8c4b]"
+                    : "bg-gray-300 cursor-not-allowed"
+                }`}
+                disabled={!isCardFormValid() || !isPersonalFormValid()}
+                whileHover={{ scale: isCardFormValid() && isPersonalFormValid() ? 1.05 : 1 }}
+                whileTap={{ scale: isCardFormValid() && isPersonalFormValid() ? 0.95 : 1 }}
               >
-                Pay Now
-              </button>
-            </div>
-          </form>
-        </div>
+                <FaLeaf /> Order from the Farm
+              </motion.button>
+            </form>
+          </div>
+        </motion.div>
       </div>
     </div>
   );

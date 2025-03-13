@@ -1,15 +1,17 @@
-import React from "react";
-import { FaCartShopping } from "react-icons/fa6";
+import React, { useState } from "react";
+import {  FaCartShopping, FaUser } from "react-icons/fa6";
 import { BsFillDoorOpenFill } from "react-icons/bs";
-import { FaUser } from "react-icons/fa";
+import { CgMenu } from "react-icons/cg";
 import { Link } from "react-router-dom";
 import { useAuth } from "../../utils/Auth";
 import { motion } from "framer-motion";
-import { useState } from "react";
+import SideBar from "../SideBar/SideBar";
 
 const NavBar = ({ transparent = false }) => {
   const { authToken, logout } = useAuth();
   const [active, setActive] = useState(0);
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+
   const tabs = [
     { label: "Home", path: "/" },
     { label: "MarketPlace", path: "/market" },
@@ -18,83 +20,94 @@ const NavBar = ({ transparent = false }) => {
 
   return (
     <div
-      className={`h-[13vh] w-full px-6 py-4 flex justify-between items-center ${
-        transparent ? "bg-transparent" : "bg-zinc-100"
+      className={`w-full px-4 sm:px-6 md:px-8 lg:px-12 py-3 sm:py-4 md:py-5 flex justify-between items-center transition-all duration-300 ${
+        transparent ? "bg-transparent" : ""
       }`}
     >
-      {/* Brand Logo */}
-      <h1 className="text-3xl sm:text-5xl font-black font-[Aladin] text-[#0d331c] ml-4 z-50">
+    
+      <h1 className="text-3xl sm:text-4xl font-black font-[Aladin] text-[#0d331c] z-10">
         Farmisto
       </h1>
 
-      {/* Navigation Links */}
-      <div className="hidden sm:flex gap-8">
-      {tabs.map((tab, index) => (
-        <Link
-          to={tab.path}
-          key={index}
-          className={`text-lg sm:text-xl w-[auto] flex flex-col gap-2 text-green-800 font-semibold`}
-          onMouseEnter={() => setActive(index)}
-        >
-          {tab.label}
-          {active === index && (
-            <motion.span
-              initial={{ width: '0%' }}
-              animate={{ width: '100%' }}
-              whileHover={{ width: '100%' }}
-              transition={{
-                type: 'spring',
-                stiffness: 150,
-                mass: 1,
-                duration: 0.3, 
-              }}
-              className="bg-green-500 shadow-lg shadow-green-100 h-[4px] block mx-auto rounded-sm"
-            />
-          )}
-        </Link>
-      ))}
+      <div className="hidden md:flex gap-4 lg:gap-8">
+        {tabs.map((tab, index) => (
+          <Link
+            to={tab.path}
+            key={index}
+            className={`text-base sm:text-lg md:text-xl lg:text-2xl flex flex-col gap-1 text-green-800 font-semibold hover:text-emerald-700 transition-colors duration-200`}
+            onMouseEnter={() => setActive(index)}
+          >
+            {tab.label}
+            {active === index && (
+              <motion.span
+                initial={{ width: "0%" }}
+                animate={{ width: "100%" }}
+                whileHover={{ width: "100%" }}
+                transition={{
+                  type: "linear",
+                  stiffness: 150,
+                  mass: 1,
+                  duration: 0.3,
+                }}
+                className="bg-emerald-800 shadow-lg shadow-emerald-100 h-0.5 sm:h-1 md:h-[4px] block mx-auto rounded-sm"
+              />
+            )}
+          </Link>
+        ))}
       </div>
 
       {/* Icons Section */}
-      <div className="flex gap-4">
-        <div className="h-10 sm:h-12 px-1 flex items-center justify-center gap-2 bg-[#0d331c] text-white rounded-full">
+      <div className="flex items-center">
+        <div className="h-9 sm:h-10 md:h-12 px-1 mr-2 sm:mr-0 flex items-center justify-center gap-2 bg-[#0d331c] text-emerald-800 rounded-full">
           {authToken ? (
             <div
               onClick={() => logout()}
-              className="h-8 w-8 sm:h-10 sm:w-10 flex items-center justify-center bg-white rounded-full hover:scale-110 transition-all duration-300 hover:cursor-pointer"
+              className="h-7 w-7 sm:h-8 sm:w-8 md:h-10 md:w-10 flex items-center justify-center bg-green-50 rounded-full hover:scale-110 transition-all duration-300 hover:cursor-pointer"
             >
               <BsFillDoorOpenFill
-                size={16}
-                className="sm:size-18"
+                size={14}
+                className="sm:size-3 md:size-5"
                 color="#0d331c"
               />
             </div>
           ) : (
             <Link
               to={"/form"}
-              className="h-8 w-8 sm:h-10 sm:w-10 flex items-center justify-center bg-white rounded-full hover:scale-110 transition-all duration-300 hover:cursor-pointer"
+              className="h-7 w-7 sm:h-8 sm:w-8 md:h-10 md:w-10 flex items-center justify-center bg-green-50 rounded-full hover:scale-110 transition-all duration-300 hover:cursor-pointer"
             >
-              <FaUser size={16} className="sm:size-18" color="#0d331c" />
+              <FaUser
+                className="sm:size-3 md:size-5"
+                color="#0d331c"
+              />
             </Link>
           )}
           <Link
             to={"/cart"}
-            className="h-8 w-8 sm:h-10 sm:w-10 flex items-center justify-center bg-white rounded-full hover:scale-110 transition-all duration-300"
+            className="h-7 w-7 sm:h-8 sm:w-8 md:h-10 md:w-10 flex items-center justify-center bg-green-50 rounded-full hover:scale-110 transition-all duration-300"
           >
-            <FaCartShopping size={16} className="sm:size-18" color="#0d331c" />
+            <FaCartShopping
+              className="sm:size-3 md:size-5"
+              color="#0d331c"
+            />
           </Link>
         </div>
-      </div>
 
-      {/* Mobile Menu */}
-      <div className="sm:hidden">
         <button
-          className="text-green-800 font-semibold text-lg"
-          onClick={() => alert("Toggle Mobile Menu Here")}
+          className="md:hidden text-green-800 font-semibold text-lg sm:text-xl"
+          onClick={() => setIsSidebarOpen(true)}
         >
-          ☰
+          <CgMenu size={30}/>
         </button>
       </div>
+
+      {isSidebarOpen && (
+        <div
+          className="fixed inset-0 z-40 md:hidden"
+          onClick={() => setIsSidebarOpen(false)}
+        />
+      )}
+
+      <SideBar isOpen={isSidebarOpen} setIsSidebarOpen={setIsSidebarOpen} />
     </div>
   );
 };
