@@ -1,15 +1,15 @@
 const express = require("express");
 const dotenv = require("dotenv");
 const cors = require("cors");
-const FarmerRoutes = require("./routes/FarmerRoutes");
-const UserRoutes = require("./routes/userRoutes");
-const MarketRoutes = require("./routes/MarketRoutes");
+const FarmerRoutes = require("./routes/FarmerRoutes.js");
+const UserRoutes = require("./routes/userRoutes.js");
+const MarketRoutes = require("./routes/MarketRoutes.js");
+const PaymentRoutes = require("./routes/PaymentRoutes.js");
+const PromoRoutes = require("./routes/PromoRoutes.js")
+const { fetchLocation, fetchNearbyFarmers } = require("./controllers/GeoController.js");
+const connectCloudinary = require("./config/cloudinary.js");
+const MongooseConnect = require("./config/Db.js");
 const CartRoutes = require('./routes/CartRoutes.js');
-const PaymentRoutes = require("./routes/PaymentRoutes");
-const PromoRoutes = require("./routes/PromoRoutes")
-const { fetchLocation, fetchNearbyFarmers } = require("./controllers/GeoController");
-const connectCloudinary = require("./config/cloudinary");
-const MongooseConnect = require("./config/Db");
 
 dotenv.config();
 
