@@ -21,9 +21,16 @@ MongooseConnect();
 
 const app = express();
 
-app.use(cors({
-  origin: process.env.NODE_ENV === 'development' ? 'http://localhost:5173' : "",
-}));
+app.use(
+  cors({
+    origin: process.env.NODE_ENV === 'development' ? 'http://localhost:5173' : "",
+    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+    allowedHeaders: ["Content-Type", "Authorization"],
+    credentials: true,
+  })
+);
+app.options("*", cors());
+
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 

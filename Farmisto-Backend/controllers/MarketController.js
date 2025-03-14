@@ -109,6 +109,7 @@ const DeleteItem = async (req, res) => {
 const GetItems = async (req, res) => {
   try {
     const items = await Market.find({});
+    console.log(items);
     if (!items.length) {
       return res.status(200).json({ message: "No items available!" });
     }
