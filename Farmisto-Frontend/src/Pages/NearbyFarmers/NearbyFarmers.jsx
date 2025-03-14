@@ -4,7 +4,7 @@ import NavBar from "../../Components/NavBar/NavBar";
 import Footer from "../../Components/Footer/Footer";
 import Pagination from "@mui/material/Pagination";
 import { styled } from "@mui/material/styles";
-import axios from "axios";
+import axios from "../../utils/axios";
 import { FaSearch, FaMapMarkerAlt, FaLeaf, FaChevronDown, FaShoppingBasket } from "react-icons/fa";
 import { motion } from "framer-motion";
 
@@ -40,11 +40,7 @@ const NearbyFarmers = () => {
     const fetchFarmers = async () => {
       setLoading(true);
       try {
-        const response = await axios.get(`http://localhost:4000/user/fetch-nearby-farmers`, {
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem("authToken")}`,
-          },
-        });
+        const response = await axios.get(`/user/fetch-nearby-farmers`);
         setFarmers(response.data.farmers);
         setFilteredFarmers(response.data.farmers);
       } catch (error) {

@@ -7,18 +7,16 @@ import {
   FaPepperHot,
   FaLeaf,
   FaFish,
-  FaSearch,
   FaMinus,
   FaPlus,
   FaCartPlus,
   FaTractor,
 } from "react-icons/fa";
 import { ImCross } from "react-icons/im";
-import axios from "axios";
+import axios from "../../utils/axios";
 import { useAuth } from "../../utils/Auth";
 import { motion } from "framer-motion";
 import MobileBuyBlock from "../../Components/BuySection/MobileBuyBlock";
-import { BsCart4 } from "react-icons/bs";
 import AllBuyBlock from "../../Components/BuySection/AllBuyBlock";
 
 const BuyBlock = () => {
@@ -49,7 +47,7 @@ const BuyBlock = () => {
 
   const GetProducts = async () => {
     try {
-      const response = await axios.get("http://localhost:4000/market/get-items");
+      const response = await axios.get("/market/get-items");
       const allItems = response.data.items || [];
       setAllProducts(allItems);
       setProducts(allItems);
@@ -83,13 +81,8 @@ const BuyBlock = () => {
 
     try {
       const response = await axios.post(
-        "http://localhost:4000/user/buy-item",
-        item,
-        {
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem("authToken")}`,
-          },
-        }
+        "/user/buy-item",
+        item
       );
       console.log("Added to cart: ", response.data);
       closeModal();

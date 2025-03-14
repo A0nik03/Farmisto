@@ -4,7 +4,7 @@ import { FaMinus, FaPlus } from "react-icons/fa6";
 import { MdDelete } from "react-icons/md";
 import assets from "../../assets/assets";
 import { useAuth } from "../../utils/Auth";
-import axios from "axios";
+import axios from "../../utils/axios";
 import { useNavigate } from "react-router-dom";
 import { AnimatePresence, motion } from "framer-motion";
 import CartItems from "./CartItems";
@@ -42,13 +42,8 @@ const Cart = () => {
     if (authToken) {
       try {
         const response = await axios.post(
-          `http://localhost:4000/cart/user`,
-          { id, dsnt },
-          {
-            headers: {
-              Authorization: `Bearer ${authToken}`,
-            },
-          }
+          `/cart/user`,
+          { id, dsnt }
         );
         if (response.status === 200 && response.data.cart) {
           setCart(response.data.cart);
@@ -67,13 +62,8 @@ const Cart = () => {
     if (authToken) {
       try {
         const response = await axios.patch(
-          `http://localhost:4000/cart/update/${itemId}`,
-          { updatedQuantity: newQuantity },
-          {
-            headers: {
-              Authorization: `Bearer ${authToken}`,
-            },
-          }
+          `/cart/update/${itemId}`,
+          { updatedQuantity: newQuantity }
         );
         if (response.status === 200) {
           fetchCart();
@@ -106,13 +96,8 @@ const Cart = () => {
     if (authToken && code) {
       try {
         const response = await axios.post(
-          "http://localhost:4000/promo/apply-promo",
-          data,
-          {
-            headers: {
-              Authorization: `Bearer ${authToken}`,
-            },
-          }
+          "/promo/apply-promo",
+          data
         );
         if (response.status === 200) {
           const discountAmount = response.data.promo || 0;
@@ -133,12 +118,7 @@ const Cart = () => {
       try {
         setCart((prevCart) => prevCart.filter((item) => item.id !== itemId));
         const response = await axios.delete(
-          `http://localhost:4000/cart/delete/${itemId}`,
-          {
-            headers: {
-              Authorization: `Bearer ${authToken}`,
-            },
-          }
+          `/cart/delete/${itemId}`
         );
         if (response.status === 200) {
           fetchCart();
@@ -155,11 +135,8 @@ const Cart = () => {
     if (authToken) {
       try {
         const response = await axios.delete(
-          `http://localhost:4000/cart/clear`,
+          `/cart/clear`,
           {
-            headers: {
-              Authorization: `Bearer ${authToken}`,
-            },
             data: { id },
           }
         );
@@ -198,12 +175,9 @@ const Cart = () => {
     if (authToken) {
       try {
         const response = await axios.post(
-          "http://localhost:4000/payments/create-payment",
+          "/payments/create-payment",
           orderDetails,
           {
-            headers: {
-              Authorization: `Bearer ${authToken}`,
-            },
             responseType: "blob",
           }
         );

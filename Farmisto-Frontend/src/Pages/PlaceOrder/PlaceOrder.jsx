@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import NavBar from "../../Components/NavBar/NavBar";
 import { SiVisa } from "react-icons/si";
-import { FaLeaf, FaTractor } from "react-icons/fa"; // Farm-themed icons
+import { FaLeaf, FaTractor } from "react-icons/fa";
 import { motion } from "framer-motion";
 import assets from "../../assets/assets";
 

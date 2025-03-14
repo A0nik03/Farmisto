@@ -5,7 +5,7 @@ import { PuffLoader } from "react-spinners";
 import { Modal, Button } from "rsuite";
 import { useNavigate } from "react-router-dom";
 import { FcGoogle } from "react-icons/fc";
-import axios from "axios";
+import axios from "../../utils/axios";
 import { useAuth } from "../../utils/Auth";
 
 const Register = () => {
@@ -89,10 +89,9 @@ const Register = () => {
     let isMounted = true;
   
     try {
-      const BASE_URL = "http://localhost:4000";
   
       const response = await axios.post(
-        `${BASE_URL}/user/${isLogin ? "login" : "register"}`,
+        `/user/${isLogin ? "login" : "register"}`,
         formData
       );
       console.log("Response Data: ", response.data);

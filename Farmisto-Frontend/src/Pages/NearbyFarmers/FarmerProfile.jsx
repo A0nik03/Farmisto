@@ -2,11 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
 import NavBar from "../../Components/NavBar/NavBar";
 import Footer from "../../Components/Footer/Footer";
-import axios from "axios";
-import MobileBuyBlock from "../../Components/BuySection/MobileBuyBlock";
-import AllBuyBlock from "../../Components/BuySection/AllBuyBlock";
-import { FaCarrot, FaFish, FaLeaf, FaPepperHot, FaSeedling } from "react-icons/fa6";
-import { FaAppleAlt, FaShoppingBasket } from "react-icons/fa";
+import axios from "../../utils/axios";
 import MobileFarmerStore from "./Components/MobileFarmerStore";
 import LargerFarmerStore from "./Components/LargerFarmerStore";
 
@@ -21,13 +17,8 @@ const FarmerProfile = () => {
   const fetchFarmer = async () => {
     try {
       const response = await axios.post(
-        `http://localhost:4000/user/get-farmer`,
-        { farmerEmail },
-        {
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem("authToken")}`,
-          },
-        }
+        `/user/get-farmer`,
+        { farmerEmail }
       );
       setFarmer(response.data.farmer || {});
     } catch (error) {
@@ -38,13 +29,8 @@ const FarmerProfile = () => {
   const fetchFarmerItems = async () => {
     try {
       const response = await axios.post(
-        `http://localhost:4000/user/get-items-by-farmerId`,
-        { farmerEmail },
-        {
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem("authToken")}`,
-          },
-        }
+        `/user/get-items-by-farmerId`,
+        { farmerEmail }
       );
       setFarmerItems(response.data.items || []);
     } catch (error) {
@@ -87,13 +73,8 @@ const FarmerProfile = () => {
 
     try {
       const response = await axios.post(
-        "http://localhost:4000/user/buy-item",
-        item,
-        {
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem("authToken")}`,
-          },
-        }
+        "/user/buy-item",
+        item
       );
       console.log("Response: ", response.data);
     } catch (error) {
