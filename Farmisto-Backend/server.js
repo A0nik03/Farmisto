@@ -22,10 +22,18 @@ MongooseConnect();
 const app = express();
 
 app.use(cors({
-  origin: process.env.NODE_ENV === 'development' ? 'http://localhost:5173' : "" 
+  origin: process.env.NODE_ENV === 'development' ? 'http://localhost:5173' : "http://localhost:5173" 
 }));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
+
+app.get('/api',(req,res) => {
+  res.send("Welcome to Farmisto API!");
+  res.status(200).json({
+    message: "Welcome to Farmisto API",
+    success: true,
+  });
+})
 
 // Routes
 app.use("/farmer", FarmerRoutes);
@@ -37,12 +45,6 @@ app.use("/promo",PromoRoutes);
 app.use("/api/geocode", fetchLocation);
 app.use("/api/geoNearby", fetchNearbyFarmers);
 
-app.get('/',(req,res) => {
-  res.status(200).json({
-    message: "Welcome to Farmisto API",
-    success: true,
-  });
-})
 
 app.get("/logout", (req, res) => {
   res.clearCookie("token", {
