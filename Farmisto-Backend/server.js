@@ -22,7 +22,7 @@ MongooseConnect();
 const app = express();
 
 app.use(cors({
-  origin: process.env.NODE_ENV === 'development' ? 'http://localhost:5173' : "http://localhost:5173" 
+  origin: process.env.NODE_ENV === 'development' ? 'http://localhost:5173' : "",
 }));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
