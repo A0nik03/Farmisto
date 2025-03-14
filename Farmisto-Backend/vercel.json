@@ -1,8 +1,0 @@
-{
-    "functions": {
-      "api/server.js": {
-        "runtime": "nodejs16.x"
-      }
-    }
-  }
-  
