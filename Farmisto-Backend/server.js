@@ -37,11 +37,12 @@ app.use("/promo",PromoRoutes);
 app.use("/api/geocode", fetchLocation);
 app.use("/api/geoNearby", fetchNearbyFarmers);
 
-app.get('/',{
+app.get('/',(req,res) => {
+  res.status(200).json({
     message: "Welcome to Farmisto API",
     success: true,
-  
-});
+  });
+})
 
 app.get("/logout", (req, res) => {
   res.clearCookie("token", {
