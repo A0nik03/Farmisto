@@ -1,4 +1,3 @@
-const express = require("express");
 const User = require("../models/User");
 const { GenerateToken } = require("../middleware/TokenAuth");
 const { comparePassword, hashPassword } = require("../middleware/Hashing");
