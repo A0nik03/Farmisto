@@ -2,7 +2,7 @@ import React, { useRef, useEffect, useState, useContext } from "react";
 import { RiLeafFill } from "react-icons/ri";
 import { FaApple, FaArrowLeftLong } from "react-icons/fa6";
 import { PuffLoader } from "react-spinners";
-import { Modal, Button } from "rsuite";
+import { Modal } from "rsuite";
 import { useNavigate } from "react-router-dom";
 import { FcGoogle } from "react-icons/fc";
 import axios from "../../utils/axios";

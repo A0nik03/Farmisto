@@ -45,7 +45,7 @@ const AuthProvider = ({ children }) => {
     }
   };
 
-  // Logout function to clear token and user details from localStorage
+
   const logout = () => {
     localStorage.removeItem("authToken");
     setAuthToken(null);

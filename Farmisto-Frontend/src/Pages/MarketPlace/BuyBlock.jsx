@@ -49,6 +49,7 @@ const BuyBlock = () => {
     try {
       const response = await axios.get("/market/get-items");
       const allItems = response.data.items || [];
+      console.log(allItems)
       setAllProducts(allItems);
       setProducts(allItems);
     } catch (error) {
@@ -127,7 +128,7 @@ const BuyBlock = () => {
 
   useEffect(() => {
     GetProducts();
-  }, []);
+  },[]);
 
   useEffect(() => {
     filterProducts();
