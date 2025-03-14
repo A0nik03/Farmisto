@@ -19,7 +19,9 @@ MongooseConnect();
 
 const app = express();
 
-app.use(cors());
+app.use(cors({
+  origin: NODE_ENV === 'development' ? 'http://localhost:5173' : "" 
+}));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
