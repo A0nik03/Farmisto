@@ -27,7 +27,7 @@ app.use(cors({
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
-app.get('/api',(req,res) => {
+app.get('/',async(req,res) => {
   res.send("Welcome to Farmisto API!");
   res.status(200).json({
     message: "Welcome to Farmisto API",
