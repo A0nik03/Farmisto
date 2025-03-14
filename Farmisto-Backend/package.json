@@ -6,7 +6,7 @@
     "start": "node server.js",
     "dev": "nodemon server.js",
     "build": "npm install",
-      "postinstall": "npm rebuild bcrypt --build-from-source"
+    "postinstall": "npm rebuild bcryptjs --build-from-source"
   },
   "author": "",
   "license": "ISC",
