@@ -9,7 +9,7 @@ const PromoRoutes = require("./routes/PromoRoutes.js")
 const { fetchLocation, fetchNearbyFarmers } = require("./controllers/GeoController.js");
 const connectCloudinary = require("./config/cloudinary.js");
 const MongooseConnect = require("./config/Db.js");
-const CartRoutes = require('./routes/CartRoutes.js');
+const CartRoutes = require('./routes/cartRoutes.js');
 
 dotenv.config();
 
