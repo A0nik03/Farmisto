@@ -1,5 +1,4 @@
 const { GenerateToken } = require("../middleware/TokenAuth.js");
-const { hashPassword, comparePassword } = require("../middleware/Hashing.js");
 const Farmer = require("../models/Farmer");
 const { fetchLocation } = require("./GeoController");
 const bcrypt = require("bcrypt");
@@ -7,6 +6,7 @@ const Payment = require("../models/Payment");
 const User = require("../models/User");
 const cloudinary = require("cloudinary").v2;
 const connectCloudinary = require("../config/cloudinary");
+const { comparePassword, hashPassword } = require("../middleware/hashing.js");
 connectCloudinary();
 
 const FarmerRegister = async (req, res) => {

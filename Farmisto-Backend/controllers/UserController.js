@@ -1,9 +1,9 @@
 const User = require("../models/User");
 const { GenerateToken } = require("../middleware/TokenAuth");
-const { comparePassword, hashPassword } = require("../middleware/Hashing");
 const Cart = require("../models/Cart");
 const Farmer = require("../models/Farmer");
 const Market = require("../models/Market");
+const { hashPassword, comparePassword } = require("../middleware/hashing");
 
 const UserRegister = async (req, res) => {
   const { userName, email, password, userLocation } = req.body;
