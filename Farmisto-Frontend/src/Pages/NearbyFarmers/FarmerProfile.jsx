@@ -84,7 +84,12 @@ const FarmerProfile = () => {
     try {
       const response = await axios.post(
         "/user/buy-item",
-        item
+        item,
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem('authToken')}`,
+          },
+        }
       );
       console.log("Response: ", response.data);
     } catch (error) {
