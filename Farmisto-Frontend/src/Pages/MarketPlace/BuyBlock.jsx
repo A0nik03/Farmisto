@@ -30,7 +30,6 @@ const BuyBlock = () => {
   const [selectedKind, setSelectedKind] = useState(null);
   const [selectedCategory, setSelectedCategory] = useState(null);
 
-    
   const sideBarKinds = [
     { name: "Seasonal", icon: <FaSeedling className="text-[#155724]" /> },
     { name: "Daily", icon: <FaShoppingBasket className="text-[#155724]" /> },
@@ -49,7 +48,7 @@ const BuyBlock = () => {
     try {
       const response = await axios.get("/market/get-items");
       const allItems = response.data.items || [];
-      console.log(allItems)
+      console.log(allItems);
       setAllProducts(allItems);
       setProducts(allItems);
     } catch (error) {
@@ -62,7 +61,7 @@ const BuyBlock = () => {
   };
 
   const AddToCart = async (product, quantity = 1) => {
-    console.log(product)
+    console.log(product);
     const item = {
       id: product._id,
       itemName: product.itemName,
@@ -81,10 +80,11 @@ const BuyBlock = () => {
     };
 
     try {
-      const response = await axios.post(
-        "/user/buy-item",
-        item
-      );
+      const response = await axios.post("/user/buy-item", item, {
+        headers: {
+          Authorization: `Bearer ${authToken}`,
+        },
+      });
       console.log("Added to cart: ", response.data);
       closeModal();
     } catch (error) {
@@ -110,16 +110,22 @@ const BuyBlock = () => {
   const filterProducts = () => {
     let filtered = allProducts;
     if (selectedCategory) {
-      filtered = filtered.filter((product) => product.itemCategory === selectedCategory);
+      filtered = filtered.filter(
+        (product) => product.itemCategory === selectedCategory
+      );
     }
     if (selectedKind) {
-      filtered = filtered.filter((product) => product.itemType === selectedKind);
+      filtered = filtered.filter(
+        (product) => product.itemType === selectedKind
+      );
     }
     if (searchTerm) {
       filtered = filtered.filter(
         (product) =>
           product.itemName.toLowerCase().includes(searchTerm.toLowerCase()) ||
-          product.itemCategory.toLowerCase().includes(searchTerm.toLowerCase()) ||
+          product.itemCategory
+            .toLowerCase()
+            .includes(searchTerm.toLowerCase()) ||
           product.farmerName.toLowerCase().includes(searchTerm.toLowerCase())
       );
     }
@@ -128,7 +134,7 @@ const BuyBlock = () => {
 
   useEffect(() => {
     GetProducts();
-  },[]);
+  }, []);
 
   useEffect(() => {
     filterProducts();
@@ -153,14 +159,20 @@ const BuyBlock = () => {
               animate={{ opacity: 1, scale: 1 }}
               transition={{ duration: 0.3 }}
             >
-              <ImCross size={18} className="text-[#6b8e23] hover:text-[#8ab644]" />
+              <ImCross
+                size={18}
+                className="text-[#6b8e23] hover:text-[#8ab644]"
+              />
             </motion.span>
             <div className="flex flex-col gap-4 p-4 sm:p-6">
               <div className="flex flex-col sm:flex-row items-center justify-between border border-[#a3cfae] rounded-lg p-4">
                 <div className="flex flex-col sm:flex-row items-center gap-4 w-full sm:w-auto">
                   <div className="h-24 w-24 sm:h-32 sm:w-32 bg-[#d4edda] rounded-lg flex justify-center items-center">
                     <img
-                      src={selectedProduct.itemImage || "https://via.placeholder.com/150"}
+                      src={
+                        selectedProduct.itemImage ||
+                        "https://via.placeholder.com/150"
+                      }
                       alt={selectedProduct.itemName || "Produce"}
                       className="h-full w-full object-contain"
                     />
@@ -170,10 +182,16 @@ const BuyBlock = () => {
                       {selectedProduct.itemName}
                     </h1>
                     <p className="text-sm sm:text-base font-medium text-[#155724] mt-1">
-                      From: <span className="text-[#6b8e23]">{selectedProduct.farmerName}</span>
+                      From:{" "}
+                      <span className="text-[#6b8e23]">
+                        {selectedProduct.farmerName}
+                      </span>
                     </p>
                     <p className="text-sm sm:text-base font-medium text-[#155724] mt-1">
-                      Price: <span className="text-[#6b8e23]">₹{selectedProduct.itemPrice} / {selectedProduct.unit}</span>
+                      Price:{" "}
+                      <span className="text-[#6b8e23]">
+                        ₹{selectedProduct.itemPrice} / {selectedProduct.unit}
+                      </span>
                     </p>
                     <div className="flex items-center justify-center sm:justify-start gap-2 mt-3">
                       <motion.div
@@ -184,7 +202,9 @@ const BuyBlock = () => {
                         <FaMinus />
                       </motion.div>
                       <div className="w-10 h-8 flex justify-center items-center bg-[#f0f7e4] border border-[#a3cfae] rounded-md">
-                        <p className="text-lg font-semibold text-[#155724]">{quantity}</p>
+                        <p className="text-lg font-semibold text-[#155724]">
+                          {quantity}
+                        </p>
                       </div>
                       <motion.div
                         onClick={() => handleQuantityChange(1)}
@@ -208,7 +228,9 @@ const BuyBlock = () => {
               </div>
               <div className="space-y-2">
                 {allProducts
-                  .filter((product) => product.itemName === selectedProduct.itemName)
+                  .filter(
+                    (product) => product.itemName === selectedProduct.itemName
+                  )
                   .map((product) => (
                     <div
                       key={product._id}
@@ -250,7 +272,8 @@ const BuyBlock = () => {
       {/* Header */}
       <div className="text-center p-4">
         <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-semibold text-[#155724] tracking-tight flex items-center justify-center gap-2">
-          <FaTractor className="text-[#6b8e23]" />Farmisto
+          <FaTractor className="text-[#6b8e23]" />
+          Farmisto
         </h1>
         <p className="text-base sm:text-lg md:text-xl text-[#155724]/80 mt-2">
           Fresh Produce Direct from Local Farmers
@@ -259,30 +282,30 @@ const BuyBlock = () => {
 
       {/* Main Content */}
       <div className="hidden lg:block w-full">
-          <AllBuyBlock
-            products={products}
-            openModal={openModal}
-            sideBarKinds={sideBarKinds}
-            sideBarCategory={sideBarCategory}
-            setSelectedKind={setSelectedKind}
-            setSelectedCategory={setSelectedCategory}
-            selectedKind={selectedKind}
-            selectedCategory={selectedCategory}
-          />
-        </div>
+        <AllBuyBlock
+          products={products}
+          openModal={openModal}
+          sideBarKinds={sideBarKinds}
+          sideBarCategory={sideBarCategory}
+          setSelectedKind={setSelectedKind}
+          setSelectedCategory={setSelectedCategory}
+          selectedKind={selectedKind}
+          selectedCategory={selectedCategory}
+        />
+      </div>
 
       <div className="lg:hidden w-full">
-          <MobileBuyBlock
-            products={products}
-            openModal={openModal}
-            sideBarKinds={sideBarKinds}
-            sideBarCategory={sideBarCategory}
-            setSelectedKind={setSelectedKind}
-            setSelectedCategory={setSelectedCategory}
-            selectedKind={selectedKind}
-            selectedCategory={selectedCategory}
-          />
-        </div>
+        <MobileBuyBlock
+          products={products}
+          openModal={openModal}
+          sideBarKinds={sideBarKinds}
+          sideBarCategory={sideBarCategory}
+          setSelectedKind={setSelectedKind}
+          setSelectedCategory={setSelectedCategory}
+          selectedKind={selectedKind}
+          selectedCategory={selectedCategory}
+        />
+      </div>
     </div>
   );
 };

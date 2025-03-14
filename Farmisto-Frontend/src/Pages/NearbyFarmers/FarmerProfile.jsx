@@ -18,7 +18,12 @@ const FarmerProfile = () => {
     try {
       const response = await axios.post(
         `/user/get-farmer`,
-        { farmerEmail }
+        { farmerEmail },
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem('authToken')}`,
+          },
+        }
       );
       setFarmer(response.data.farmer || {});
     } catch (error) {
@@ -30,7 +35,12 @@ const FarmerProfile = () => {
     try {
       const response = await axios.post(
         `/user/get-items-by-farmerId`,
-        { farmerEmail }
+        { farmerEmail },
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem('authToken')}`,
+          },
+        }
       );
       setFarmerItems(response.data.items || []);
     } catch (error) {

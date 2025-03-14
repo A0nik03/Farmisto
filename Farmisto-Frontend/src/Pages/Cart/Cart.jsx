@@ -43,7 +43,12 @@ const Cart = () => {
       try {
         const response = await axios.post(
           `/cart/user`,
-          { id, dsnt }
+          { id, dsnt },
+          {
+            headers: {
+              Authorization: `Bearer ${localStorage.getItem('authToken')}`,
+            },
+          }
         );
         if (response.status === 200 && response.data.cart) {
           setCart(response.data.cart);
@@ -63,7 +68,12 @@ const Cart = () => {
       try {
         const response = await axios.patch(
           `/cart/update/${itemId}`,
-          { updatedQuantity: newQuantity }
+          { updatedQuantity: newQuantity },
+          {
+            headers: {
+              Authorization: `Bearer ${localStorage.getItem('authToken')}`,
+            },
+          }
         );
         if (response.status === 200) {
           fetchCart();
@@ -97,7 +107,12 @@ const Cart = () => {
       try {
         const response = await axios.post(
           "/promo/apply-promo",
-          data
+          data,
+          {
+            headers: {
+              Authorization: `Bearer ${localStorage.getItem('authToken')}`,
+            },
+          }
         );
         if (response.status === 200) {
           const discountAmount = response.data.promo || 0;
@@ -118,7 +133,12 @@ const Cart = () => {
       try {
         setCart((prevCart) => prevCart.filter((item) => item.id !== itemId));
         const response = await axios.delete(
-          `/cart/delete/${itemId}`
+          `/cart/delete/${itemId}`,
+          {
+            headers: {
+              Authorization: `Bearer ${localStorage.getItem('authToken')}`,
+            },
+          }
         );
         if (response.status === 200) {
           fetchCart();
@@ -138,6 +158,9 @@ const Cart = () => {
           `/cart/clear`,
           {
             data: { id },
+            headers: {
+              Authorization: `Bearer ${localStorage.getItem('authToken')}`,
+            },
           }
         );
         if (response.status === 200) {
@@ -179,6 +202,9 @@ const Cart = () => {
           orderDetails,
           {
             responseType: "blob",
+            headers: {
+              Authorization: `Bearer ${localStorage.getItem('authToken')}`,
+            }
           }
         );
         if (response.status === 200) {

@@ -5,7 +5,13 @@ import Footer from "../../Components/Footer/Footer";
 import Pagination from "@mui/material/Pagination";
 import { styled } from "@mui/material/styles";
 import axios from "../../utils/axios";
-import { FaSearch, FaMapMarkerAlt, FaLeaf, FaChevronDown, FaShoppingBasket } from "react-icons/fa";
+import {
+  FaSearch,
+  FaMapMarkerAlt,
+  FaLeaf,
+  FaChevronDown,
+  FaShoppingBasket,
+} from "react-icons/fa";
 import { motion } from "framer-motion";
 
 const StyledPagination = styled(Pagination)(({ theme }) => ({
@@ -40,7 +46,11 @@ const NearbyFarmers = () => {
     const fetchFarmers = async () => {
       setLoading(true);
       try {
-        const response = await axios.get(`/user/fetch-nearby-farmers`);
+        const response = await axios.get(`/user/fetch-nearby-farmers`, {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("authToken")}`,
+          },
+        });
         setFarmers(response.data.farmers);
         setFilteredFarmers(response.data.farmers);
       } catch (error) {
@@ -77,7 +87,9 @@ const NearbyFarmers = () => {
   };
 
   const handleSearch = debounce((value) => setSearch(value), 300);
-  const categories = Array.from(new Set(farmers.map((farmer) => farmer.farmerCategory)));
+  const categories = Array.from(
+    new Set(farmers.map((farmer) => farmer.farmerCategory))
+  );
 
   const totalPages = Math.ceil(filteredFarmers.length / ITEMS_PER_PAGE);
   const paginatedFarmers = filteredFarmers.slice(
@@ -124,7 +136,8 @@ const NearbyFarmers = () => {
             <FaLeaf /> Fresh from Nearby Farms
           </h1>
           <p className="mt-2 text-white text-xs sm:text-sm md:text-base lg:text-lg max-w-xl sm:max-w-2xl mx-auto">
-            Discover local farmers within 30km bringing you the freshest produce.
+            Discover local farmers within 30km bringing you the freshest
+            produce.
           </p>
         </motion.section>
 
@@ -195,7 +208,8 @@ const NearbyFarmers = () => {
                         {farmer.farmerName}
                       </h2>
                       <p className="text-xs sm:text-sm text-emerald-800 mt-1 flex items-center justify-center gap-1 truncate">
-                        <FaMapMarkerAlt className="text-emerald-800" /> {farmer.farmerAddress}
+                        <FaMapMarkerAlt className="text-emerald-800" />{" "}
+                        {farmer.farmerAddress}
                       </p>
                       <p className="mt-1 sm:mt-2 text-xs sm:text-sm text-emerald-800 border border-green-200 inline-block px-2 py-1 rounded-full font-medium truncate">
                         {farmer.farmerCategory}
