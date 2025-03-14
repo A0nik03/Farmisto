@@ -23,7 +23,7 @@ const app = express();
 
 app.use(
   cors({
-    origin: process.env.NODE_ENV === 'development' ? 'http://localhost:5173' : "",
+    origin: process.env.NODE_ENV === 'development' ? 'http://localhost:5173' : "https://farmisto-frontend.vercel.app",
     methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
     allowedHeaders: ["Content-Type", "Authorization"],
     credentials: true,
