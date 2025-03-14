@@ -13,6 +13,8 @@ const MongooseConnect = require("./config/Db");
 
 dotenv.config();
 
+const PORT = process.env.PORT || 4000;
+
 // Connect to Cloudinary and MongoDB
 connectCloudinary();
 MongooseConnect();
@@ -54,6 +56,6 @@ app.get("/logout", (req, res) => {
 });
 
 // Start server
-app.listen(process.env.PORT, () => {
+app.listen(PORT, () => {
   console.log(`Server is running on port ${process.env.PORT}`);
 });
