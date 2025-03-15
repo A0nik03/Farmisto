@@ -1,5 +1,5 @@
 import React from "react";
-import Maindash from "./MainDash";
+import Maindash from "./Maindash";
 import SideNav from "./SideNav";
 const Dashboard = () => {
   return (
