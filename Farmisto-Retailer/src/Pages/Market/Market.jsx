@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import axios from "../../utils/axios";
 import { BsCart4 } from "react-icons/bs";
 import { FaMinus, FaPlus } from "react-icons/fa6";
-import NavBar from "../../Components/Major/Navbar";
+import NavBar from "../../Components/Major/NavBar";
 import Footer from '../../Components/Footer/Footer'
 import { useAuth } from "../../utils/Auth";
 
