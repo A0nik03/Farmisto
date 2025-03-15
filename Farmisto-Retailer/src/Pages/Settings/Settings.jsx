@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import SideNav from "../../Dash/sidenav";
+import SideNav from "../../Dash/SideNav";
 import { Link, Outlet } from "react-router-dom";
 
 const settingsData = [
