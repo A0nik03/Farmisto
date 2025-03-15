@@ -4,10 +4,14 @@ import { FaUser } from "react-icons/fa";
 import { Link } from "react-router-dom";
 import { useAuth } from "../../utils/Auth";
 import { motion } from "framer-motion";
+import SideBar from "./SideBar";
+import { MdDashboard } from "react-icons/md";
+import { CgMenu } from "react-icons/cg";
 
 const NavBar = ({ transparent = false }) => {
   const { authToken, logout } = useAuth();
   const [active, setActive] = useState(0);
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
   const tabs = [
     { label: "Home", path: "/" },
@@ -17,13 +21,13 @@ const NavBar = ({ transparent = false }) => {
 
   return (
     <div
-      className={`h-[13vh] px-4 sm:px-6 py-4 flex justify-between items-center ${
+      className={`relative h-[13vh] px-4 sm:px-6 py-4 flex justify-between items-center ${
         transparent ? "bg-transparent" : "bg-[#f7f3e9]"
       }`}
     >
       <div className="w-full justify-between flex">
-        <h1 className="text-2xl sm:text-4xl md:text-5xl font-black text-[#6b4226] ml-2 sm:ml-4 z-50">
-          Farmisto
+        <h1 className="text-3xl sm:text-4xl font-black font-[Aladin] text-[#6b4226] z-10">
+          Farmisto Farmer
         </h1>
         <div className="gap-6 md:gap-8 hidden sm:flex mr-32">
           {tabs.map((tab, index) => (
@@ -76,16 +80,28 @@ const NavBar = ({ transparent = false }) => {
             {authToken && (
               <Link
                 to={"/Dashboard"}
-                className="hidden sm:flex h-8 sm:h-10 px-4 sm:px-6 items-center justify-center gap-2 bg-white text-[#7a9f35] hover:scale-[1.05] transition-all duration-300 cursor-pointer rounded-full"
+                className="h-8 w-8 items-center sm:w-10 sm:h-10 flex justify-center gap-2 bg-white text-[#7a9f35] hover:scale-[1.05] transition-all duration-300 cursor-pointer rounded-full"
               >
-                <p className="font-bold text-sm sm:text-base md:text-lg text-[#405f27]">
-                  Dashboard
-                </p>
+                <MdDashboard className="sm:size-5 text-[#405f27]" />
               </Link>
             )}
           </div>
+        <button
+          className="md:hidden text-green-800 font-semibold text-lg sm:text-xl"
+          onClick={() => setIsSidebarOpen(!isSidebarOpen)}
+        >
+          <CgMenu size={30} />
+        </button>
         </div>
       </div>
+      {isSidebarOpen && (
+        <div
+          className="fixed z-40 md:hidden bg-red-200"
+          onClick={() => setIsSidebarOpen(false)}
+        />
+      )}
+
+      <SideBar isOpen={isSidebarOpen} setIsSidebarOpen={setIsSidebarOpen} />
     </div>
   );
 };

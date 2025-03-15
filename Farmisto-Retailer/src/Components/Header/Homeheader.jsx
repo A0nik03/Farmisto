@@ -26,8 +26,8 @@ const Homeheader = () => {
           real farm life
         </p>
 
-        <div className="h-auto mt-5 w-auto max-w-[90%] sm:max-w-[70%] z-50 border border-[#ffffff80] rounded-full flex items-center gap-2 bg-[#ffffff20] backdrop-blur-lg shadow-[0_4px_10px_rgba(0,0,0,0.4)]">
-          <p className="z-50 text-sm sm:text-lg md:text-xl py-2 px-1 text-white font-normal text-nowrap drop-shadow-[1px_2px_4px_rgba(0,0,0,0.5)]">
+        <div className="h-auto mt-5 w-auto max-w-[90%] sm:max-w-[70%] z-10 border border-[#ffffff80] rounded-full flex items-center gap-2 bg-[#ffffff20] backdrop-blur-lg shadow-[0_4px_10px_rgba(0,0,0,0.4)]">
+          <p className="z-10 text-sm sm:text-lg md:text-xl py-2 px-1 text-white font-normal text-nowrap drop-shadow-[1px_2px_4px_rgba(0,0,0,0.5)]">
             Fuel your health with fresh, nutritious veggies.
           </p>
         </div>

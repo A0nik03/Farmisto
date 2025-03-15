@@ -3,7 +3,7 @@ import { Line } from "react-chartjs-2";
 import { MapContainer, Marker, Popup, TileLayer } from "react-leaflet";
 import { PuffLoader } from "react-spinners";
 import { useAuth } from "../../utils/Auth";
-import axios from "axios";
+import axios from "../../utils/axios";
 
 const MainContent = () => {
   const { authToken, userDetails } = useAuth();
@@ -15,7 +15,7 @@ const MainContent = () => {
   const GetLocation = async () => {
     try {
       const response = await axios.get("/farmer/location", {
-        headers: { Authorization: `Bearer ${authToken}` },
+        headers: { Authorization: `Bearer ${localStorage.getItem('authToken')}` },
       });
       if (response.status === 200) {
         setLocation(response.data.farmerLocation);
@@ -30,9 +30,10 @@ const MainContent = () => {
   const GetDashboard = async () => {
     try {
       const response = await axios.get("/farmer/dashboard", {
-        headers: { Authorization: `Bearer ${authToken}` },
+        headers: { Authorization: `Bearer ${localStorage.getItem('authToken')}` },
       });
       if (response.status === 200) {
+        console.log(response.data.dashboard)
         setSalesData(response.data.dashboard.salesData);
         setDashboardData(response.data.dashboard);
       }
