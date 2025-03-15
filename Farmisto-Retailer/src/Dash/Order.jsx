@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import SideNav from "./sidenav";
+import SideNav from "./SideNav";
 import axios from "../utils/axios";
 import { useAuth } from "../utils/Auth";
 import moment from "moment";

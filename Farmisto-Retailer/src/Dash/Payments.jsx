@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import SideNav from "./sidenav";
+import SideNav from "./SideNav"
 
 const Payments = () => {
   const [payments, setPayments] = useState([

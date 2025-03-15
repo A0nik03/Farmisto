@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from "react";
-import SideNav from "./sidenav";
+import SideNav from "./SideNav";
 import axios from "../utils/axios";
 import { useAuth } from "../utils/Auth";
 import { motion } from "framer-motion";
