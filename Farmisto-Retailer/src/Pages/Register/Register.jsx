@@ -214,7 +214,7 @@ const Register = () => {
             <p className="text-red-500 text-sm mt-2">{locationError}</p>
           )}
 
-          {/* Registration/Login Form */}
+
           <form
             className="w-full sm:mt-5 mt-2 px-6 sm:px-10"
             onSubmit={handleSubmit}
