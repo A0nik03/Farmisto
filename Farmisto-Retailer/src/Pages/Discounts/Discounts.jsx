@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import moment from "moment";
 import { Stack, Pagination } from "@mui/material";
-import SideNav from "../../Dash/sidenav";
+import SideNav from "../../Dash/SideNav";
 import { useAuth } from "../../utils/Auth";
 import axios from "../../utils/axios";
 import { MdDelete } from "react-icons/md";
