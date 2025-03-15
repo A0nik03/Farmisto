@@ -1,11 +1,10 @@
 import React, { useEffect, useState } from "react";
 import SideNav from "./sidenav";
-import axios from "axios";
+import axios from "../utils/axios";
 import { useAuth } from "../utils/Auth";
 import moment from "moment";
 import Pagination from "@mui/material/Pagination";
 import Stack from "@mui/material/Stack";
-import Footer from "../Components/Footer/Footer";
 
 const Order = () => {
   const { authToken } = useAuth();
@@ -22,7 +21,7 @@ const Order = () => {
     const fetchOrders = async () => {
       try {
         const response = await axios.get(
-          "http://localhost:4000/payments/farmer-get-payment",
+          "/payments/farmer-get-payment",
           {
             headers: {
               Authorization: `Bearer ${authToken}`,
@@ -47,7 +46,7 @@ const Order = () => {
     try {
       const data = { field: "orderStatus", value: value, id: id };
       const response = await axios.patch(
-        `http://localhost:4000/payments/farmer-update-payment`,
+        `/payments/farmer-update-payment`,
         data,
         {
           headers: {

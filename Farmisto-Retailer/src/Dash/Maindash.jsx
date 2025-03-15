@@ -1,11 +1,10 @@
 import React, { useRef, useState, useEffect } from "react";
 import { useAuth } from "../utils/Auth";
-import axios from "axios";
+import axios from "../utils/axios";
 import { RiPlantFill } from "react-icons/ri";
 import { IoWallet } from "react-icons/io5";
 import { GrTransaction } from "react-icons/gr";
 import { BsPeopleFill } from "react-icons/bs";
-import Footer from '../Components/Footer/Footer'
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -40,7 +39,7 @@ const Dashboard = () => {
   const GetDashboard = async () => {
     try {
       const response = await axios.get(
-        "http://localhost:4000/farmer/dashboard",
+        "/farmer/dashboard",
         {
           headers: {
             Authorization: `Bearer ${authToken}`,

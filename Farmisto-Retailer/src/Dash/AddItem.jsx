@@ -1,17 +1,16 @@
 import React, { useState, useRef, useEffect } from "react";
 import SideNav from "./sidenav";
-import axios from "axios";
+import axios from "../utils/axios";
 import { useAuth } from "../utils/Auth";
 import { motion } from "framer-motion";
 import {
-  FaCarrot, // For Produce Name (vegetable icon)
-  FaRupeeSign, // For Price and Price per Unit
-  FaListAlt, // For Category
-  FaCalendarAlt, // For Type (seasonal/daily)
-  FaWeightHanging, // For Quantity
-  FaRuler, // For Unit
-  FaCamera, // For Image Upload
-  FaLeaf, // General farming touch
+  FaCarrot,
+  FaRupeeSign,
+  FaListAlt,
+  FaCalendarAlt,
+  FaWeightHanging,
+  FaRuler,
+  FaCamera,
 } from "react-icons/fa";
 
 const AddItem = () => {
@@ -54,7 +53,7 @@ const AddItem = () => {
 
     try {
       const response = await axios.post(
-        "http://localhost:4000/market/add-item",
+        "/market/add-item",
         formData,
         {
           headers: {
@@ -83,7 +82,7 @@ const AddItem = () => {
   const getAllItems = async () => {
     try {
       const response = await axios.get(
-        `http://localhost:4000/market/get-items-farmer`,
+        `/market/get-items-farmer`,
         {
           headers: {
             Authorization: `Bearer ${authToken}`,

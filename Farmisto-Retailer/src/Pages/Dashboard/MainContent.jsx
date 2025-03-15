@@ -14,7 +14,7 @@ const MainContent = () => {
 
   const GetLocation = async () => {
     try {
-      const response = await axios.get("http://localhost:4000/farmer/location", {
+      const response = await axios.get("/farmer/location", {
         headers: { Authorization: `Bearer ${authToken}` },
       });
       if (response.status === 200) {
@@ -29,7 +29,7 @@ const MainContent = () => {
 
   const GetDashboard = async () => {
     try {
-      const response = await axios.get("http://localhost:4000/farmer/dashboard", {
+      const response = await axios.get("/farmer/dashboard", {
         headers: { Authorization: `Bearer ${authToken}` },
       });
       if (response.status === 200) {

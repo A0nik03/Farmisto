@@ -1,4 +1,4 @@
-import axios from "axios";
+import axios from "../../utils/axios";
 import React, { useEffect, useRef, useState } from "react";
 import { RxCross2 } from "react-icons/rx";
 import { useAuth } from "../../utils/Auth";
@@ -17,7 +17,7 @@ const DiscountSection = () => {
   const getAllItems = async () => {
     try {
       const response = await axios.get(
-        `http://localhost:4000/market/get-items-farmer`,
+        `/market/get-items-farmer`,
         {
           headers: {
             Authorization: `Bearer ${authToken}`,
@@ -41,7 +41,7 @@ const DiscountSection = () => {
         usageLimit: usageLimitRef.current.value,
       };
       const response = await axios.post(
-        "http://localhost:4000/promo/gen-promo",
+        "/promo/gen-promo",
         data,
         {
           headers: {
@@ -58,7 +58,7 @@ const DiscountSection = () => {
   const GetPromos = async () => {
     try {
       const response = await axios.get(
-        "http://localhost:4000/promo/list-promos",
+        "/promo/list-promos",
         {
           headers: {
             Authorization: `Bearer ${authToken}`,

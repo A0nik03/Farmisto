@@ -10,12 +10,12 @@ import {
   FaCamera,
   FaEdit,
 } from "react-icons/fa";
-import axios, { formToJSON } from "axios";
+import axios from "../../../utils/axios";
 
 const ProfileSettings = () => {
   const [formData, setFormData] = useState({
     farmerName: "",
-    farmerProfilePhoto: null, // Can be a URL (from DB) or File (when updated)
+    farmerProfilePhoto: null,
     farmerMobile: "",
     farmerPassword: "",
     farmerAddress: "",
@@ -39,7 +39,7 @@ const ProfileSettings = () => {
   const fetchDefaultData = async () => {
     try {
       const response = await axios.get(
-        "http://localhost:4000/farmer/settings/profile-data",
+        "/farmer/settings/profile-data",
         {
           headers: {
             Authorization: `Bearer ${localStorage.getItem("authToken")}`,
@@ -99,7 +99,7 @@ const ProfileSettings = () => {
 
     try {
       const response = await axios.patch(
-        "http://localhost:4000/farmer/settings/update-profile",
+        "/farmer/settings/update-profile",
         formDataToSend,
         {
           headers: {

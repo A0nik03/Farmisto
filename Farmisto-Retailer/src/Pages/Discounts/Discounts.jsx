@@ -3,8 +3,7 @@ import moment from "moment";
 import { Stack, Pagination } from "@mui/material";
 import SideNav from "../../Dash/sidenav";
 import { useAuth } from "../../utils/Auth";
-import axios from "axios";
-import { AiOutlineDelete } from "react-icons/ai"; // Importing delete icon
+import axios from "../../utils/axios";
 import { MdDelete } from "react-icons/md";
 
 const Discounts = () => {
@@ -16,11 +15,10 @@ const Discounts = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 10;
 
-  // Fetch promo codes
   const GetPromos = async (authToken) => {
     try {
       const response = await axios.get(
-        "http://localhost:4000/promo/list-promos",
+        "/promo/list-promos",
         {
           headers: {
             Authorization: `Bearer ${authToken}`,
@@ -33,11 +31,10 @@ const Discounts = () => {
     }
   };
 
-  // Fetch product data
   const getAllItems = async () => {
     try {
       const response = await axios.get(
-        "http://localhost:4000/market/get-items-farmer",
+        "/market/get-items-farmer",
         {
           headers: {
             Authorization: `Bearer ${authToken}`,
@@ -50,7 +47,6 @@ const Discounts = () => {
     }
   };
 
-  // Get product details by item ID
   const getProductDetails = (itemId) => {
     if (!productData || productData.length === 0) {
       return null;
@@ -58,7 +54,6 @@ const Discounts = () => {
     return productData.find((product) => product?._id === itemId);
   };
 
-  // Filter promos by search query (promo code)
   const filteredPromos = listPromos.filter((promo) =>
     promo.code.toLowerCase().includes(searchQuery.toLowerCase())
   );
@@ -79,7 +74,7 @@ const Discounts = () => {
   const handleDeleteDiscount = async (id) => {
     try {
       const response = await axios.delete(
-        "http://localhost:4000/promo/del-promo/" + id,
+        "/promo/del-promo/" + id,
         {
           headers: {
             Authorization: `Bearer ${authToken}`,

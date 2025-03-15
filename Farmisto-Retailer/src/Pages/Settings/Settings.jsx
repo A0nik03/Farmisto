@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import { BsPersonCircle } from "react-icons/bs";
 import SideNav from "../../Dash/sidenav";
 import { Link, Outlet } from "react-router-dom";
 

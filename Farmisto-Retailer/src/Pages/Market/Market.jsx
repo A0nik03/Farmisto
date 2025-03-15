@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import axios from "axios";
+import axios from "../../utils/axios";
 import { BsCart4 } from "react-icons/bs";
 import { FaMinus, FaPlus } from "react-icons/fa6";
 import NavBar from "../../Components/Major/Navbar";
@@ -18,7 +18,7 @@ const Market = () => {
   const fetchFarmer = async () => {
     try {
       const response = await axios.post(
-        `http://localhost:4000/user/get-farmer`,
+        `/user/get-farmer`,
         { farmerEmail: farmerEmail },
         {
           headers: {
@@ -35,7 +35,7 @@ const Market = () => {
   const fetchFarmerItems = async () => {
     try {
       const response = await axios.post(
-        `http://localhost:4000/user/get-items-by-farmerId`,
+        `/user/get-items-by-farmerId`,
         { farmerEmail },
         {
           headers: {
