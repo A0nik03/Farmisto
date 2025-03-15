@@ -16,7 +16,6 @@ const LegalAndCompliance = () => {
     complianceChecklist: false,
   });
 
-
   const termsOfService = [
     {
       title: "Control Over Produce",
@@ -77,42 +76,43 @@ const LegalAndCompliance = () => {
 
   return (
     <div className="min-h-screen bg-[#e8dab7] flex flex-col">
-      <main className="h-full flex justify-center items-center">
-        <div className="p-6 h-screen w-full transform transition-all duration-300 hover:shadow-lg">
-          <div className="text-3xl w-1/4 font-semibold text-[#5a4e2d] border-b-4 border-[#70942e] mb-6 tracking-tight">
-            <p className="text-center mb-2">Legal & Compliance</p>
+      <main className="flex-1 flex justify-center items-start p-4 sm:p-6">
+        <div className="w-full max-w-4xl transform transition-all duration-300 hover:shadow-lg">
+          <div className="text-2xl sm:text-3xl font-semibold text-[#5a4e2d] border-b-4 border-[#70942e] mb-4 sm:mb-6 tracking-tight text-center">
+            Legal & Compliance
           </div>
 
-          <div className="space-y-8">
+          <div className="space-y-6">
+            {/* Terms of Service */}
             <div>
               <div
                 onClick={() => toggleSection("termsOfService")}
-                className="flex items-center justify-between w-full text-lg font-medium text-[#5a4e2d] mb-4 cursor-pointer"
+                className="flex items-center justify-between w-full text-base sm:text-lg font-medium text-[#5a4e2d] mb-3 sm:mb-4 cursor-pointer"
               >
                 <span className="flex items-center gap-2">
-                  <FaFileContract className="text-[#70942e]" /> Terms of Service
+                  <FaFileContract className="text-[#70942e] w-5 h-5" /> Terms of Service
                 </span>
                 {expandedSections.termsOfService ? (
-                  <FaAngleUp className="text-[#70942e]" />
+                  <FaAngleUp className="text-[#70942e] w-5 h-5" />
                 ) : (
-                  <FaAngleDown className="text-[#70942e]" />
+                  <FaAngleDown className="text-[#70942e] w-5 h-5" />
                 )}
               </div>
               {expandedSections.termsOfService && (
-                <div className="pl-4 space-y-4">
+                <div className="pl-2 sm:pl-4 space-y-4">
                   {termsOfService.map((item, index) => (
                     <div
                       key={index}
-                      className="bg-[#f5f0e1] p-4 rounded-lg shadow-sm hover:shadow-md transition-shadow duration-300 border-l-4 border-[#70942e]"
+                      className="bg-[#f5f0e1] p-3 sm:p-4 rounded-lg shadow-sm hover:shadow-md transition-shadow duration-300 border-l-4 border-[#70942e]"
                     >
                       <div className="flex items-start gap-3">
-                        <FaLeaf className="text-[#70942e] mt-1" />
+                        <FaLeaf className="text-[#70942e] mt-1 w-4 h-4 sm:w-5 sm:h-5" />
                         <div>
-                          <h3 className="text-[#5a4e2d] font-semibold flex items-center gap-2">
+                          <h3 className="text-[#5a4e2d] font-semibold text-sm sm:text-base flex items-center gap-2">
                             {item.title}
-                            <FaCheckCircle className="text-[#70942e] text-sm" />
+                            <FaCheckCircle className="text-[#70942e] text-xs sm:text-sm" />
                           </h3>
-                          <p className="text-[#5a4e2d] text-sm mt-1">{item.content}</p>
+                          <p className="text-[#5a4e2d] text-xs sm:text-sm mt-1">{item.content}</p>
                         </div>
                       </div>
                     </div>
@@ -125,32 +125,32 @@ const LegalAndCompliance = () => {
             <div>
               <div
                 onClick={() => toggleSection("privacyPolicy")}
-                className="flex items-center justify-between w-full text-lg font-medium text-[#5a4e2d] mb-4 cursor-pointer"
+                className="flex items-center justify-between w-full text-base sm:text-lg font-medium text-[#5a4e2d] mb-3 sm:mb-4 cursor-pointer"
               >
                 <span className="flex items-center gap-2">
-                  <FaShieldAlt className="text-[#70942e]" /> Privacy Policy
+                  <FaShieldAlt className="text-[#70942e] w-5 h-5" /> Privacy Policy
                 </span>
                 {expandedSections.privacyPolicy ? (
-                  <FaAngleUp className="text-[#70942e]" />
+                  <FaAngleUp className="text-[#70942e] w-5 h-5" />
                 ) : (
-                  <FaAngleDown className="text-[#70942e]" />
+                  <FaAngleDown className="text-[#70942e] w-5 h-5" />
                 )}
               </div>
               {expandedSections.privacyPolicy && (
-                <div className="pl-4 space-y-4">
+                <div className="pl-2 sm:pl-4 space-y-4">
                   {privacyPolicy.map((item, index) => (
                     <div
                       key={index}
-                      className="bg-[#f5f0e1] p-4 rounded-lg shadow-sm hover:shadow-md transition-shadow duration-300 border-l-4 border-[#70942e]"
+                      className="bg-[#f5f0e1] p-3 sm:p-4 rounded-lg shadow-sm hover:shadow-md transition-shadow duration-300 border-l-4 border-[#70942e]"
                     >
                       <div className="flex items-start gap-3">
-                        <FaLeaf className="text-[#70942e] mt-1" />
+                        <FaLeaf className="text-[#70942e] mt-1 w-4 h-4 sm:w-5 sm:h-5" />
                         <div>
-                          <h3 className="text-[#5a4e2d] font-semibold flex items-center gap-2">
+                          <h3 className="text-[#5a4e2d] font-semibold text-sm sm:text-base flex items-center gap-2">
                             {item.title}
-                            <FaCheckCircle className="text-[#70942e] text-sm" />
+                            <FaCheckCircle className="text-[#70942e] text-xs sm:text-sm" />
                           </h3>
-                          <p className="text-[#5a4e2d] text-sm mt-1">{item.content}</p>
+                          <p className="text-[#5a4e2d] text-xs sm:text-sm mt-1">{item.content}</p>
                         </div>
                       </div>
                     </div>
@@ -163,32 +163,32 @@ const LegalAndCompliance = () => {
             <div>
               <div
                 onClick={() => toggleSection("complianceChecklist")}
-                className="flex items-center justify-between w-full text-lg font-medium text-[#5a4e2d] mb-4 cursor-pointer"
+                className="flex items-center justify-between w-full text-base sm:text-lg font-medium text-[#5a4e2d] mb-3 sm:mb-4 cursor-pointer"
               >
                 <span className="flex items-center gap-2">
-                  <FaTasks className="text-[#70942e]" /> Compliance Checklist
+                  <FaTasks className="text-[#70942e] w-5 h-5" /> Compliance Checklist
                 </span>
                 {expandedSections.complianceChecklist ? (
-                  <FaAngleUp className="text-[#70942e]" />
+                  <FaAngleUp className="text-[#70942e] w-5 h-5" />
                 ) : (
-                  <FaAngleDown className="text-[#70942e]" />
+                  <FaAngleDown className="text-[#70942e] w-5 h-5" />
                 )}
               </div>
               {expandedSections.complianceChecklist && (
-                <div className="pl-4 space-y-4">
+                <div className="pl-2 sm:pl-4 space-y-4">
                   {complianceChecklist.map((item, index) => (
                     <div
                       key={index}
-                      className="bg-[#f5f0e1] p-4 rounded-lg shadow-sm hover:shadow-md transition-shadow duration-300 border-l-4 border-[#70942e]"
+                      className="bg-[#f5f0e1] p-3 sm:p-4 rounded-lg shadow-sm hover:shadow-md transition-shadow duration-300 border-l-4 border-[#70942e]"
                     >
                       <div className="flex items-start gap-3">
-                        <FaLeaf className="text-[#70942e] mt-1" />
+                        <FaLeaf className="text-[#70942e] mt-1 w-4 h-4 sm:w-5 sm:h-5" />
                         <div>
-                          <h3 className="text-[#5a4e2d] font-semibold flex items-center gap-2">
+                          <h3 className="text-[#5a4e2d] font-semibold text-sm sm:text-base flex items-center gap-2">
                             {item.title}
-                            <FaCheckCircle className="text-[#70942e] text-sm" />
+                            <FaCheckCircle className="text-[#70942e] text-xs sm:text-sm" />
                           </h3>
-                          <p className="text-[#5a4e2d] text-sm mt-1">{item.content}</p>
+                          <p className="text-[#5a4e2d] text-xs sm:text-sm mt-1">{item.content}</p>
                         </div>
                       </div>
                     </div>
